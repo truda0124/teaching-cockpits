@@ -1,0 +1,21 @@
+# 影片檔案（過大，改用 YouTube / NotebookLM 外連）
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# 暫存與系統檔
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+~$*
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# 草稿資料夾
+_draft/
+_tmp/

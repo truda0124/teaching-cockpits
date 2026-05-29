@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>教學駕駛艙 · 從臺灣探索世界文化 CH4_1</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#162b18;--board:#1d3a1f;--board2:#254a28;--dim:#0e1e10;
+  --chalk:#f0ece2;--faint:#9aaa9c;
+  --Y:#f5d050;--O:#e87040;--B:#5bb3e0;--R:#e05555;--G:#5dcc78;--P:#b388ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--chalk)}
+
+/* HEADER */
+header{height:48px;display:flex;align-items:center;gap:12px;padding:0 14px;
+  background:var(--dim);border-bottom:1px solid #2e4e30;flex-shrink:0}
+.logo{font-family:'Caveat',cursive;font-size:1.35rem;color:var(--Y);
+  text-shadow:0 0 12px rgba(245,208,80,.35);white-space:nowrap}
+.sub{font-size:.72rem;color:var(--faint);white-space:nowrap}
+.sp{flex:1}
+.mode-wrap{display:flex;background:var(--board);border:1px solid #3a5c3d;border-radius:20px;padding:2px}
+.mbtn{padding:3px 14px;border-radius:18px;border:none;background:transparent;
+  color:var(--faint);cursor:pointer;font-size:.78rem;font-family:'Noto Sans TC',sans-serif;transition:.2s}
+.mbtn.on{background:var(--Y);color:#1a1a1a;font-weight:700}
+
+/* TABS */
+.tabs{height:44px;display:flex;align-items:flex-end;gap:3px;padding:0 12px;
+  background:var(--board);border-bottom:1px solid #2e4e30;flex-shrink:0;overflow-x:auto}
+.tab{padding:6px 14px;border:1px solid #3a5c3d;border-bottom:none;border-radius:5px 5px 0 0;
+  background:transparent;color:var(--faint);cursor:pointer;font-size:17px;
+  font-family:'Noto Sans TC',sans-serif;white-space:nowrap;transition:.15s}
+.tab:hover{background:#2d4e30;color:var(--chalk)}
+.tab.on{background:var(--dim);color:var(--Y);border-color:#5a8c5d;font-weight:700}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
+
+/* MAIN LAYOUT */
+.main{display:flex;flex:1;overflow:hidden;position:relative}
+
+/* SECTIONS WRAPPER */
+.sw{flex:1;overflow-y:auto;overflow-x:hidden;display:flex;min-width:0}
+.sec{display:none;flex-direction:column;flex:1;padding:10px 10px 14px 12px;gap:10px}
+.sec.on{display:flex}
+.sec-title{font-family:'Caveat',cursive;font-size:1.2rem;color:var(--Y);flex-shrink:0;
+  text-shadow:1px 1px 3px rgba(0,0,0,.5)}
+.cols{display:grid;grid-template-columns:1fr 2fr;gap:10px}
+
+/* CARD */
+.card{background:var(--board);border:1px solid #3a5c3d;border-radius:7px;
+  display:flex;flex-direction:column}
+.ch{background:#1a3320;padding:6px 13px;font-family:'Caveat',cursive;font-size:17px;
+  color:var(--faint);display:flex;align-items:center;gap:6px;
+  border-bottom:1px solid #3a5c3d;flex-shrink:0}
+.cb{padding:11px;display:flex;flex-direction:column;
+  align-items:flex-start;gap:8px;font-size:17px}
+.cb.center{align-items:center}
+
+/* scrollbar */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--dim)}
+::-webkit-scrollbar-thumb{background:#3a5c3d;border-radius:2px}
+
+/* CAROUSEL */
+.car{display:flex;flex-direction:column;width:100%}
+.slide-wrap{width:100%;overflow:hidden;border-radius:4px;background:rgba(0,0,0,.15)}
+.slide-wrap img{width:100%;height:auto;display:block;border-radius:4px;
+  box-shadow:0 2px 10px rgba(0,0,0,.5)}
+.car-ctrl{display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:5px 0;flex-shrink:0}
+.cbtn{background:var(--board2);border:1px solid #5a8c5d;color:var(--chalk);
+  border-radius:4px;padding:3px 10px;cursor:pointer;font-size:.82rem}
+.cbtn:hover{background:#3a5c3d}
+.cdots{display:flex;gap:5px}
+.cdot{width:7px;height:7px;border-radius:50%;background:#3a5c3d;cursor:pointer;border:none}
+.cdot.on{background:var(--Y)}
+
+/* VIZ HELPERS */
+.vl{font-family:'Caveat',cursive;font-size:17px;color:var(--B);
+  border-bottom:1px dashed #3a5c3d;padding-bottom:3px;width:100%}
+.flow-row{display:flex;align-items:flex-start;gap:7px;width:100%}
+.flow-label{width:80px;font-family:'Caveat',cursive;font-size:17px;flex-shrink:0}
+.flow-box{flex:1;background:#152a17;border-radius:5px;padding:6px 9px;font-size:17px;
+  color:var(--faint);line-height:1.6}
+.arrow{text-align:center;color:#3a5c3d;font-size:1rem;width:100%}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;width:100%}
+.feat{background:#152a17;border:1px solid #3a5c3d;border-radius:6px;padding:5px 7px;text-align:center}
+.feat .icon{font-size:.9rem}.feat .fl{font-family:'Caveat',cursive;font-size:17px}
+.feat .fd{font-size:17px;color:var(--faint);margin-top:2px;line-height:1.4}
+.kw{display:inline-block;background:rgba(91,179,224,.18);border:1px solid var(--B);
+  color:var(--B);border-radius:10px;padding:2px 9px;font-size:17px;margin:2px}
+.ct{width:100%;border-collapse:collapse;font-size:17px}
+.ct th{background:#152a17;color:var(--Y);padding:5px 7px;border:1px solid #3a5c3d;text-align:left}
+.ct td{padding:5px 7px;border:1px solid #3a5c3d;color:var(--faint)}
+.ct tr:hover td{background:rgba(255,255,255,.04);color:var(--chalk)}
+.acc-row{background:#152a17;border:1px solid #3a5c3d;border-radius:6px;padding:8px 11px;
+  cursor:pointer;display:flex;flex-direction:column;gap:4px;width:100%;transition:.15s}
+.acc-row:hover{border-color:#5a8c5d}
+.acc-head{display:flex;align-items:center;gap:7px;font-size:17px}
+.acc-body{font-size:17px;color:var(--faint);display:none;padding-top:5px;
+  border-top:1px dashed #3a5c3d;margin-top:3px;line-height:1.7}
+.acc-row.open .acc-body{display:block}
+.acc-arrow{margin-left:auto;transition:.2s}
+.acc-row.open .acc-arrow{transform:rotate(180deg)}
+.bridge-row{display:flex;align-items:flex-start;gap:9px;background:#152a17;
+  border-radius:6px;padding:9px;width:100%}
+.bridge-label{font-family:'Caveat',cursive;font-size:17px;white-space:nowrap}
+.bridge-body{font-size:17px;color:var(--faint);line-height:1.7}
+.art-grid{display:flex;gap:6px;width:100%;flex-wrap:wrap}
+.art-card{flex:1;min-width:70px;background:#152a17;border:1px solid #3a5c3d;
+  border-radius:6px;padding:5px 7px;text-align:center;cursor:pointer;transition:.15s}
+.art-card:hover{border-color:var(--Y)}
+.art-card .art-icon{font-size:.9rem}
+.art-card .art-name{font-size:17px;color:var(--faint)}
+.art-card .art-detail{font-size:17px;display:none;margin-top:3px;color:var(--Y)}
+.art-card.open .art-detail{display:block}
+.match-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.mleft{flex:1;background:#152a17;border:1px solid #3a5c3d;border-radius:4px;
+  padding:5px 8px;font-size:17px}
+.msel{flex:1;background:var(--dim);border:1px solid #3a5c3d;border-radius:4px;
+  padding:4px 6px;color:var(--chalk);font-family:'Noto Sans TC',sans-serif;font-size:17px}
+.mind{width:20px;text-align:center;font-size:.85rem}
+.tool-3{display:flex;gap:5px;width:100%}
+.tool-card{flex:1;background:#152a17;border-radius:6px;padding:5px 4px;text-align:center;font-size:17px}
+.tool-card .ti{font-size:.85rem}
+.divhr{border:none;border-top:1px dashed #3a5c3d;width:100%;margin:2px 0}
+
+/* QUIZ */
+.qwrap{width:100%}
+.qnum{font-size:17px;color:var(--faint);margin-bottom:4px}
+.qq{font-size:17px;margin-bottom:8px;line-height:1.7;color:var(--chalk)}
+.qopts{display:flex;flex-direction:column;gap:5px}
+.qopt{background:#152a17;border:1px solid #3a5c3d;border-radius:5px;padding:8px 11px;
+  cursor:pointer;font-size:17px;color:var(--faint);text-align:left;
+  font-family:'Noto Sans TC',sans-serif;transition:.15s}
+.qopt:hover{background:#2d4e30;color:var(--chalk)}
+.qopt.ok{background:#1a4a1a;border-color:var(--G);color:var(--G);pointer-events:none}
+.qopt.ng{background:#4a1a1a;border-color:var(--R);color:var(--R);pointer-events:none}
+.qopt.show-ans{background:#1a3a1a;border-color:var(--G);color:var(--G);pointer-events:none}
+.qfb{font-size:17px;padding:6px 9px;border-radius:4px;display:none;
+  margin-top:5px;line-height:1.6}
+.qfb.show{display:block}
+.qfb.ok{background:#1a4a1a;color:var(--G)}
+.qfb.ng{background:#4a1a1a;color:var(--R)}
+.qnext{margin-top:7px;background:var(--board2);border:1px solid var(--Y);color:var(--Y);
+  padding:5px 14px;border-radius:4px;cursor:pointer;font-size:17px;display:none;
+  font-family:'Noto Sans TC',sans-serif}
+.qnext.show{display:inline-block}
+.qscore{font-family:'Caveat',cursive;font-size:1.2rem;color:var(--Y);
+  text-align:center;margin-top:6px}
+.qreset{background:var(--board2);border:1px solid #5a8c5d;color:var(--faint);
+  padding:4px 12px;border-radius:4px;cursor:pointer;font-size:17px;
+  margin-top:5px;font-family:'Noto Sans TC',sans-serif}
+
+/* TEACHER HINT */
+.t-hint{background:rgba(245,208,80,.08);border:1px dashed var(--Y);border-radius:5px;
+  padding:6px 9px;font-size:.7rem;color:var(--Y);width:100%;line-height:1.5}
+body.student .t-hint{display:none}
+
+/* ══════════════════════════════════
+   RIGHT PANEL (persistent, no tab switch)
+══════════════════════════════════ */
+.rp{
+  flex:0 0 25%;min-width:240px;max-width:420px;
+  background:var(--board);
+  border-left:2px solid #3a5c3d;
+  display:flex;flex-direction:column;
+  overflow:hidden;position:relative;
+}
+
+/* Right panel header */
+.rp-head{
+  background:var(--dim);
+  border-bottom:1px solid #3a5c3d;
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+
+/* media tabs */
+.rp-tabs{
+  display:flex;
+  border-bottom:1px solid #2e4e30;
+  padding:4px 8px 0;
+  gap:4px;
+}
+.rp-tab{
+  padding:4px 12px;border:1px solid #3a5c3d;border-bottom:none;
+  border-radius:5px 5px 0 0;background:transparent;color:var(--faint);
+  cursor:pointer;font-size:.73rem;font-family:'Noto Sans TC',sans-serif;transition:.15s;
+}
+.rp-tab:hover{background:#2d4e30;color:var(--chalk)}
+.rp-tab.on{background:var(--board);color:var(--Y);border-color:#5a8c5d;font-weight:700}
+
+/* tool strip */
+.rp-tools{
+  display:flex;align-items:center;gap:4px;padding:5px 8px;
+  border-bottom:1px solid #2e4e30;
+}
+.rp-tool-label{font-family:'Caveat',cursive;font-size:.75rem;color:var(--faint);
+  margin-right:4px;}
+.rtbtn{width:34px;height:34px;border-radius:5px;background:var(--board2);
+  border:1px solid #3a5c3d;color:var(--chalk);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:1rem;transition:.15s;}
+.rtbtn:hover{background:#3a5c3d;border-color:var(--Y)}
+.rtbtn.on{background:var(--Y);color:#1a1a1a}
+
+/* Tool content overlay */
+.rp-tool-pop{
+  position:absolute;top:0;left:0;right:0;
+  background:var(--dim);
+  border-bottom:2px solid var(--Y);
+  padding:10px;
+  display:none;flex-direction:column;gap:6px;
+  z-index:50;
+  box-shadow:0 4px 12px rgba(0,0,0,.5);
+}
+.rp-tool-pop.show{display:flex}
+.rp-tool-pop-head{display:flex;align-items:center;justify-content:space-between;
+  font-family:'Caveat',cursive;font-size:.95rem;color:var(--Y);}
+.rp-close{background:none;border:none;color:var(--faint);cursor:pointer;font-size:1rem;}
+.rp-close:hover{color:var(--R)}
+
+/* Tool sub-elements */
+.ta{width:100%;background:rgba(0,0,0,.25);border:1px solid #3a5c3d;border-radius:4px;
+  padding:4px 6px;font-size:.7rem;color:var(--faint);min-height:55px;max-height:80px;
+  resize:vertical;font-family:'Noto Sans TC',sans-serif}
+.lot-result{font-family:'Caveat',cursive;font-size:1.6rem;color:var(--Y);
+  text-align:center;min-height:2.2rem;text-shadow:0 0 10px rgba(245,208,80,.4)}
+.tbtn{background:var(--board2);border:1px solid #5a8c5d;color:var(--chalk);
+  border-radius:4px;padding:5px;cursor:pointer;font-size:.73rem;
+  text-align:center;font-family:'Noto Sans TC',sans-serif}
+.tbtn:hover{background:#3a5c3d}
+.timer-disp{font-family:'Caveat',cursive;font-size:2.2rem;color:var(--B);
+  text-align:center;letter-spacing:2px}
+.presets{display:flex;flex-wrap:wrap;gap:3px}
+.pbtn{background:var(--board2);border:1px solid #5a8c5d;color:var(--faint);
+  border-radius:3px;padding:2px 6px;cursor:pointer;font-size:.65rem;
+  font-family:'Noto Sans TC',sans-serif}
+.pbtn:hover{border-color:var(--B);color:var(--B)}
+.tbtns{display:flex;gap:3px}
+.swatch{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent}
+.swatch.on{border-color:white}
+.swatches{display:flex;flex-wrap:wrap;gap:4px}
+
+/* Right panel body (media) */
+.rp-body{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.rp-pane{display:none;flex-direction:column;flex:1;overflow:hidden;padding:8px}
+.rp-pane.on{display:flex}
+
+/* Audio pane */
+.audio-wrap{flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:12px;padding:8px 4px}
+.audio-disc{width:80px;height:80px;border-radius:50%;
+  background:conic-gradient(var(--board2) 0deg,#1a3320 90deg,var(--board2) 180deg,#1a3320 270deg);
+  border:3px solid #3a5c3d;display:flex;align-items:center;justify-content:center;
+  font-size:2rem;animation:spin 8s linear infinite;animation-play-state:paused;
+  box-shadow:0 0 20px rgba(91,179,224,.15)}
+.audio-disc.playing{animation-play-state:running}
+@keyframes spin{to{transform:rotate(360deg)}}
+.audio-title{font-family:'Caveat',cursive;font-size:1rem;color:var(--chalk);
+  text-align:center;line-height:1.5}
+.audio-sub{font-size:.68rem;color:var(--faint);text-align:center}
+.audio-play-btn{
+  width:58px;height:58px;border-radius:50%;
+  background:var(--B);border:none;color:#fff;
+  font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:transform .15s,box-shadow .15s;text-decoration:none;
+  box-shadow:0 4px 16px rgba(91,179,224,.4);flex-shrink:0}
+.audio-play-btn:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(91,179,224,.6)}
+.audio-wave{display:flex;align-items:flex-end;gap:3px;height:30px}
+.audio-wave span{width:4px;border-radius:2px;background:var(--B);opacity:.5;
+  animation:wave 1.2s ease-in-out infinite}
+.audio-wave span:nth-child(1){height:10px;animation-delay:0s}
+.audio-wave span:nth-child(2){height:22px;animation-delay:.15s}
+.audio-wave span:nth-child(3){height:16px;animation-delay:.3s}
+.audio-wave span:nth-child(4){height:28px;animation-delay:.45s}
+.audio-wave span:nth-child(5){height:12px;animation-delay:.6s}
+.audio-wave span:nth-child(6){height:20px;animation-delay:.3s}
+.audio-wave span:nth-child(7){height:8px;animation-delay:.15s}
+@keyframes wave{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+.audio-note{font-size:.65rem;color:var(--faint);text-align:center;line-height:1.6}
+
+/* Video pane */
+.rp-video-wrap{
+  flex:1;display:flex;flex-direction:column;gap:6px;min-height:0;overflow:hidden;
+}
+.video-disc{
+  width:80px;height:80px;border-radius:10px;
+  background:linear-gradient(135deg,#1a3320 0%,#0e1e10 50%,#1a3320 100%);
+  border:3px solid #3a5c3d;
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.2rem;flex-shrink:0;
+  box-shadow:0 4px 20px rgba(0,0,0,.4);transition:border-color .3s,box-shadow .3s;
+}
+.video-disc.playing{
+  border-color:var(--O);
+  box-shadow:0 4px 28px rgba(232,112,64,.45);
+  animation:vpulse 2s ease-in-out infinite;
+}
+@keyframes vpulse{
+  0%,100%{box-shadow:0 4px 20px rgba(232,112,64,.35)}
+  50%{box-shadow:0 4px 36px rgba(232,112,64,.7)}
+}
+.video-play-btn{
+  width:58px;height:58px;border-radius:50%;
+  background:var(--O);border:none;color:#fff;font-size:1.5rem;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:transform .15s,box-shadow .15s;text-decoration:none;
+  box-shadow:0 4px 16px rgba(232,112,64,.45);flex-shrink:0;
+}
+.video-play-btn:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(232,112,64,.65)}
+.video-wave span{
+  width:4px;border-radius:2px;background:var(--O);opacity:.5;
+  animation:wave 1.2s ease-in-out infinite;
+}
+.video-note{font-size:.68rem;color:var(--faint);line-height:1.5;padding:4px 2px}
+.video-note span{color:var(--Y)}
+
+/* Infographic pane */
+.rp-info-wrap{flex:1;overflow-y:auto;min-height:0}
+.rp-info-wrap img{width:100%;display:block;border-radius:4px}
+.rp-info-label{font-family:'Caveat',cursive;font-size:.82rem;color:var(--B);
+  padding:4px 2px 6px;flex-shrink:0}
+
+/* Canvas */
+#cvs{position:fixed;top:0;left:0;width:100%;height:100%;z-index:700;
+  display:none;pointer-events:none}
+#cvs.on{display:block;pointer-events:all;cursor:crosshair}
+
+/* ══════ LIGHTBOX ══════ */
+#lb{position:fixed;inset:0;z-index:2000;display:none;
+  background:rgba(0,0,0,.88);backdrop-filter:blur(4px);
+  flex-direction:column;align-items:center;justify-content:flex-start}
+#lb.on{display:flex}
+#lb-bar{width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:8px 14px;background:rgba(0,0,0,.5);flex-shrink:0}
+#lb-title{font-family:'Caveat',cursive;font-size:1rem;color:var(--Y)}
+#lb-zoom{display:flex;gap:6px;align-items:center}
+.lzbtn{background:var(--board2);border:1px solid #5a8c5d;color:var(--chalk);
+  border-radius:4px;padding:3px 11px;cursor:pointer;font-size:.85rem;transition:.15s}
+.lzbtn:hover{background:#3a5c3d;border-color:var(--Y);color:var(--Y)}
+#lb-scale{font-family:'Caveat',cursive;font-size:.88rem;color:var(--faint);
+  min-width:42px;text-align:center}
+#lb-close{background:none;border:1px solid #5a8c5d;color:var(--faint);
+  border-radius:4px;padding:3px 10px;cursor:pointer;font-size:.9rem;
+  font-family:'Noto Sans TC',sans-serif;transition:.15s}
+#lb-close:hover{border-color:var(--R);color:var(--R)}
+#lb-scroll{flex:1;width:100%;overflow:auto;display:flex;
+  align-items:flex-start;justify-content:center;padding:12px;cursor:grab}
+#lb-scroll:active{cursor:grabbing}
+#lb-img{display:block;border-radius:6px;
+  box-shadow:0 8px 40px rgba(0,0,0,.7);
+  transform-origin:top center;transition:transform .15s;
+  max-width:none}
+#lb-hint{font-size:.68rem;color:var(--faint);padding:4px 2px 0;
+  text-align:center;font-style:italic}
+.info-thumb{cursor:zoom-in;border-radius:4px;
+  transition:box-shadow .2s,transform .15s;display:block;width:100%}
+.info-thumb:hover{box-shadow:0 0 0 2px var(--B);transform:scale(1.01)}
+.zoom-hint{font-size:.65rem;color:var(--B);text-align:center;
+  padding:3px 0 1px;font-family:'Caveat',cursive}
+</style>
+</head>
+<body class="teacher">
+
+<canvas id="cvs"></canvas>
+
+<!-- ══ LIGHTBOX ══ -->
+<div id="lb" onclick="lbBgClose(event)">
+  <div id="lb-bar">
+    <span id="lb-title">📊 資訊圖表 · 走進博物館：探索臺灣與世界的文化寶庫</span>
+    <div id="lb-zoom">
+      <button class="lzbtn" onclick="lbZoom(-0.25)">－</button>
+      <span id="lb-scale">100%</span>
+      <button class="lzbtn" onclick="lbZoom(+0.25)">＋</button>
+      <button class="lzbtn" onclick="lbFit()">符合</button>
+    </div>
+    <button id="lb-close" onclick="closeLB()">✕ 關閉</button>
+  </div>
+  <div id="lb-scroll">
+    <img id="lb-img" src="./CH4_1_%E8%B3%87%E8%A8%8A%E5%9C%96%E8%A1%A8.png" alt="資訊圖表">
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div>
+    <div class="logo">🎓 教學駕駛艙</div>
+    <div class="sub">從臺灣探索世界文化 · CH4_1 · 國小社會 五年級下</div>
+  </div>
+  <div class="sp"></div>
+  <div class="mode-wrap">
+    <button class="mbtn on" onclick="setMode('teacher')">👨‍🏫 教師模式</button>
+    <button class="mbtn" onclick="setMode('student')">🎒 學生模式</button>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab on" onclick="sw(0)"><span class="dot" style="background:var(--Y)"></span>① 文化與博物館</button>
+  <button class="tab" onclick="sw(1)"><span class="dot" style="background:var(--B)"></span>② 臺灣博物館</button>
+  <button class="tab" onclick="sw(2)"><span class="dot" style="background:var(--O)"></span>③ 故宮博物院</button>
+  <button class="tab" onclick="sw(3)"><span class="dot" style="background:var(--P)"></span>④ 雙源流比較</button>
+  <button class="tab" onclick="sw(4)"><span class="dot" style="background:var(--G)"></span>⑤ 現代博物館</button>
+  <button class="tab" onclick="sw(5)"><span class="dot" style="background:var(--R)"></span>⑥ 世界文化對話</button>
+</div>
+
+<div class="main">
+
+<!-- ─── SECTIONS WRAPPER ─── -->
+<div class="sw">
+
+<!-- ══ SEC 0 ══ -->
+<div class="sec on" id="s0">
+  <div class="sec-title">📚 重點一：文化是人類生活方式的展現，博物館是文化時光機</div>
+  <div class="cols">
+    <div class="card">
+      <div class="ch">🖼 NotebookLM 簡報輪播</div>
+      <div class="cb center" style="padding:6px">
+        <div class="car" id="car0">
+          <div class="slide-wrap"><img id="ci0" src="./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC01%E9%A0%81.png" onclick="openLB(this.src,'🖼 簡報投影片 · 點擊放大瀏覽')" style="cursor:zoom-in" title="點擊放大瀏覽"></div>
+          <div class="car-ctrl">
+            <button class="cbtn" onclick="pv(0)">◀</button>
+            <div class="cdots" id="cd0"></div>
+            <button class="cbtn" onclick="nx(0)">▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch">⚡ 互動視覺化 ＋ 形成性評量</div>
+      <div class="cb">
+        <div class="t-hint">📌 教師提示：以「時光機」比喻引導學生思考，博物館如何幫助我們「穿越時空」認識先民？</div>
+        <div class="vl">⏳ 博物館功能流程圖</div>
+        <div class="flow-row"><div class="flow-label" style="color:var(--R)">😟 危機</div><div class="flow-box">隨時間流逝，許多事物面臨消失或遺忘的危機</div></div>
+        <div class="arrow">↓</div>
+        <div class="flow-row"><div class="flow-label" style="color:var(--Y)">🏛 博物館</div><div class="flow-box">作為保存與展示的場所，抵擋時間的侵蝕</div></div>
+        <div class="arrow">↓</div>
+        <div class="flow-row"><div class="flow-label" style="color:var(--G)">✨ 成果</div><div class="flow-box">讓我們穿越時空，認識先民的智慧與生活方式</div></div>
+        <div class="divhr"></div>
+        <div class="vl">📝 形成性評量</div>
+        <div id="q0" class="qwrap"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SEC 1 ══ -->
+<div class="sec" id="s1">
+  <div class="sec-title">🏛 重點二：日治時期知識殿堂——國立臺灣博物館</div>
+  <div class="cols">
+    <div class="card">
+      <div class="ch">🖼 NotebookLM 簡報輪播</div>
+      <div class="cb center" style="padding:6px">
+        <div class="car" id="car1">
+          <div class="slide-wrap"><img id="ci1" src="./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC03%E9%A0%81.png" onclick="openLB(this.src,'🖼 簡報投影片 · 點擊放大瀏覽')" style="cursor:zoom-in" title="點擊放大瀏覽"></div>
+          <div class="car-ctrl">
+            <button class="cbtn" onclick="pv(1)">◀</button>
+            <div class="cdots" id="cd1"></div>
+            <button class="cbtn" onclick="nx(1)">▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch">⚡ 互動視覺化 ＋ 形成性評量</div>
+      <div class="cb">
+        <div class="t-hint">📌 教師提示：強調1908年是臺灣「最悠久」博物館，引導觀察建築特色（半球形圓頂、圓柱）。</div>
+        <div class="vl">🏗 特色速查卡</div>
+        <div class="feat-grid">
+          <div class="feat"><div class="icon">📅</div><div class="fl" style="color:var(--Y)">成立年代</div><div class="fd">西元 1908 年<br>臺灣現存最悠久</div></div>
+          <div class="feat"><div class="icon">🏛</div><div class="fl" style="color:var(--B)">建築風格</div><div class="fd">歐洲古典大宅<br>半球形圓頂</div></div>
+          <div class="feat"><div class="icon">🎯</div><div class="fl" style="color:var(--O)">核心功能</div><div class="fd">展示治理成果<br>保存自然史</div></div>
+          <div class="feat"><div class="icon">📚</div><div class="fl" style="color:var(--G)">典藏主題</div><div class="fd">人類學<br>自然史 · 植物學</div></div>
+        </div>
+        <div class="vl">🖼 館藏《臺灣番社圖》</div>
+        <div style="width:100%;font-size:.72rem;color:var(--faint);line-height:1.7">
+          <span class="kw">弓箭與標槍射魚</span><span class="kw">自給自足生態智慧</span><span class="kw">苧麻棉毛織紡</span><span class="kw">平埔族群日常</span>
+        </div>
+        <div class="divhr"></div>
+        <div class="vl">📝 形成性評量</div>
+        <div id="q1" class="qwrap"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SEC 2 ══ -->
+<div class="sec" id="s2">
+  <div class="sec-title">🏯 重點三：中華民國時期文化重鎮——國立故宮博物院</div>
+  <div class="cols">
+    <div class="card">
+      <div class="ch">🖼 NotebookLM 簡報輪播</div>
+      <div class="cb center" style="padding:6px">
+        <div class="car" id="car2">
+          <div class="slide-wrap"><img id="ci2" src="./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC05%E9%A0%81.png" onclick="openLB(this.src,'🖼 簡報投影片 · 點擊放大瀏覽')" style="cursor:zoom-in" title="點擊放大瀏覽"></div>
+          <div class="car-ctrl">
+            <button class="cbtn" onclick="pv(2)">◀</button>
+            <div class="cdots" id="cd2"></div>
+            <button class="cbtn" onclick="nx(2)">▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch">⚡ 互動視覺化 ＋ 形成性評量</div>
+      <div class="cb">
+        <div class="t-hint">📌 教師提示：比較故宮（中式宮殿）與臺博館（歐式古典）建築差異，為「雙源流」做鋪墊。</div>
+        <div class="vl">🎭 典藏分類卡（點擊展開）</div>
+        <div class="art-grid">
+          <div class="art-card" onclick="this.classList.toggle('open')"><div class="art-icon">🏺</div><div class="art-name">器物</div><div class="art-detail">陶瓷、青銅器等工藝珍品</div></div>
+          <div class="art-card" onclick="this.classList.toggle('open')"><div class="art-icon">🖌</div><div class="art-name">書畫</div><div class="art-detail">歷代名家書法與繪畫</div></div>
+          <div class="art-card" onclick="this.classList.toggle('open')"><div class="art-icon">📖</div><div class="art-name">圖書文獻</div><div class="art-detail">古典文獻、善本古書</div></div>
+        </div>
+        <div style="font-size:.71rem;color:var(--faint);text-align:center;width:100%">總數近 <span style="color:var(--Y);font-family:'Caveat',cursive;font-size:1rem">70萬件</span> 典藏</div>
+        <div class="vl">🖼 館藏《清明上河圖》密碼</div>
+        <div style="width:100%;font-size:.72rem;color:var(--faint);line-height:1.7">
+          <span class="kw">食衣住行街頭風情</span><span class="kw">熙來攘往人物</span><span class="kw">商業貿易與市集</span><span class="kw">古代城市繁華</span>
+        </div>
+        <div class="divhr"></div>
+        <div class="vl">📝 形成性評量</div>
+        <div id="q2" class="qwrap"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SEC 3 ══ -->
+<div class="sec" id="s3">
+  <div class="sec-title">⚖ 重點四：臺灣早期博物館的演變與雙源流</div>
+  <div class="cols">
+    <div class="card">
+      <div class="ch">🖼 NotebookLM 簡報輪播</div>
+      <div class="cb center" style="padding:6px">
+        <div class="car" id="car3">
+          <div class="slide-wrap"><img id="ci3" src="./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC07%E9%A0%81.png" onclick="openLB(this.src,'🖼 簡報投影片 · 點擊放大瀏覽')" style="cursor:zoom-in" title="點擊放大瀏覽"></div>
+          <div class="car-ctrl">
+            <button class="cbtn" onclick="pv(3)">◀</button>
+            <div class="cdots" id="cd3"></div>
+            <button class="cbtn" onclick="nx(3)">▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch">⚡ 互動視覺化 ＋ 配對活動</div>
+      <div class="cb">
+        <div class="t-hint">📌 教師提示：引導學生找出「同樣是博物館，為什麼風格差這麼多？」背後的歷史脈絡。</div>
+        <div class="vl">📊 雙源流對照表</div>
+        <table class="ct">
+          <thead><tr><th>項目</th><th style="color:var(--B)">🇯🇵 日治時期</th><th style="color:var(--O)">🏛 中華民國</th></tr></thead>
+          <tbody>
+            <tr><td>代表場館</td><td>國立臺灣博物館</td><td>國立故宮博物院</td></tr>
+            <tr><td>建築風格</td><td>歐洲古典大宅</td><td>中式傳統宮殿</td></tr>
+            <tr><td>核心功能</td><td>展治理、保自然史</td><td>宣揚並融入中華文化</td></tr>
+            <tr><td>經典館藏</td><td>《臺灣番社圖》</td><td>《清明上河圖》</td></tr>
+          </tbody>
+        </table>
+        <div class="vl" style="margin-top:4px">🔀 配對挑戰</div>
+        <div class="match-row"><div class="mleft">歐洲古典大宅，半球形圓頂</div><div class="mind" id="m0">❓</div><select class="msel" onchange="cm(0,this,'臺灣博物館')"><option value="">選…</option><option>臺灣博物館</option><option>故宮博物院</option></select></div>
+        <div class="match-row"><div class="mleft">中式宮殿，色彩鮮豔綠琉璃瓦</div><div class="mind" id="m1">❓</div><select class="msel" onchange="cm(1,this,'故宮博物院')"><option value="">選…</option><option>臺灣博物館</option><option>故宮博物院</option></select></div>
+        <div class="match-row"><div class="mleft">1908年，臺灣現存最悠久</div><div class="mind" id="m2">❓</div><select class="msel" onchange="cm(2,this,'臺灣博物館')"><option value="">選…</option><option>臺灣博物館</option><option>故宮博物院</option></select></div>
+        <div class="match-row"><div class="mleft">1949年遷臺，典藏近70萬件</div><div class="mind" id="m3">❓</div><select class="msel" onchange="cm(3,this,'故宮博物院')"><option value="">選…</option><option>臺灣博物館</option><option>故宮博物院</option></select></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SEC 4 ══ -->
+<div class="sec" id="s4">
+  <div class="sec-title">🌐 重點五：百花齊放的現代文化展演生態系</div>
+  <div class="cols">
+    <div class="card">
+      <div class="ch">🖼 NotebookLM 簡報輪播</div>
+      <div class="cb center" style="padding:6px">
+        <div class="car" id="car4">
+          <div class="slide-wrap"><img id="ci4" src="./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC08%E9%A0%81.png" onclick="openLB(this.src,'🖼 簡報投影片 · 點擊放大瀏覽')" style="cursor:zoom-in" title="點擊放大瀏覽"></div>
+          <div class="car-ctrl">
+            <button class="cbtn" onclick="pv(4)">◀</button>
+            <div class="cdots" id="cd4"></div>
+            <button class="cbtn" onclick="nx(4)">▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch">⚡ 互動視覺化 ＋ 形成性評量</div>
+      <div class="cb">
+        <div class="t-hint">📌 教師提示：請學生分享曾經去過哪種博物館？有沒有用過語音導覽或VR體驗？</div>
+        <div class="vl">🗺 博物館類型（點擊展開）</div>
+        <div class="acc-row" onclick="this.classList.toggle('open')">
+          <div class="acc-head"><span>🖼</span><span>美術館 &amp; 歷史博物館</span><span class="acc-arrow">▼</span></div>
+          <div class="acc-body">宏觀視野 × 實體體驗｜收藏展覽跨時代藝術與歷史，讓觀眾認識人類精神文明</div>
+        </div>
+        <div class="acc-row" onclick="this.classList.toggle('open')">
+          <div class="acc-head"><span>🏘</span><span>地方文化館</span><span class="acc-arrow">▼</span></div>
+          <div class="acc-body">在地深耕 × 實體體驗｜帶動地方創生，保存在地信仰、民俗與文化記憶</div>
+        </div>
+        <div class="acc-row" onclick="this.classList.toggle('open')">
+          <div class="acc-head"><span>💻</span><span>數位博物館</span><span class="acc-arrow">▼</span></div>
+          <div class="acc-body">宏觀世界 × 虛擬體驗｜打破空間限制，在家就能線上瀏覽，甚至使用 VR 探索</div>
+        </div>
+        <div class="vl" style="margin-top:4px">🎧 現代探索工具</div>
+        <div class="tool-3">
+          <div class="tool-card"><div class="ti">👥</div><div style="color:var(--Y);font-size:.7rem">團體導覽</div><div style="color:var(--faint);font-size:.65rem;margin-top:2px">專業導覽員帶領</div></div>
+          <div class="tool-card"><div class="ti">🎧</div><div style="color:var(--B);font-size:.7rem">語音導覽</div><div style="color:var(--faint);font-size:.65rem;margin-top:2px">租借機器或手機</div></div>
+          <div class="tool-card"><div class="ti">🥽</div><div style="color:var(--G);font-size:.7rem">數位學習</div><div style="color:var(--faint);font-size:.65rem;margin-top:2px">VR 環境線上展</div></div>
+        </div>
+        <div class="divhr"></div>
+        <div class="vl">📝 形成性評量</div>
+        <div id="q4" class="qwrap"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SEC 5 ══ -->
+<div class="sec" id="s5">
+  <div class="sec-title">🌍 重點六：引進世界，建立相互尊重的民主社會</div>
+  <div class="cols">
+    <div class="card">
+      <div class="ch">🖼 NotebookLM 簡報輪播</div>
+      <div class="cb center" style="padding:6px">
+        <div class="car" id="car5">
+          <div class="slide-wrap"><img id="ci5" src="./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC10%E9%A0%81.png" onclick="openLB(this.src,'🖼 簡報投影片 · 點擊放大瀏覽')" style="cursor:zoom-in" title="點擊放大瀏覽"></div>
+          <div class="car-ctrl">
+            <button class="cbtn" onclick="pv(5)">◀</button>
+            <div class="cdots" id="cd5"></div>
+            <button class="cbtn" onclick="nx(5)">▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch">⚡ 互動視覺化 ＋ 形成性評量</div>
+      <div class="cb">
+        <div class="t-hint">📌 教師提示：引導學生思考「你怎麼在臺灣看到世界？博物館如何扮演文化橋樑？」</div>
+        <div class="vl">🌉 文化橋樑三方向</div>
+        <div class="bridge-row"><div class="bridge-label" style="color:var(--B)">向後看</div><div class="bridge-body"><span style="color:var(--chalk)">傳承</span>｜保存與展示，透過博物館了解人類的生活方式</div></div>
+        <div class="bridge-row"><div class="bridge-label" style="color:var(--Y)">向內看</div><div class="bridge-body"><span style="color:var(--chalk)">認同</span>｜在地文化館，強化自身文化自信，了解自己的根</div></div>
+        <div class="bridge-row"><div class="bridge-label" style="color:var(--G)">向外看</div><div class="bridge-body"><span style="color:var(--chalk)">連結</span>｜國際交流，了解不同時代與文化，欣賞世界多樣性</div></div>
+        <div class="vl" style="margin-top:4px">🤝 跨國館際合作</div>
+        <div style="background:#152a17;border-radius:6px;padding:8px;width:100%;font-size:.71rem;color:var(--faint);line-height:1.7">
+          故宮博物院 × 大都會博物館<br>
+          <span class="kw">梵谷</span><span class="kw">雷諾瓦</span><span class="kw">交換文物</span><span class="kw">主題特展</span>
+        </div>
+        <div class="divhr"></div>
+        <div class="vl">📝 形成性評量</div>
+        <div id="q5" class="qwrap"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- .sw -->
+
+<!-- ─────────────────────────────────────────
+     RIGHT PANEL — 影片 ＋ 資訊圖表（固定不切換）
+───────────────────────────────────────── -->
+<div class="rp">
+
+  <!-- Tool popup overlays -->
+  <div class="rp-tool-pop" id="pop-lot">
+    <div class="rp-tool-pop-head">
+      <span>🎲 抽籤</span>
+      <button class="rp-close" onclick="closePop('lot')">✕</button>
+    </div>
+    <textarea class="ta" id="lot-in" placeholder="每行一個名字">小明&#10;小華&#10;小美&#10;小志&#10;小玲&#10;小雯</textarea>
+    <div class="lot-result" id="lot-res">—</div>
+    <button class="tbtn" onclick="draw()">🎯 抽！</button>
+  </div>
+
+  <div class="rp-tool-pop" id="pop-tmr">
+    <div class="rp-tool-pop-head">
+      <span>⏱ 計時器</span>
+      <button class="rp-close" onclick="closePop('tmr')">✕</button>
+    </div>
+    <div class="timer-disp" id="td">05:00</div>
+    <div class="presets">
+      <button class="pbtn" onclick="st(60)">1分</button>
+      <button class="pbtn" onclick="st(180)">3分</button>
+      <button class="pbtn" onclick="st(300)">5分</button>
+      <button class="pbtn" onclick="st(600)">10分</button>
+    </div>
+    <div class="tbtns">
+      <button class="tbtn" onclick="startT()" style="flex:1">▶ 開始</button>
+      <button class="tbtn" onclick="pauseT()" style="flex:1">⏸ 暫停</button>
+      <button class="tbtn" onclick="resetT()" style="flex:1">↺ 重置</button>
+    </div>
+  </div>
+
+  <div class="rp-tool-pop" id="pop-drw">
+    <div class="rp-tool-pop-head">
+      <span>✏️ 畫筆工具</span>
+      <button class="rp-close" onclick="closePop('drw');if(drawOn)toggleDraw()">✕</button>
+    </div>
+    <div class="swatches">
+      <div class="swatch on" style="background:#f0ece2" onclick="dc('#f0ece2',this)"></div>
+      <div class="swatch" style="background:#f5d050" onclick="dc('#f5d050',this)"></div>
+      <div class="swatch" style="background:#e87040" onclick="dc('#e87040',this)"></div>
+      <div class="swatch" style="background:#5bb3e0" onclick="dc('#5bb3e0',this)"></div>
+      <div class="swatch" style="background:#e05555" onclick="dc('#e05555',this)"></div>
+      <div class="swatch" style="background:#5dcc78" onclick="dc('#5dcc78',this)"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:5px;font-size:.69rem;color:var(--faint)">
+      粗細 <input type="range" min="2" max="22" value="4" id="bs" style="flex:1;accent-color:var(--Y)">
+    </div>
+    <button class="tbtn" onclick="clr()">🗑 清除畫面</button>
+  </div>
+
+  <!-- Header: media tabs + tool buttons -->
+  <div class="rp-head">
+    <div class="rp-tabs">
+      <button class="rp-tab on" onclick="swRP(0)">🎬 影片</button>
+      <button class="rp-tab" onclick="swRP(1)">🔊 語音</button>
+      <button class="rp-tab" onclick="swRP(2)">📊 圖表</button>
+    </div>
+    <div class="rp-tools">
+      <span class="rp-tool-label">工具：</span>
+      <button class="rtbtn" id="rtbtn-lot" title="抽籤" onclick="togPop('lot')">🎲</button>
+      <button class="rtbtn" id="rtbtn-tmr" title="計時器" onclick="togPop('tmr')">⏱</button>
+      <button class="rtbtn" id="rtbtn-drw" title="畫筆" onclick="togPop('drw');toggleDraw()">✏️</button>
+    </div>
+  </div>
+
+  <!-- Body: media panes -->
+  <div class="rp-body">
+
+    <!-- 🎬 VIDEO PANE -->
+    <div class="rp-pane on" id="rp0">
+      <div class="rp-info-label">🎬 NotebookLM 影片播放</div>
+      <div class="audio-wrap" style="flex:0 0 auto;padding:10px 0 6px">
+        <div class="video-disc" id="video-disc">🎬</div>
+        <div class="audio-title">博物館文化探索<br>AI 影片導覽</div>
+        <div class="audio-sub">由 NotebookLM 生成 · 深度學習影片</div>
+        <div class="audio-wave video-wave">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+        </div>
+        <a class="video-play-btn" id="video-play-btn"
+          href="https://notebooklm.google.com/notebook/0db8fbab-3745-4c52-a5c4-0ba4407d53fa/artifact/c85fd998-269d-40ed-a61b-d160064b2e8a?utm_source=nlm_web_share&utm_medium=google_oo&utm_campaign=art_share_2&utm_content=&utm_smc=nlm_web_share_google_oo_art_share_2_"
+          target="_blank" rel="noopener" title="開啟 NotebookLM 影片播放"
+          onclick="document.getElementById('video-disc').classList.toggle('playing')">
+          ▶
+        </a>
+        <div class="audio-note">
+          點擊 ▶ 在新分頁開啟影片播放器<br>
+          · 適合學生課前預習 / 課後複習<br>
+          · NotebookLM AI 生成教學影片
+        </div>
+      </div>
+      <!-- Mini infographic preview below -->
+      <div class="rp-info-label" style="margin-top:4px">📊 資訊圖表預覽</div>
+      <div style="flex:1;overflow-y:auto;min-height:0">
+        <img src="./CH4_1_%E8%B3%87%E8%A8%8A%E5%9C%96%E8%A1%A8.png"
+          class="info-thumb" onclick="openLB(this.src,'📊 資訊圖表 · 走進博物館：探索臺灣與世界的文化寶庫')" title="點擊放大瀏覽">
+        <div class="zoom-hint">🔍 點擊放大瀏覽</div>
+      </div>
+    </div>
+
+    <!-- 🔊 AUDIO PANE -->
+    <div class="rp-pane" id="rp1">
+      <div class="rp-info-label">🔊 NotebookLM 語音播放</div>
+      <div class="audio-wrap">
+        <div class="audio-disc" id="audio-disc">🎙</div>
+        <div class="audio-title">博物館文化探索<br>AI 語音總覽</div>
+        <div class="audio-sub">由 NotebookLM 生成 · Podcast 風格</div>
+        <div class="audio-wave">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+        </div>
+        <a class="audio-play-btn" id="audio-play-btn"
+          href="https://notebooklm.google.com/notebook/0db8fbab-3745-4c52-a5c4-0ba4407d53fa/artifact/8340dd22-8ddc-4c42-8636-5e4d8eb7e1ff?utm_source=nlm_web_share&utm_medium=google_oo&utm_campaign=art_share_2&utm_content=&utm_smc=nlm_web_share_google_oo_art_share_2_"
+          target="_blank" rel="noopener" title="開啟 NotebookLM 語音播放"
+          onclick="document.getElementById('audio-disc').classList.toggle('playing')">
+          ▶
+        </a>
+        <div class="audio-note">
+          點擊 ▶ 在新分頁開啟語音播放器<br>
+          · 適合學生課前預習 / 通勤聆聽<br>
+          · AI 雙人對話 Podcast 風格
+        </div>
+      </div>
+    </div>
+
+    <!-- 📊 INFOGRAPHIC PANE -->
+    <div class="rp-pane" id="rp2">
+      <div class="rp-info-label">📊 走進博物館：探索臺灣與世界的文化寶庫</div>
+      <div class="rp-info-wrap">
+        <img src="./CH4_1_%E8%B3%87%E8%A8%8A%E5%9C%96%E8%A1%A8.png"
+          class="info-thumb" onclick="openLB(this.src,'📊 資訊圖表 · 走進博物館：探索臺灣與世界的文化寶庫')" title="點擊放大瀏覽">
+        <div class="zoom-hint">🔍 點擊圖表放大瀏覽</div>
+      </div>
+    </div>
+
+  </div><!-- .rp-body -->
+</div><!-- .rp -->
+
+</div><!-- .main -->
+
+<script>
+// ══ LIGHTBOX ══
+let _lbScale = 1;
+function openLB(src, title){
+  if(src){ document.getElementById('lb-img').src = src; }
+  if(title){ document.getElementById('lb-title').textContent = title; }
+  _lbScale = 1;
+  _applyLBScale();
+  document.getElementById('lb').classList.add('on');
+  document.getElementById('lb-scroll').scrollTop = 0;
+}
+function closeLB(){
+  document.getElementById('lb').classList.remove('on');
+}
+function lbBgClose(e){
+  if(e.target === document.getElementById('lb') ||
+     e.target === document.getElementById('lb-scroll')) closeLB();
+}
+function lbZoom(delta){
+  _lbScale = Math.min(4, Math.max(0.25, _lbScale + delta));
+  _applyLBScale();
+}
+function lbFit(){
+  const scroll = document.getElementById('lb-scroll');
+  const img = document.getElementById('lb-img');
+  const nat = img.naturalWidth;
+  if(!nat){ _lbScale = 1; _applyLBScale(); return; }
+  // clientWidth may be 0 if lb just opened; fall back to window width minus panel
+  const avail = (scroll.clientWidth || window.innerWidth) - 32;
+  _lbScale = Math.round(Math.min(1, avail / nat) * 100) / 100 || 1;
+  _applyLBScale();
+}
+function _applyLBScale(){
+  const img = document.getElementById('lb-img');
+  const nat = img.naturalWidth;
+  if(nat){
+    img.style.width = Math.round(nat * _lbScale) + 'px';
+    img.style.height = 'auto';
+  }
+  document.getElementById('lb-scale').textContent =
+    Math.round(_lbScale * 100) + '%';
+}
+// ESC key to close lightbox
+document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape') closeLB();
+});
+
+// ── SLIDE DATA ──
+const SLIDES=[
+  ['./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC01%E9%A0%81.png','./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC02%E9%A0%81.png'],
+  ['./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC03%E9%A0%81.png','./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC04%E9%A0%81.png'],
+  ['./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC05%E9%A0%81.png','./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC06%E9%A0%81.png'],
+  ['./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC07%E9%A0%81.png'],
+  ['./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC08%E9%A0%81.png','./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC09%E9%A0%81.png'],
+  ['./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC10%E9%A0%81.png','./CH4_1_%E7%B0%A1%E5%A0%B1_%E7%AC%AC11%E9%A0%81.png'],
+];
+const ci=[0,0,0,0,0,0];
+
+// ── QUIZ DATA ──
+const QD=[
+  {qs:[
+    {q:'博物館被比喻為什麼？',o:['文化時光機','文化倉庫','文化百貨','文化垃圾桶'],a:0,h:'博物館讓我們穿越時空，認識先民的智慧！'},
+    {q:'文化是什麼？',o:['人類生活方式的展現','只有藝術作品','只有古代文物','只有語言'],a:0,h:'文化包含人類所有的生活方式，非常廣泛！'},
+    {q:'博物館最主要的功能是？',o:['保存與展示文物','販售紀念品','舉辦演唱會','提供餐飲'],a:0,h:'博物館最重要的任務是保存人類文化遺產！'},
+  ]},
+  {qs:[
+    {q:'國立臺灣博物館成立於哪一年？',o:['西元1908年','西元1949年','西元1895年','西元2000年'],a:0,h:'1908年，日治時期建立，是臺灣現存最悠久的博物館！'},
+    {q:'臺灣博物館的建築風格是？',o:['歐洲古典大宅','中式傳統宮殿','日本和風','現代玻璃帷幕'],a:0,h:'有美麗的半球形圓頂，是歐洲古典大宅風格！'},
+    {q:'《臺灣番社圖》記錄了哪個族群？',o:['平埔族群','排灣族','阿美族','漢人移民'],a:0,h:'由清代畫家徐澐繪製，記錄了平埔族群的日常生活！'},
+  ]},
+  {qs:[
+    {q:'國立故宮博物院在哪一年遷臺？',o:['西元1949年','西元1908年','西元1895年','西元1960年'],a:0,h:'1949年隨中華民國政府遷臺，原址為北京紫禁城！'},
+    {q:'故宮博物院典藏總數約多少件？',o:['近70萬件','7萬件','700萬件','7千件'],a:0,h:'故宮近70萬件，涵蓋器物、書畫、圖書文獻！'},
+    {q:'《清明上河圖》展現了什麼？',o:['古代城市繁華生活','平埔族群日常','自然史標本','西洋藝術風格'],a:0,h:'展現古代城市繁華密碼，有市集、人物、商業！'},
+  ]},
+  {qs:[]},
+  {qs:[
+    {q:'「在家就能線上參觀」是哪種博物館？',o:['數位博物館','地方文化館','美術館','歷史博物館'],a:0,h:'數位博物館利用網路，打破空間限制！'},
+    {q:'語音導覽的特色是？',o:['按個人步調聆聽介紹','專業人員帶領','VR環境展覽','在地信仰保存'],a:0,h:'語音導覽可以租借機器或用手機，自行控制節奏！'},
+    {q:'地方文化館的主要目的是？',o:['帶動地方創生，保存在地文化','展覽世界名畫','收藏70萬件文物','提供VR體驗'],a:0,h:'地方文化館根植在地，強調在地深耕！'},
+  ]},
+  {qs:[
+    {q:'文化橋樑「向後看」代表什麼？',o:['傳承，保存文化','認同，強化自信','連結，國際交流','創新，開發產品'],a:0,h:'向後看-傳承，向內看-認同，向外看-連結！'},
+    {q:'博物館如何讓臺灣與世界對話？',o:['交換文物與主題特展','只展示臺灣本地文物','關閉博物館保護文物','只讓外國人參觀'],a:0,h:'透過跨國館際合作，引進世界文化！'},
+    {q:'欣賞世界文化多樣性體現什麼精神？',o:['相互尊重的民主精神','競爭排斥的精神','文化優越感','文化隔閡'],a:0,h:'博物館教我們欣賞並尊重世界文化的多樣性！'},
+  ]},
+];
+const QS=QD.map(()=>({i:0,sc:0,done:false}));
+
+// ── TABS ──
+function sw(n){
+  document.querySelectorAll('.sec').forEach((e,i)=>e.classList.toggle('on',i===n));
+  document.querySelectorAll('.tab').forEach((e,i)=>e.classList.toggle('on',i===n));
+}
+
+// ── CAROUSEL ──
+function initCars(){
+  SLIDES.forEach((sl,si)=>{
+    const dd=document.getElementById('cd'+si);if(!dd)return;
+    dd.innerHTML='';
+    sl.forEach((_,i)=>{
+      const d=document.createElement('button');
+      d.className='cdot'+(i===0?' on':'');
+      d.onclick=()=>go(si,i);
+      dd.appendChild(d);
+    });
+  });
+}
+function go(si,idx){
+  ci[si]=idx;
+  const img=document.getElementById('ci'+si);if(!img)return;
+  img.src=SLIDES[si][idx];
+  document.getElementById('cd'+si).querySelectorAll('.cdot')
+    .forEach((d,i)=>d.classList.toggle('on',i===idx));
+}
+function nx(si){go(si,(ci[si]+1)%SLIDES[si].length)}
+function pv(si){go(si,(ci[si]-1+SLIDES[si].length)%SLIDES[si].length)}
+
+// keyboard arrows
+document.addEventListener('keydown',e=>{
+  const on=[...document.querySelectorAll('.sec')].findIndex(s=>s.classList.contains('on'));
+  if(on<0)return;
+  if(e.key==='ArrowRight')nx(on);
+  if(e.key==='ArrowLeft')pv(on);
+});
+
+// ── RIGHT PANEL TABS ──
+function swRP(n){
+  document.querySelectorAll('.rp-pane').forEach((p,i)=>p.classList.toggle('on',i===n));
+  document.querySelectorAll('.rp-tab').forEach((t,i)=>t.classList.toggle('on',i===n));
+}
+
+// ── TOOL POPUPS ──
+let activePop='';
+function togPop(name){
+  const pop=document.getElementById('pop-'+name);
+  const same=activePop===name;
+  document.querySelectorAll('.rp-tool-pop').forEach(p=>p.classList.remove('show'));
+  document.querySelectorAll('.rtbtn').forEach(b=>b.classList.remove('on'));
+  if(same){activePop='';}
+  else{
+    pop.classList.add('show');
+    document.getElementById('rtbtn-'+name).classList.add('on');
+    activePop=name;
+  }
+}
+function closePop(name){
+  document.getElementById('pop-'+name).classList.remove('show');
+  document.getElementById('rtbtn-'+name).classList.remove('on');
+  activePop='';
+}
+
+// ── QUIZ ──
+function initQ(){
+  QD.forEach((qd,si)=>{
+    const el=document.getElementById('q'+si);
+    if(!el||!qd.qs.length)return;
+    renderQ(si);
+  });
+}
+function renderQ(si){
+  const el=document.getElementById('q'+si);if(!el)return;
+  const qd=QD[si];const st=QS[si];
+  if(st.done||st.i>=qd.qs.length){
+    el.innerHTML=`<div class="qscore">🎉 完成！${st.sc}/${qd.qs.length} 題答對</div>
+      <button class="qreset" onclick="rstQ(${si})">↺ 再挑戰</button>`;return;
+  }
+  const q=qd.qs[st.i];
+  el.innerHTML=`<div class="qnum">第 ${st.i+1} / ${qd.qs.length} 題</div>
+    <div class="qq">${q.q}</div>
+    <div class="qopts">${q.o.map((o,i)=>`<button class="qopt" onclick="ansQ(${si},${i})">${o}</button>`).join('')}</div>
+    <div class="qfb" id="qf${si}"></div>
+    <button class="qnext" id="qn${si}" onclick="nxtQ(${si})">下一題 ▶</button>`;
+}
+function ansQ(si,ch){
+  const q=QD[si].qs[QS[si].i];
+  document.querySelectorAll(`#q${si} .qopt`).forEach(o=>o.style.pointerEvents='none');
+  document.querySelectorAll(`#q${si} .qopt`)[ch].classList.add(ch===q.a?'ok':'ng');
+  if(ch!==q.a)document.querySelectorAll(`#q${si} .qopt`)[q.a].classList.add('show-ans');
+  if(ch===q.a)QS[si].sc++;
+  const fb=document.getElementById('qf'+si);
+  fb.textContent=(ch===q.a?'✅ 答對！':'❌ 再想想！')+q.h;
+  fb.className='qfb show '+(ch===q.a?'ok':'ng');
+  const nb=document.getElementById('qn'+si);if(nb)nb.classList.add('show');
+}
+function nxtQ(si){QS[si].i++;if(QS[si].i>=QD[si].qs.length)QS[si].done=true;renderQ(si)}
+function rstQ(si){QS[si]={i:0,sc:0,done:false};renderQ(si)}
+
+// ── MATCH ──
+function cm(idx,sel,ans){
+  document.getElementById('m'+idx).textContent=sel.value===''?'❓':(sel.value===ans?'✅':'❌');
+}
+
+// ── MODE ──
+function setMode(m){
+  document.body.className=m;
+  document.querySelectorAll('.mbtn').forEach(b=>b.classList.toggle('on',
+    b.textContent.includes(m==='teacher'?'教師':'學生')));
+}
+
+// ── LOTTERY ──
+let lotAnim=false;
+function draw(){
+  if(lotAnim)return;
+  const names=document.getElementById('lot-in').value.split('\n').filter(n=>n.trim());
+  if(!names.length)return;
+  const res=document.getElementById('lot-res');
+  lotAnim=true;let c=0;
+  const iv=setInterval(()=>{
+    res.textContent=names[Math.floor(Math.random()*names.length)].trim();
+    if(++c>18){clearInterval(iv);lotAnim=false;
+      res.textContent='🎉 '+names[Math.floor(Math.random()*names.length)].trim()+'!';}
+  },70);
+}
+
+// ── TIMER ──
+let tsec=300,tiv=null,trun=false;
+function ud(){
+  const m=Math.floor(tsec/60).toString().padStart(2,'0');
+  const s=(tsec%60).toString().padStart(2,'0');
+  const el=document.getElementById('td');
+  el.textContent=m+':'+s;
+  el.style.color=tsec<=10?'var(--R)':tsec<=30?'var(--O)':'var(--B)';
+}
+function st(s){tsec=s;ud();if(tiv){clearInterval(tiv);tiv=null;trun=false;}}
+function startT(){
+  if(trun)return;trun=true;
+  tiv=setInterval(()=>{
+    tsec--;ud();
+    if(tsec<=0){
+      clearInterval(tiv);trun=false;
+      document.getElementById('td').textContent='⏰ 時間到！';
+      let f=0;const fl=setInterval(()=>{
+        document.getElementById('td').style.opacity=f++%2?'1':'.2';
+        if(f>12){clearInterval(fl);document.getElementById('td').style.opacity='1';}
+      },300);
+    }
+  },1000);
+}
+function pauseT(){if(tiv){clearInterval(tiv);tiv=null;trun=false;}}
+function resetT(){pauseT();ud();}
+
+// ── DRAW ──
+const cvs=document.getElementById('cvs');
+const ctx2=cvs.getContext('2d');
+let drawing=false,drawOn=false,dc_='#f0ece2',lx=0,ly=0;
+function resizeCvs(){cvs.width=innerWidth;cvs.height=innerHeight;}
+window.addEventListener('resize',resizeCvs);resizeCvs();
+function toggleDraw(){
+  drawOn=!drawOn;
+  cvs.classList.toggle('on',drawOn);
+  document.getElementById('rtbtn-drw').classList.toggle('on',drawOn);
+}
+function dc(c,el){dc_=c;document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('on'));el.classList.add('on');}
+function clr(){ctx2.clearRect(0,0,cvs.width,cvs.height);}
+cvs.addEventListener('mousedown',e=>{if(!drawOn)return;drawing=true;[lx,ly]=[e.clientX,e.clientY];});
+cvs.addEventListener('mousemove',e=>{
+  if(!drawing||!drawOn)return;
+  ctx2.beginPath();ctx2.moveTo(lx,ly);ctx2.lineTo(e.clientX,e.clientY);
+  ctx2.strokeStyle=dc_;ctx2.lineWidth=document.getElementById('bs').value;
+  ctx2.lineCap='round';ctx2.lineJoin='round';ctx2.stroke();
+  [lx,ly]=[e.clientX,e.clientY];
+});
+cvs.addEventListener('mouseup',()=>drawing=false);
+cvs.addEventListener('mouseleave',()=>drawing=false);
+cvs.addEventListener('touchstart',e=>{if(!drawOn)return;e.preventDefault();
+  const t=e.touches[0];drawing=true;[lx,ly]=[t.clientX,t.clientY];},{passive:false});
+cvs.addEventListener('touchmove',e=>{
+  if(!drawing||!drawOn)return;e.preventDefault();
+  const t=e.touches[0];
+  ctx2.beginPath();ctx2.moveTo(lx,ly);ctx2.lineTo(t.clientX,t.clientY);
+  ctx2.strokeStyle=dc_;ctx2.lineWidth=document.getElementById('bs').value;
+  ctx2.lineCap='round';ctx2.lineJoin='round';ctx2.stroke();
+  [lx,ly]=[t.clientX,t.clientY];},{passive:false});
+cvs.addEventListener('touchend',()=>drawing=false);
+
+// ── INIT ──
+initCars();
+initQ();
+</script>
+</body>
+</html>

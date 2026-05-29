@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>教學駕駛艙集合 · Teaching Cockpits</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#162b18;--board:#1d3a1f;--board2:#254a28;--dim:#0e1e10;
+  --chalk:#f0ece2;--faint:#9aaa9c;
+  --Y:#f5d050;--O:#e87040;--B:#5bb3e0;--G:#5dcc78;--P:#b388ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;font-family:'Noto Sans TC',sans-serif;
+  background:var(--bg);color:var(--chalk)}
+header{background:var(--dim);border-bottom:2px solid #2e4e30;
+  padding:28px 40px 24px;text-align:center}
+.site-title{font-family:'Caveat',cursive;font-size:2.4rem;color:var(--Y);
+  text-shadow:0 0 20px rgba(245,208,80,.3);margin-bottom:6px}
+.site-sub{font-size:.85rem;color:var(--faint);letter-spacing:.05em}
+.container{max-width:960px;margin:0 auto;padding:32px 20px}
+.section-label{font-family:'Caveat',cursive;font-size:1.4rem;color:var(--faint);
+  margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #2e4e30;
+  display:flex;align-items:center;gap:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;
+  margin-bottom:40px}
+.cockpit-card{background:var(--board);border:1px solid #3a5c3d;border-radius:10px;
+  padding:20px;display:flex;flex-direction:column;gap:10px;
+  transition:border-color .2s,transform .15s,box-shadow .2s;text-decoration:none;color:inherit}
+.cockpit-card:hover{border-color:var(--Y);transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.card-tag{font-size:.68rem;background:#1a3320;border:1px solid #3a5c3d;
+  border-radius:12px;padding:2px 10px;color:var(--faint);display:inline-block;
+  width:fit-content}
+.card-title{font-family:'Caveat',cursive;font-size:1.3rem;color:var(--Y);
+  line-height:1.3}
+.card-desc{font-size:.8rem;color:var(--faint);line-height:1.6}
+.card-badge{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.badge{font-size:.65rem;background:#254a28;border-radius:10px;
+  padding:2px 8px;color:var(--chalk)}
+.card-footer{font-size:.72rem;color:var(--B);margin-top:auto;
+  display:flex;align-items:center;gap:4px}
+footer{background:var(--dim);border-top:1px solid #2e4e30;
+  text-align:center;padding:20px;font-size:.75rem;color:var(--faint)}
+footer a{color:var(--B);text-decoration:none}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--dim)}
+::-webkit-scrollbar-thumb{background:#3a5c3d;border-radius:2px}
+</style>
+</head>
+<body>
+<header>
+  <div class="site-title">🎓 教學駕駛艙集合</div>
+  <div class="site-sub">Teaching Cockpits · 互動式單頁教學網頁 · GitHub Pages</div>
+</header>
+
+<div class="container">
+
+  <!-- 社會科 -->
+  <div class="section-label">📚 社會科</div>
+  <div class="grid">
+
+    <a class="cockpit-card" href="./社會/CH4_1/教學駕駛艙_CH4_1.html">
+      <span class="card-tag">國小五年級 · 社會</span>
+      <div class="card-title">從臺灣探索世界文化<br>CH4_1 走進博物館</div>
+      <div class="card-desc">博物館的功能與文化意義、臺灣與世界各地的博物館特色</div>
+      <div class="card-badge">
+        <span class="badge">🖼 簡報輪播</span>
+        <span class="badge">🎬 影片</span>
+        <span class="badge">🔊 語音</span>
+        <span class="badge">📊 圖表</span>
+        <span class="badge">✏️ 評量</span>
+      </div>
+      <div class="card-footer">▶ 開啟教學駕駛艙</div>
+    </a>
+
+    <!-- 未來的社會科駕駛艙會加在這裡 -->
+
+  </div>
+
+  <!-- 未來的科目區塊 -->
+  <!-- 範例：
+  <div class="section-label">🔢 數學科</div>
+  <div class="grid">
+    ...
+  </div>
+  -->
+
+</div>
+
+<footer>
+  <p>本頁面由 <strong style="color:var(--Y)">AI 教學駕駛艙系統</strong> 自動生成 ·
+    部署於 <a href="https://pages.github.com/">GitHub Pages</a></p>
+  <p style="margin-top:6px">
+    <a href="https://github.com/truda0124/teaching-cockpits">📁 查看原始碼</a>
+  </p>
+</footer>
+</body>
+</html>
