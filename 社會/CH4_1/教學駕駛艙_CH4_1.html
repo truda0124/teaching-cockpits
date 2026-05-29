@@ -388,8 +388,8 @@ body.student .t-hint{display:none}
 <!-- HEADER -->
 <header>
   <div>
-    <div class="logo">🎓 教學駕駛艙</div>
-    <div class="sub">從臺灣探索世界文化 · CH4_1 · 國小社會 五年級下</div>
+    <div class="logo" id="site-title">🎓 教學駕駛艙</div>
+    <div class="sub" id="site-sub">從臺灣探索世界文化 · CH4_1 · 國小社會 五年級下</div>
   </div>
   <div class="sp"></div>
   <div class="mode-wrap">
@@ -999,6 +999,15 @@ function setMode(m){
   document.body.className=m;
   document.querySelectorAll('.mbtn').forEach(b=>b.classList.toggle('on',
     b.textContent.includes(m==='teacher'?'教師':'學生')));
+  const title=document.getElementById('site-title');
+  const sub=document.getElementById('site-sub');
+  if(m==='student'){
+    title.textContent='🚀 Andrew學習導航艙';
+    sub.textContent='從臺灣探索世界文化 · CH4_1 · 歡迎來到你的學習空間！';
+  } else {
+    title.textContent='🎓 教學駕駛艙';
+    sub.textContent='從臺灣探索世界文化 · CH4_1 · 國小社會 五年級下';
+  }
 }
 
 // ── LOTTERY ──
