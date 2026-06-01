@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>重點2：布農族三大祭典 - 配對題</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans TC', Arial, sans-serif;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px 24px;
+      max-width: 580px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .badge { background: #f5576c; color: #fff; border-radius: 30px; padding: 4px 14px; font-size: 13px; display: inline-block; margin-bottom: 10px; }
+    h1 { font-size: 22px; color: #2d2d2d; margin-bottom: 6px; }
+    .rule { font-size: 14px; color: #888; margin-bottom: 20px; }
+    .score-row { display: flex; justify-content: space-between; font-size: 14px; color: #666; margin-bottom: 18px; }
+    .match-area { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .col-label { font-size: 13px; font-weight: 700; color: #888; text-align: center; margin-bottom: 4px; }
+    .item {
+      background: #f8f0ff;
+      border: 2px solid #e0c0ff;
+      border-radius: 12px;
+      padding: 12px 10px;
+      font-size: 15px;
+      cursor: pointer;
+      text-align: center;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      line-height: 1.4;
+    }
+    .item.desc {
+      background: #fff0f5;
+      border-color: #ffb3c6;
+      font-size: 13px;
+    }
+    .item.selected { border-color: #f5576c; background: #ffe0e8; box-shadow: 0 0 0 3px rgba(245,87,108,0.3); }
+    .item.matched { background: #e6f9f0; border-color: #2ecc71; color: #1a7a45; cursor: default; }
+    .item.wrong-flash { border-color: #e74c3c; background: #fde8e8; animation: shake 0.3s; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+    .feedback { margin-top: 14px; padding: 12px 16px; border-radius: 12px; font-size: 15px; display: none; }
+    .feedback.show { display: block; }
+    .feedback.correct { background: #e6f9f0; color: #1a7a45; }
+    .feedback.wrong { background: #fde8e8; color: #8b1a1a; }
+    .result-box { text-align: center; padding: 20px 0; display: none; }
+    .result-box h2 { font-size: 26px; margin-bottom: 10px; }
+    .result-score { font-size: 48px; font-weight: 800; color: #f5576c; }
+    .result-sub { color: #888; margin: 8px 0 20px; }
+    .replay-btn { padding: 14px 40px; background: linear-gradient(90deg, #f093fb, #f5576c); color: #fff; border: none; border-radius: 12px; font-size: 16px; cursor: pointer; }
+    .qr-section { text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid #eee; font-size: 12px; color: #aaa; }
+    .progress-bar { background: #eee; border-radius: 10px; height: 8px; margin-bottom: 16px; overflow: hidden; }
+    .progress-fill { background: linear-gradient(90deg, #f093fb, #f5576c); height: 100%; border-radius: 10px; transition: width 0.4s; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="badge">重點 2／6</div>
+  <h1>布農族木刻畫曆與三大祭典</h1>
+  <p class="rule">點選左欄的「祭典名稱」，再點選右欄對應的「說明」完成配對。</p>
+  <div class="progress-bar"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
+  <div class="score-row">
+    <span>已配對：<strong id="matched-count">0</strong> / 5 組</span>
+    <span>錯誤：<strong id="wrong-count">0</strong> 次</span>
+  </div>
+  <div class="match-area">
+    <div>
+      <div class="col-label">祭典 / 概念</div>
+      <div id="left-col"></div>
+    </div>
+    <div>
+      <div class="col-label">說明</div>
+      <div id="right-col"></div>
+    </div>
+  </div>
+  <div class="feedback" id="feedback"></div>
+  <div class="result-box" id="result-box">
+    <h2>🎊 全部配對完成！</h2>
+    <div class="result-score" id="final-score"></div>
+    <div class="result-sub">錯誤次數</div>
+    <button class="replay-btn" onclick="startGame()">再玩一次</button>
+  </div>
+  <div class="qr-section">
+    <img id="qr-img" width="100" height="100" alt="QR Code"><br>掃描開啟此遊戲
+  </div>
+</div>
+<script>
+const pairs = [
+  { left: "除草祭", right: "為祈求小米豐收，布農族進行除草並祈求粟禾成長旺盛的祭典。" },
+  { left: "射耳祭", right: "布農族最盛大的祭典，男子用弓箭射動物耳朵，象徵勇氣與責任。" },
+  { left: "豐收祭", right: "從收割小米前到收進倉庫儲藏的祭典，象徵對上天的感恩之意。" },
+  { left: "木刻畫曆", right: "布農族在木板上刻畫圖像或符號，呈現一年中重要的祭典與作息。" },
+  { left: "小米種植", right: "布農族傳統時間運作規律深受此影響，以此結合祭典計算一年週期。" }
+];
+
+let selectedLeft = null, selectedRight = null;
+let matchedCount = 0, wrongCount = 0;
+let leftItems = [], rightItems = [];
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function startGame() {
+  matchedCount = 0; wrongCount = 0;
+  selectedLeft = null; selectedRight = null;
+  document.getElementById('matched-count').textContent = '0';
+  document.getElementById('wrong-count').textContent = '0';
+  document.getElementById('pbar').style.width = '0%';
+  document.getElementById('result-box').style.display = 'none';
+  document.getElementById('feedback').className = 'feedback';
+
+  const shuffledLeft = shuffle(pairs.map((p,i) => ({...p, id: i})));
+  const shuffledRight = shuffle(pairs.map((p,i) => ({...p, id: i})));
+
+  leftItems = shuffledLeft;
+  rightItems = shuffledRight;
+
+  const lc = document.getElementById('left-col');
+  const rc = document.getElementById('right-col');
+  lc.innerHTML = ''; rc.innerHTML = '';
+
+  shuffledLeft.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.textContent = p.left;
+    div.dataset.id = p.id;
+    div.style.marginBottom = '10px';
+    div.onclick = () => selectLeft(div, p.id);
+    lc.appendChild(div);
+  });
+
+  shuffledRight.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'item desc';
+    div.textContent = p.right;
+    div.dataset.id = p.id;
+    div.style.marginBottom = '10px';
+    div.onclick = () => selectRight(div, p.id);
+    rc.appendChild(div);
+  });
+}
+
+function selectLeft(div, id) {
+  if (div.classList.contains('matched')) return;
+  document.querySelectorAll('#left-col .item').forEach(d => d.classList.remove('selected'));
+  div.classList.add('selected');
+  selectedLeft = { el: div, id };
+  tryMatch();
+}
+
+function selectRight(div, id) {
+  if (div.classList.contains('matched')) return;
+  document.querySelectorAll('#right-col .item').forEach(d => d.classList.remove('selected'));
+  div.classList.add('selected');
+  selectedRight = { el: div, id };
+  tryMatch();
+}
+
+function tryMatch() {
+  if (!selectedLeft || !selectedRight) return;
+  const fb = document.getElementById('feedback');
+  if (selectedLeft.id === selectedRight.id) {
+    selectedLeft.el.classList.remove('selected');
+    selectedLeft.el.classList.add('matched');
+    selectedRight.el.classList.remove('selected');
+    selectedRight.el.classList.add('matched');
+    matchedCount++;
+    document.getElementById('matched-count').textContent = matchedCount;
+    document.getElementById('pbar').style.width = (matchedCount / pairs.length * 100) + '%';
+    fb.textContent = '✅ 配對正確！';
+    fb.className = 'feedback correct show';
+    selectedLeft = null; selectedRight = null;
+    if (matchedCount === pairs.length) {
+      setTimeout(() => {
+        document.getElementById('result-box').style.display = 'block';
+        document.getElementById('final-score').textContent = wrongCount + ' 次';
+      }, 600);
+    }
+  } else {
+    wrongCount++;
+    document.getElementById('wrong-count').textContent = wrongCount;
+    fb.textContent = '❌ 不對喔！再想想看，重新選一次吧。';
+    fb.className = 'feedback wrong show';
+    const lEl = selectedLeft.el, rEl = selectedRight.el;
+    lEl.classList.add('wrong-flash'); rEl.classList.add('wrong-flash');
+    setTimeout(() => {
+      lEl.classList.remove('selected', 'wrong-flash');
+      rEl.classList.remove('selected', 'wrong-flash');
+    }, 600);
+    selectedLeft = null; selectedRight = null;
+  }
+}
+
+startGame();
+document.getElementById('qr-img').src =
+  'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=' +
+  encodeURIComponent(window.location.href);
+</script>
+</body>
+</html>
