@@ -10,65 +10,118 @@
   --bg:#162b18;--board:#1d3a1f;--board2:#254a28;--dim:#0e1e10;
   --chalk:#f0ece2;--faint:#9aaa9c;
   --Y:#f5d050;--O:#e87040;--B:#5bb3e0;--G:#5dcc78;--P:#b388ff;
-  --R:#f5576c;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{min-height:100%;font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--chalk)}
-header{background:var(--dim);border-bottom:2px solid #2e4e30;padding:24px 40px 20px;text-align:center}
-.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--B);
-  text-decoration:none;margin-bottom:12px;opacity:.8}
+
+/* ── HEADER ── */
+header{background:var(--dim);border-bottom:2px solid #2e4e30;padding:22px 32px 18px;text-align:center}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;color:var(--B);
+  text-decoration:none;margin-bottom:10px;opacity:.8;transition:opacity .15s}
 .back-btn:hover{opacity:1}
 .site-title{font-family:'Caveat',cursive;font-size:2rem;color:var(--Y);
   text-shadow:0 0 20px rgba(245,208,80,.3);margin-bottom:4px}
-.site-sub{font-size:.82rem;color:var(--faint);letter-spacing:.04em}
-.container{max-width:900px;margin:0 auto;padding:28px 20px 48px}
+.site-sub{font-size:.8rem;color:var(--faint);letter-spacing:.04em}
 
-/* Section labels */
+/* ── LAYOUT ── */
+.container{max-width:960px;margin:0 auto;padding:28px 18px 56px}
 .section-label{font-family:'Caveat',cursive;font-size:1.35rem;color:var(--faint);
-  margin:28px 0 14px;padding-bottom:8px;border-bottom:1px solid #2e4e30;
+  margin:32px 0 14px;padding-bottom:8px;border-bottom:1px solid #2e4e30;
   display:flex;align-items:center;gap:8px}
 
-/* ── MEDIA ── */
-.media-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:10px}
-@media(max-width:640px){.media-grid{grid-template-columns:1fr}}
-.media-card{background:var(--board);border:1px solid #3a5c3d;border-radius:12px;
-  overflow:hidden}
-.media-header{padding:12px 16px 8px;display:flex;align-items:center;gap:8px}
-.media-icon{font-size:1.3rem}
-.media-title{font-size:.85rem;font-weight:700;color:var(--Y);line-height:1.3}
-.media-sub{font-size:.72rem;color:var(--faint);margin-top:2px}
-.media-body{padding:0 12px 12px}
-video{width:100%;border-radius:8px;background:#000;display:block;max-height:220px}
-audio{width:100%;margin-top:4px;filter:invert(1) hue-rotate(100deg) brightness(.85)}
+/* ════════════════════════════
+   SLIDE CAROUSEL
+════════════════════════════ */
+.carousel-wrap{background:var(--board);border:1px solid #3a5c3d;border-radius:14px;
+  overflow:hidden;position:relative}
+.carousel-track{display:flex;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.carousel-slide{flex:0 0 100%;position:relative}
+.carousel-slide img{width:100%;display:block;border-radius:0;max-height:520px;
+  object-fit:contain;background:#0a160b}
+.carousel-slide .slide-caption{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(transparent,rgba(10,22,11,.85));
+  padding:18px 20px 14px;font-size:.78rem;color:var(--chalk);opacity:.9}
+/* nav buttons */
+.car-btn{position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(10,22,11,.7);border:1px solid #3a5c3d;color:var(--Y);
+  width:38px;height:38px;border-radius:50%;font-size:1.1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;z-index:10;line-height:1}
+.car-btn:hover{background:rgba(45,90,48,.85)}
+.car-prev{left:10px}.car-next{right:10px}
+/* dots */
+.car-dots{display:flex;justify-content:center;gap:6px;padding:10px 0 8px}
+.car-dot{width:7px;height:7px;border-radius:50%;background:#3a5c3d;
+  cursor:pointer;transition:background .2s}
+.car-dot.active{background:var(--Y)}
+/* controls bar */
+.car-controls{display:flex;align-items:center;justify-content:space-between;
+  padding:8px 16px;background:var(--dim);font-size:.75rem;color:var(--faint)}
+.car-counter{color:var(--Y)}
+.car-auto-btn{background:none;border:1px solid #3a5c3d;color:var(--chalk);
+  border-radius:20px;padding:3px 12px;font-size:.72rem;cursor:pointer;
+  transition:border-color .2s}
+.car-auto-btn:hover,.car-auto-btn.playing{border-color:var(--G);color:var(--G)}
 
-/* ── GAMES ── */
+/* ════════════════════════════
+   MEDIA (video + audio)
+════════════════════════════ */
+.media-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:620px){.media-grid{grid-template-columns:1fr}}
+.media-card{background:var(--board);border:1px solid #3a5c3d;border-radius:12px;overflow:hidden}
+.media-header{padding:13px 16px 8px;display:flex;align-items:flex-start;gap:10px}
+.media-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+.media-title{font-size:.85rem;font-weight:700;color:var(--Y);line-height:1.35}
+.media-sub{font-size:.7rem;color:var(--faint);margin-top:3px}
+.media-body{padding:0 14px 14px}
+video{width:100%;border-radius:8px;background:#000;display:block;max-height:210px}
+audio{width:100%;margin-top:2px;accent-color:var(--G)}
+.audio-note{font-size:.71rem;color:var(--faint);margin-top:8px;line-height:1.6}
+
+/* ════════════════════════════
+   INFOGRAPHIC
+════════════════════════════ */
+.infographic-wrap{background:var(--board);border:1px solid #3a5c3d;border-radius:12px;
+  overflow:hidden;text-align:center}
+.infographic-wrap img{width:100%;max-width:860px;display:block;margin:0 auto;
+  border-radius:0}
+.infographic-footer{padding:10px 16px;font-size:.72rem;color:var(--faint);
+  display:flex;align-items:center;justify-content:space-between}
+.infographic-footer a{color:var(--B);text-decoration:none;font-size:.72rem}
+
+/* ════════════════════════════
+   GAMES
+════════════════════════════ */
 .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
 .game-card{background:var(--board);border:1px solid #3a5c3d;border-radius:10px;
-  padding:18px;display:flex;flex-direction:column;gap:8px;
-  transition:border-color .2s,transform .15s,box-shadow .2s;text-decoration:none;color:inherit}
+  padding:17px;display:flex;flex-direction:column;gap:8px;
+  transition:border-color .2s,transform .15s,box-shadow .2s;
+  text-decoration:none;color:inherit}
 .game-card:hover{border-color:var(--Y);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
-.card-num{font-size:.68rem;background:#1a3320;border:1px solid #3a5c3d;
+.card-num{font-size:.67rem;background:#1a3320;border:1px solid #3a5c3d;
   border-radius:12px;padding:2px 10px;color:var(--faint);display:inline-block;width:fit-content}
 .card-title{font-family:'Caveat',cursive;font-size:1.2rem;color:var(--Y);line-height:1.3}
 .card-desc{font-size:.78rem;color:var(--faint);line-height:1.55}
-.card-type{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.card-type{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px}
 .type-badge{font-size:.63rem;background:#254a28;border-radius:10px;padding:2px 8px;color:var(--chalk)}
 .card-go{font-size:.72rem;color:var(--B);margin-top:auto;display:flex;align-items:center;gap:4px}
-
-/* color accents per game */
 .g1{border-left:3px solid #667eea}.g2{border-left:3px solid #f5576c}
 .g3{border-left:3px solid #2ecc71}.g4{border-left:3px solid #fa8231}
 .g5{border-left:3px solid #4facfe}.g6{border-left:3px solid #a18cd1}
 
-/* ── QR strip ── */
-.qr-strip{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px}
+/* ════════════════════════════
+   QR STRIP
+════════════════════════════ */
+.qr-strip{display:flex;flex-wrap:wrap;gap:14px;margin-top:8px}
 .qr-item{text-align:center;font-size:.65rem;color:var(--faint)}
-.qr-item img{display:block;border-radius:6px;margin-bottom:4px;
-  border:1px solid #3a5c3d}
+.qr-item img{display:block;border-radius:6px;margin-bottom:4px;border:1px solid #3a5c3d}
 
+/* FOOTER */
 footer{background:var(--dim);border-top:1px solid #2e4e30;
   text-align:center;padding:18px;font-size:.73rem;color:var(--faint)}
 footer a{color:var(--B);text-decoration:none}
+
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:var(--dim)}
 ::-webkit-scrollbar-thumb{background:#3a5c3d;border-radius:2px}
@@ -84,7 +137,21 @@ footer a{color:var(--B);text-decoration:none}
 
 <div class="container">
 
-  <!-- ── 影片 ── -->
+  <!-- ══════════════ 1. 簡報輪播 ══════════════ -->
+  <div class="section-label">🖼️ 教學簡報輪播</div>
+  <div class="carousel-wrap" id="carousel">
+    <div class="carousel-track" id="car-track"></div>
+    <button class="car-btn car-prev" onclick="carMove(-1)">‹</button>
+    <button class="car-btn car-next" onclick="carMove(1)">›</button>
+    <div class="car-dots" id="car-dots"></div>
+  </div>
+  <div class="car-controls">
+    <span class="car-counter" id="car-counter">1 / —</span>
+    <button class="car-auto-btn" id="car-auto-btn" onclick="toggleAuto()">▶ 自動播放</button>
+    <span style="font-size:.7rem">← → 鍵或點選切換</span>
+  </div>
+
+  <!-- ══════════════ 2. 影片 ══════════════ -->
   <div class="section-label">🎬 教學影片</div>
   <div class="media-grid">
     <div class="media-card">
@@ -92,7 +159,7 @@ footer a{color:var(--B);text-decoration:none}
         <span class="media-icon">🎬</span>
         <div>
           <div class="media-title">4-2 情緒雲霄飛車：臺灣的民主之路</div>
-          <div class="media-sub">NotebookLM · AI 生成教學影片</div>
+          <div class="media-sub">NotebookLM AI 生成教學影片</div>
         </div>
       </div>
       <div class="media-body">
@@ -103,113 +170,225 @@ footer a{color:var(--B);text-decoration:none}
       </div>
     </div>
 
-    <!-- 語音 -->
+    <!-- ══════════════ 3. 語音 ══════════════ -->
     <div class="media-card">
       <div class="media-header">
         <span class="media-icon">🔊</span>
         <div>
           <div class="media-title">4-2 二二八戒嚴與曆法必考重點</div>
-          <div class="media-sub">NotebookLM · AI 生成複習語音</div>
+          <div class="media-sub">NotebookLM AI 生成複習語音</div>
         </div>
       </div>
-      <div class="media-body" style="padding-top:16px">
+      <div class="media-body" style="padding-top:20px">
         <audio controls preload="metadata"
           src="https://lh3.googleusercontent.com/notebooklm/AKXwDQHaaf0y1Do7bSv4LOuFbrCEsj_wMLPoT6Gb8U-mXsIvGTa_r6U4Pz9l13pcU4QbY6KgxjGm_BzQbjI2zCwa818DEzYLn60-5AcKGXNJJrK2r1BA6sRgu0pHh861Zh-WcfQyejEL2_RY5yjVnZ7F9AfLUkMjEI4k0PqHRx1dUUwTjMzEWUc=m140-dv">
           您的瀏覽器不支援 HTML5 音訊。
         </audio>
-        <p style="font-size:.72rem;color:var(--faint);margin-top:10px;line-height:1.6">
-          🎙️ 補教名師風格複習語音，整理課程重點、是非題練習、關鍵字解析，適合課前暖身或課後複習。
-        </p>
+        <p class="audio-note">🎙️ 補教名師風格複習語音：課程重點整理、是非題練習、關鍵字解析。適合課前暖身或課後複習。</p>
       </div>
     </div>
   </div>
 
-  <!-- ── 形成性評量小遊戲 ── -->
+  <!-- ══════════════ 4. 資訊圖表 ══════════════ -->
+  <div class="section-label">📊 教學資訊圖表</div>
+  <div class="infographic-wrap">
+    <img src="slides/infographic.jpg"
+         onerror="this.src='https://lh3.googleusercontent.com/notebooklm/AKXwDQEHw5LvEinfrk1mg2baZO1B5-kKTAdEL-Ks9GKFAidxBC6szDFzvkR0db37PJmAqQ3PMWmnb0YKQpUCfXZ6O_csWOW7mi8b1S2GK5e-Op5-MdKZXprTlHNOuwUt0z2Dx3JF1wle1SRfh3d212rkuTo7qB-rOgs=w2752-d-h1536-mp2'"
+         alt="台灣族群與曆法演進 資訊圖表">
+    <div class="infographic-footer">
+      <span>📌 台灣族群與曆法演進 · NotebookLM AI 生成</span>
+      <a href="https://lh3.googleusercontent.com/notebooklm/AKXwDQEHw5LvEinfrk1mg2baZO1B5-kKTAdEL-Ks9GKFAidxBC6szDFzvkR0db37PJmAqQ3PMWmnb0YKQpUCfXZ6O_csWOW7mi8b1S2GK5e-Op5-MdKZXprTlHNOuwUt0z2Dx3JF1wle1SRfh3d212rkuTo7qB-rOgs=w2752-d-h1536-mp2" target="_blank">🔗 原圖連結</a>
+    </div>
+  </div>
+
+  <!-- ══════════════ 5. 形成性評量遊戲 ══════════════ -->
   <div class="section-label">🎮 形成性評量小遊戲</div>
   <div class="games-grid">
-
     <a class="game-card g1" href="game-01-calendar.html">
       <span class="card-num">重點 01</span>
       <div class="card-title">曆法的發展</div>
-      <div class="card-desc">早期人們如何找出時間規律？陽曆與陰曆的差異是什麼？</div>
-      <div class="card-type"><span class="type-badge">🔵 選擇題</span><span class="type-badge">5題</span></div>
+      <div class="card-desc">早期人們找出時間規律、陽曆與陰曆的差異。</div>
+      <div class="card-type"><span class="type-badge">🔵 選擇題</span><span class="type-badge">5 題</span></div>
       <div class="card-go">▶ 開始挑戰</div>
     </a>
-
     <a class="game-card g2" href="game-02-bunun.html">
       <span class="card-num">重點 02</span>
       <div class="card-title">布農族木刻畫曆與三大祭典</div>
-      <div class="card-desc">配對除草祭、射耳祭、豐收祭與木刻畫曆的功能意義。</div>
-      <div class="card-type"><span class="type-badge">🔴 配對題</span><span class="type-badge">5組</span></div>
+      <div class="card-desc">除草祭、射耳祭、豐收祭與木刻畫曆的功能。</div>
+      <div class="card-type"><span class="type-badge">🔴 配對題</span><span class="type-badge">5 組</span></div>
       <div class="card-go">▶ 開始挑戰</div>
     </a>
-
     <a class="game-card g3" href="game-03-almanac.html">
       <span class="card-num">重點 03</span>
       <div class="card-title">農民曆的內容與用途</div>
-      <div class="card-desc">農民曆的二十四節氣、忌宜與農業生活的關聯。</div>
-      <div class="card-type"><span class="type-badge">🟢 是非題</span><span class="type-badge">6題</span></div>
+      <div class="card-desc">二十四節氣、忌宜，農業與日常生活應用。</div>
+      <div class="card-type"><span class="type-badge">🟢 是非題</span><span class="type-badge">6 題</span></div>
       <div class="card-go">▶ 開始挑戰</div>
     </a>
-
     <a class="game-card g4" href="game-04-hanlife.html">
       <span class="card-num">重點 04</span>
       <div class="card-title">漢人農業社會的生活作息</div>
-      <div class="card-desc">日出而作、日入而息，打更制度與廟會文化。</div>
-      <div class="card-type"><span class="type-badge">🟠 填充題</span><span class="type-badge">5題</span></div>
+      <div class="card-desc">日出而作日入而息、打更制度與廟會文化。</div>
+      <div class="card-type"><span class="type-badge">🟠 填充題</span><span class="type-badge">5 題</span></div>
       <div class="card-go">▶ 開始挑戰</div>
     </a>
-
     <a class="game-card g5" href="game-05-moderntime.html">
       <span class="card-num">重點 05</span>
       <div class="card-title">現代標準時間的引進</div>
-      <div class="card-desc">日治時期如何引進標準時間？中華民國時期的延續與民國紀年。</div>
-      <div class="card-type"><span class="type-badge">🔵 選擇題</span><span class="type-badge">5題</span></div>
+      <div class="card-desc">日治時期引進標準時間、民國紀年的延續。</div>
+      <div class="card-type"><span class="type-badge">🔵 選擇題</span><span class="type-badge">5 題</span></div>
       <div class="card-go">▶ 開始挑戰</div>
     </a>
-
     <a class="game-card g6" href="game-06-diversity.html">
       <span class="card-num">重點 06</span>
       <div class="card-title">多元族群文化的保障</div>
-      <div class="card-desc">原住民放假3日、各宗教禮拜傳統、勞動節的意義。</div>
-      <div class="card-type"><span class="type-badge">🟣 配對題</span><span class="type-badge">5組</span></div>
+      <div class="card-desc">原住民放假3日、各宗教禮拜傳統、勞動節。</div>
+      <div class="card-type"><span class="type-badge">🟣 配對題</span><span class="type-badge">5 組</span></div>
       <div class="card-go">▶ 開始挑戰</div>
     </a>
-
   </div>
 
-  <!-- ── QR Codes ── -->
-  <div class="section-label">📲 掃碼直接開玩</div>
+  <!-- QR -->
+  <div class="section-label">📲 掃碼開玩</div>
   <div class="qr-strip" id="qr-strip"></div>
 
-</div>
+</div><!-- /container -->
 
 <footer>
   <p>本頁面由 <strong style="color:var(--Y)">AI 教學駕駛艙系統</strong> 自動生成 ·
     部署於 <a href="https://pages.github.com/">GitHub Pages</a></p>
-  <p style="margin-top:6px">
-    <a href="https://github.com/truda0124/teaching-cockpits">📁 查看原始碼</a>
-  </p>
+  <p style="margin-top:6px"><a href="https://github.com/truda0124/teaching-cockpits">📁 查看原始碼</a></p>
 </footer>
 
 <script>
-const games = [
-  {name:'曆法的發展', file:'game-01-calendar.html'},
-  {name:'布農族祭典', file:'game-02-bunun.html'},
-  {name:'農民曆知識', file:'game-03-almanac.html'},
-  {name:'漢人農業作息', file:'game-04-hanlife.html'},
-  {name:'現代標準時間', file:'game-05-moderntime.html'},
-  {name:'多元族群保障', file:'game-06-diversity.html'}
+/* ──────────────────── CAROUSEL ──────────────────── */
+const SLIDE_DIR  = 'slides/';
+const SLIDE_EXT  = '.jpg';
+const SLIDE_NAMES = [
+  '封面：各族群生活方式如何形成文化？',
+  '學習重點總覽',
+  '重點1：曆法的發展',
+  '重點2：布農族木刻畫曆',
+  '重點3：布農族三大祭典',
+  '重點4：農民曆的內容',
+  '重點5：漢人農業社會作息',
+  '重點6：現代標準時間',
+  '重點7：多元族群文化保障',
+  '傳統與現代的文化融合'
 ];
-const base = window.location.href.replace(/index\.html$/, '').replace(/\/$/, '/');
-const strip = document.getElementById('qr-strip');
-games.forEach(g => {
-  const url = base + g.file;
-  const div = document.createElement('div');
-  div.className = 'qr-item';
-  div.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(url)}" width="80" height="80" alt="${g.name}"><span>${g.name}</span>`;
-  strip.appendChild(div);
+
+let curIdx = 0, totalSlides = 0, autoTimer = null, isPlaying = false;
+
+function buildCarousel(count) {
+  totalSlides = count;
+  const track = document.getElementById('car-track');
+  const dots  = document.getElementById('car-dots');
+  track.innerHTML = ''; dots.innerHTML = '';
+
+  for (let i = 1; i <= count; i++) {
+    const slide = document.createElement('div');
+    slide.className = 'carousel-slide';
+    const img = document.createElement('img');
+    img.src = SLIDE_DIR + 'slide_' + String(i).padStart(2,'0') + SLIDE_EXT;
+    img.alt = 'Slide ' + i;
+    img.loading = 'lazy';
+    slide.appendChild(img);
+    if (SLIDE_NAMES[i-1]) {
+      const cap = document.createElement('div');
+      cap.className = 'slide-caption';
+      cap.textContent = SLIDE_NAMES[i-1];
+      slide.appendChild(cap);
+    }
+    track.appendChild(slide);
+
+    const dot = document.createElement('div');
+    dot.className = 'car-dot' + (i === 1 ? ' active' : '');
+    dot.onclick = () => goTo(i - 1);
+    dots.appendChild(dot);
+  }
+  updateCounter();
+}
+
+function goTo(idx) {
+  if (idx < 0) idx = totalSlides - 1;
+  if (idx >= totalSlides) idx = 0;
+  curIdx = idx;
+  document.getElementById('car-track').style.transform = `translateX(-${curIdx * 100}%)`;
+  document.querySelectorAll('.car-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === curIdx);
+  });
+  updateCounter();
+}
+
+function carMove(dir) { goTo(curIdx + dir); }
+
+function updateCounter() {
+  document.getElementById('car-counter').textContent =
+    totalSlides ? (curIdx + 1) + ' / ' + totalSlides : '尚無投影片';
+}
+
+function toggleAuto() {
+  const btn = document.getElementById('car-auto-btn');
+  if (isPlaying) {
+    clearInterval(autoTimer); isPlaying = false;
+    btn.textContent = '▶ 自動播放'; btn.classList.remove('playing');
+  } else {
+    isPlaying = true;
+    btn.textContent = '⏸ 暫停'; btn.classList.add('playing');
+    autoTimer = setInterval(() => carMove(1), 4000);
+  }
+}
+
+// keyboard nav
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') carMove(-1);
+  if (e.key === 'ArrowRight') carMove(1);
 });
+
+// Probe for available slides (1 to 20)
+async function probeSlides() {
+  let count = 0;
+  for (let i = 1; i <= 20; i++) {
+    try {
+      const r = await fetch(SLIDE_DIR + 'slide_' + String(i).padStart(2,'0') + SLIDE_EXT, {method:'HEAD'});
+      if (r.ok) count = i; else break;
+    } catch { break; }
+  }
+  if (count > 0) {
+    buildCarousel(count);
+  } else {
+    // Fallback: show infographic as single slide
+    document.getElementById('car-track').innerHTML =
+      `<div class="carousel-slide">
+         <img src="https://lh3.googleusercontent.com/notebooklm/AKXwDQEHw5LvEinfrk1mg2baZO1B5-kKTAdEL-Ks9GKFAidxBC6szDFzvkR0db37PJmAqQ3PMWmnb0YKQpUCfXZ6O_csWOW7mi8b1S2GK5e-Op5-MdKZXprTlHNOuwUt0z2Dx3JF1wle1SRfh3d212rkuTo7qB-rOgs=w2752-d-h1536-mp2" alt="資訊圖表">
+         <div class="slide-caption">📌 台灣族群與曆法演進（簡報圖片上傳後將自動顯示）</div>
+       </div>`;
+    totalSlides = 1;
+    updateCounter();
+    document.getElementById('car-dots').innerHTML =
+      '<div class="car-dot active"></div>';
+  }
+}
+
+probeSlides();
+
+/* ──────────────────── QR CODES ──────────────────── */
+const games = [
+  {name:'曆法的發展',    file:'game-01-calendar.html'},
+  {name:'布農族祭典',    file:'game-02-bunun.html'},
+  {name:'農民曆知識',    file:'game-03-almanac.html'},
+  {name:'漢人農業作息',  file:'game-04-hanlife.html'},
+  {name:'現代標準時間',  file:'game-05-moderntime.html'},
+  {name:'多元族群保障',  file:'game-06-diversity.html'}
+];
+const base = window.location.href.replace(/index\.html$/, '').replace(/([^/])$/, '$1/');
+document.getElementById('qr-strip').innerHTML = games.map(g =>
+  `<div class="qr-item">
+     <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(base+g.file)}"
+          width="80" height="80" alt="${g.name}">
+     <span>${g.name}</span>
+   </div>`
+).join('');
 </script>
 </body>
 </html>
