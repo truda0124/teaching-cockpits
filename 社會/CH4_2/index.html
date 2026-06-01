@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>教學駕駛艙 ─ 五下社會 第四單元第二課</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans TC', Arial, sans-serif;
+      background: #f0f2f8;
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .header .unit-tag {
+      display: inline-block;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      color: #fff;
+      border-radius: 30px;
+      padding: 6px 20px;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+    .header h1 {
+      font-size: 26px;
+      color: #2d2d2d;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+    .header p {
+      font-size: 14px;
+      color: #888;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .game-card {
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .game-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,0.14); }
+    .card-header {
+      padding: 20px 20px 16px;
+      position: relative;
+    }
+    .card-header .num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      opacity: 0.7;
+      margin-bottom: 6px;
+    }
+    .card-header h2 { font-size: 17px; color: #fff; line-height: 1.4; }
+    .card-header .type-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(255,255,255,0.25);
+      color: #fff;
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 12px;
+    }
+    .card-body { padding: 16px 20px 20px; }
+    .card-body p { font-size: 13px; color: #666; line-height: 1.6; margin-bottom: 14px; }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .play-btn {
+      flex: 1;
+      padding: 10px 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      transition: opacity 0.2s;
+    }
+    .play-btn:hover { opacity: 0.85; }
+    .qr-thumb { width: 64px; height: 64px; border-radius: 8px; flex-shrink: 0; }
+
+    /* Per-card gradients */
+    .c1 .card-header { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .c1 .play-btn   { background: linear-gradient(90deg, #667eea, #764ba2); }
+    .c2 .card-header { background: linear-gradient(135deg, #f093fb, #f5576c); }
+    .c2 .play-btn   { background: linear-gradient(90deg, #f093fb, #f5576c); }
+    .c3 .card-header { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+    .c3 .play-btn   { background: linear-gradient(90deg, #43e97b, #38f9d7); }
+    .c4 .card-header { background: linear-gradient(135deg, #fa8231, #f7b731); }
+    .c4 .play-btn   { background: linear-gradient(90deg, #fa8231, #f7b731); }
+    .c5 .card-header { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+    .c5 .play-btn   { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+    .c6 .card-header { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+    .c6 .play-btn   { background: linear-gradient(90deg, #a18cd1, #fbc2eb); }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 13px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="unit-tag">五下社會・第四單元</div>
+    <h1>各族群生活方式如何形成文化？</h1>
+    <p>6 個重點・6 款小遊戲・掃描 QR Code 即可開始</p>
+  </div>
+
+  <div class="grid">
+
+    <div class="game-card c1">
+      <div class="card-header">
+        <div class="num">重點 01</div>
+        <h2>曆法的發展</h2>
+        <span class="type-badge">選擇題</span>
+      </div>
+      <div class="card-body">
+        <p>了解早期人們如何找出時間規律、發展出曆法，以及陽曆、陰曆的差異。</p>
+        <div class="card-footer">
+          <a class="play-btn" href="game-01-calendar.html" target="_blank">▶ 開始挑戰</a>
+          <img class="qr-thumb" id="qr1" alt="QR">
+        </div>
+      </div>
+    </div>
+
+    <div class="game-card c2">
+      <div class="card-header">
+        <div class="num">重點 02</div>
+        <h2>布農族木刻畫曆與三大祭典</h2>
+        <span class="type-badge">配對題</span>
+      </div>
+      <div class="card-body">
+        <p>配對除草祭、射耳祭、豐收祭的意義，以及布農族木刻畫曆的功能。</p>
+        <div class="card-footer">
+          <a class="play-btn" href="game-02-bunun.html" target="_blank">▶ 開始挑戰</a>
+          <img class="qr-thumb" id="qr2" alt="QR">
+        </div>
+      </div>
+    </div>
+
+    <div class="game-card c3">
+      <div class="card-header">
+        <div class="num">重點 03</div>
+        <h2>農民曆的內容與用途</h2>
+        <span class="type-badge">是非題</span>
+      </div>
+      <div class="card-body">
+        <p>判斷農民曆相關敘述的正確性，澄清二十四節氣、忌宜等常見迷思。</p>
+        <div class="card-footer">
+          <a class="play-btn" href="game-03-almanac.html" target="_blank">▶ 開始挑戰</a>
+          <img class="qr-thumb" id="qr3" alt="QR">
+        </div>
+      </div>
+    </div>
+
+    <div class="game-card c4">
+      <div class="card-header">
+        <div class="num">重點 04</div>
+        <h2>漢人農業社會的生活作息</h2>
+        <span class="type-badge">填充題</span>
+      </div>
+      <div class="card-body">
+        <p>填入關鍵詞，了解「日出而作，日入而息」、打更制度與廟會文化。</p>
+        <div class="card-footer">
+          <a class="play-btn" href="game-04-hanlife.html" target="_blank">▶ 開始挑戰</a>
+          <img class="qr-thumb" id="qr4" alt="QR">
+        </div>
+      </div>
+    </div>
+
+    <div class="game-card c5">
+      <div class="card-header">
+        <div class="num">重點 05</div>
+        <h2>現代標準時間的引進</h2>
+        <span class="type-badge">選擇題</span>
+      </div>
+      <div class="card-body">
+        <p>了解日治時期引進標準時間制度的過程，以及中華民國時期的延續與發展。</p>
+        <div class="card-footer">
+          <a class="play-btn" href="game-05-moderntime.html" target="_blank">▶ 開始挑戰</a>
+          <img class="qr-thumb" id="qr5" alt="QR">
+        </div>
+      </div>
+    </div>
+
+    <div class="game-card c6">
+      <div class="card-header">
+        <div class="num">重點 06</div>
+        <h2>多元族群文化的保障</h2>
+        <span class="type-badge">配對題</span>
+      </div>
+      <div class="card-body">
+        <p>配對各族群的文化保障措施：原住民放假、各宗教禮拜日、勞動節。</p>
+        <div class="card-footer">
+          <a class="play-btn" href="game-06-diversity.html" target="_blank">▶ 開始挑戰</a>
+          <img class="qr-thumb" id="qr6" alt="QR">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-note">
+    翰林版・國小社會 5 下・第四單元第二課｜教學駕駛艙
+  </div>
+
+  <script>
+    const base = 'https://api.qrserver.com/v1/create-qr-code/?size=64x64&data=';
+    const origin = window.location.href.replace(/index\.html$/, '');
+    const files = [
+      'game-01-calendar.html',
+      'game-02-bunun.html',
+      'game-03-almanac.html',
+      'game-04-hanlife.html',
+      'game-05-moderntime.html',
+      'game-06-diversity.html'
+    ];
+    files.forEach((f, i) => {
+      const img = document.getElementById('qr' + (i+1));
+      if (img) img.src = base + encodeURIComponent(origin + f);
+    });
+  </script>
+</body>
+</html>
