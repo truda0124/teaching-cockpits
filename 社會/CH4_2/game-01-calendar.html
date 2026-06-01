@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>重點1：曆法的發展 - 選擇題</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans TC', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px 24px;
+      max-width: 540px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .badge {
+      background: #667eea;
+      color: #fff;
+      border-radius: 30px;
+      padding: 4px 14px;
+      font-size: 13px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    h1 { font-size: 22px; color: #2d2d2d; margin-bottom: 6px; }
+    .rule { font-size: 14px; color: #888; margin-bottom: 20px; }
+    .progress-bar {
+      background: #eee;
+      border-radius: 10px;
+      height: 8px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.4s;
+    }
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 14px;
+    }
+    .question-text {
+      font-size: 17px;
+      color: #2d2d2d;
+      margin-bottom: 18px;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option-btn {
+      background: #f8f8ff;
+      border: 2px solid #e0e0f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+      min-height: 52px;
+    }
+    .option-btn:hover:not(:disabled) {
+      border-color: #667eea;
+      background: #eef0ff;
+    }
+    .option-btn.correct {
+      background: #e6f9f0;
+      border-color: #2ecc71;
+      color: #1a7a45;
+    }
+    .option-btn.wrong {
+      background: #fde8e8;
+      border-color: #e74c3c;
+      color: #8b1a1a;
+    }
+    .feedback {
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      display: none;
+      line-height: 1.5;
+    }
+    .feedback.show { display: block; }
+    .feedback.correct { background: #e6f9f0; color: #1a7a45; }
+    .feedback.wrong { background: #fde8e8; color: #8b1a1a; }
+    .next-btn {
+      margin-top: 16px;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      display: none;
+    }
+    .next-btn.show { display: block; }
+    .result-box {
+      text-align: center;
+      padding: 20px 0;
+      display: none;
+    }
+    .result-box h2 { font-size: 26px; margin-bottom: 10px; }
+    .result-score { font-size: 48px; font-weight: 800; color: #667eea; }
+    .result-sub { color: #888; margin: 8px 0 20px; }
+    .replay-btn {
+      padding: 14px 40px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .qr-section {
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid #eee;
+      font-size: 12px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="badge">重點 1／6</div>
+  <h1>曆法的發展</h1>
+  <p class="rule">每題選一個正確答案，立即獲得回饋。</p>
+
+  <div class="progress-bar"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
+  <div class="score-row">
+    <span id="q-count">第 1 題／共 5 題</span>
+    <span>得分：<strong id="score">0</strong></span>
+  </div>
+
+  <div id="game-area">
+    <div class="question-text" id="q-text"></div>
+    <div class="options" id="opts"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQ()">下一題 →</button>
+  </div>
+
+  <div class="result-box" id="result-box">
+    <h2>🎉 完成！</h2>
+    <div class="result-score" id="final-score"></div>
+    <div class="result-sub" id="final-sub"></div>
+    <button class="replay-btn" onclick="startGame()">再玩一次</button>
+  </div>
+
+  <div class="qr-section">
+    <img id="qr-img" width="100" height="100" alt="QR Code"><br>掃描開啟此遊戲
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "早期人們利用各種方式找出時間運作的規律，發展出什麼？",
+    opts: ["星座", "曆法", "法律", "生肖"],
+    ans: 1,
+    exp: "早期人們發展出「曆法」，成為個人生活作息與群體共同遵守的社會規範。"
+  },
+  {
+    q: "以太陽為標準制定的曆法稱為什麼？",
+    opts: ["陰曆", "農民曆", "陽曆", "星曆"],
+    ans: 2,
+    exp: "以太陽為標準的曆法稱為「陽曆」；以月亮為標準的稱為「陰曆」。"
+  },
+  {
+    q: "布農族傳統時間的運作規律，深受什麼的影響？",
+    opts: ["水稻種植時程", "小米種植時程", "太陽月亮的位置", "政府的規定"],
+    ans: 1,
+    exp: "布農族傳統時間的運作規律，深受「小米種植時程」的影響。"
+  },
+  {
+    q: "布農族人將耕種過程與祭典結合，作為計算什麼的週期？",
+    opts: ["一個月", "一個季節", "一年", "五年"],
+    ans: 2,
+    exp: "布農族將小米耕種過程與祭典結合，作為計算「一年」的週期。"
+  },
+  {
+    q: "曆法在社會中具有什麼重要功能？",
+    opts: ["只是農民使用的工具", "成為群體共同遵守的社會規範", "只用來記錄歷史", "只用來預測天氣"],
+    ans: 1,
+    exp: "曆法成為個人的生活作息與「群體共同遵守的社會規範」，以及各具特色的習俗與文化。"
+  }
+];
+
+let idx = 0, score = 0, answered = false;
+
+function startGame() {
+  idx = 0; score = 0; answered = false;
+  document.getElementById('result-box').style.display = 'none';
+  document.getElementById('game-area').style.display = 'block';
+  renderQ();
+}
+
+function renderQ() {
+  answered = false;
+  const q = questions[idx];
+  document.getElementById('pbar').style.width = (idx / questions.length * 100) + '%';
+  document.getElementById('q-count').textContent = `第 ${idx+1} 題／共 ${questions.length} 題`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('next-btn').className = 'next-btn';
+
+  const opts = document.getElementById('opts');
+  opts.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = ['Ａ', 'Ｂ', 'Ｃ', 'Ｄ'][i] + '．' + o;
+    btn.onclick = () => answer(i, btn);
+    opts.appendChild(btn);
+  });
+}
+
+function answer(i, btn) {
+  if (answered) return;
+  answered = true;
+  const q = questions[idx];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+  const fb = document.getElementById('feedback');
+  if (i === q.ans) {
+    btn.classList.add('correct');
+    score++;
+    document.getElementById('score').textContent = score;
+    fb.textContent = '✅ 答對了！' + q.exp;
+    fb.className = 'feedback correct show';
+  } else {
+    btn.classList.add('wrong');
+    btns[q.ans].classList.add('correct');
+    fb.textContent = '❌ 答錯了！' + q.exp;
+    fb.className = 'feedback wrong show';
+  }
+  document.getElementById('next-btn').className = 'next-btn show';
+}
+
+function nextQ() {
+  idx++;
+  if (idx >= questions.length) {
+    document.getElementById('game-area').style.display = 'none';
+    const rb = document.getElementById('result-box');
+    rb.style.display = 'block';
+    document.getElementById('pbar').style.width = '100%';
+    document.getElementById('final-score').textContent = score + ' / ' + questions.length;
+    const msgs = ['繼續加油！', '不錯喔！', '很好！', '表現優秀！', '完美！滿分！'];
+    document.getElementById('final-sub').textContent = msgs[score] || msgs[msgs.length-1];
+  } else {
+    renderQ();
+  }
+}
+
+startGame();
+
+document.getElementById('qr-img').src =
+  'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=' +
+  encodeURIComponent(window.location.href);
+</script>
+</body>
+</html>
