@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>重點3：農民曆的知識 - 是非題</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans TC', Arial, sans-serif;
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px 24px;
+      max-width: 540px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .badge { background: #2ecc71; color: #fff; border-radius: 30px; padding: 4px 14px; font-size: 13px; display: inline-block; margin-bottom: 10px; }
+    h1 { font-size: 22px; color: #2d2d2d; margin-bottom: 6px; }
+    .rule { font-size: 14px; color: #888; margin-bottom: 20px; }
+    .progress-bar { background: #eee; border-radius: 10px; height: 8px; margin-bottom: 16px; overflow: hidden; }
+    .progress-fill { background: linear-gradient(90deg, #43e97b, #38f9d7); height: 100%; border-radius: 10px; transition: width 0.4s; }
+    .score-row { display: flex; justify-content: space-between; font-size: 14px; color: #666; margin-bottom: 20px; }
+    .question-text { font-size: 17px; color: #2d2d2d; margin-bottom: 24px; line-height: 1.7; font-weight: 600; background: #f0fff8; border-left: 4px solid #2ecc71; padding: 14px 16px; border-radius: 0 12px 12px 0; }
+    .tf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .tf-btn {
+      border: 2px solid #e0e0e0;
+      border-radius: 16px;
+      padding: 20px 10px;
+      font-size: 26px;
+      cursor: pointer;
+      text-align: center;
+      background: #fafafa;
+      transition: all 0.2s;
+    }
+    .tf-btn .label { font-size: 14px; display: block; margin-top: 4px; }
+    .tf-btn:hover:not(:disabled) { border-color: #2ecc71; background: #e6f9f0; }
+    .tf-btn.correct { background: #e6f9f0; border-color: #2ecc71; }
+    .tf-btn.wrong { background: #fde8e8; border-color: #e74c3c; }
+    .feedback { margin-top: 16px; padding: 12px 16px; border-radius: 12px; font-size: 15px; display: none; line-height: 1.5; }
+    .feedback.show { display: block; }
+    .feedback.correct { background: #e6f9f0; color: #1a7a45; }
+    .feedback.wrong { background: #fde8e8; color: #8b1a1a; }
+    .next-btn { margin-top: 16px; width: 100%; padding: 14px; background: linear-gradient(90deg, #43e97b, #38f9d7); color: #fff; border: none; border-radius: 12px; font-size: 16px; cursor: pointer; display: none; }
+    .next-btn.show { display: block; }
+    .result-box { text-align: center; padding: 20px 0; display: none; }
+    .result-box h2 { font-size: 26px; margin-bottom: 10px; }
+    .result-score { font-size: 48px; font-weight: 800; color: #2ecc71; }
+    .result-sub { color: #888; margin: 8px 0 20px; }
+    .replay-btn { padding: 14px 40px; background: linear-gradient(90deg, #43e97b, #38f9d7); color: #fff; border: none; border-radius: 12px; font-size: 16px; cursor: pointer; }
+    .qr-section { text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid #eee; font-size: 12px; color: #aaa; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="badge">重點 3／6</div>
+  <h1>農民曆的內容與用途</h1>
+  <p class="rule">判斷下列敘述是「○正確」還是「✕錯誤」。</p>
+  <div class="progress-bar"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
+  <div class="score-row">
+    <span id="q-count">第 1 題／共 6 題</span>
+    <span>得分：<strong id="score">0</strong></span>
+  </div>
+  <div id="game-area">
+    <div class="question-text" id="q-text"></div>
+    <div class="tf-row">
+      <button class="tf-btn" id="btn-true" onclick="answer(true)">○<span class="label">正確</span></button>
+      <button class="tf-btn" id="btn-false" onclick="answer(false)">✕<span class="label">錯誤</span></button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQ()">下一題 →</button>
+  </div>
+  <div class="result-box" id="result-box">
+    <h2>🌟 完成！</h2>
+    <div class="result-score" id="final-score"></div>
+    <div class="result-sub" id="final-sub"></div>
+    <button class="replay-btn" onclick="startGame()">再玩一次</button>
+  </div>
+  <div class="qr-section">
+    <img id="qr-img" width="100" height="100" alt="QR Code"><br>掃描開啟此遊戲
+  </div>
+</div>
+<script>
+const questions = [
+  { q: "農民曆結合太陽一年的運行與月亮每個月的陰晴圓缺，記錄季節與氣候的變化。", ans: true, exp: "正確！農民曆是陰陽合曆，同時參考太陽（陽曆）與月亮（陰曆）的運行規律。" },
+  { q: "農民曆中有三十六節氣，代表一年中各時期氣候的變化。", ans: false, exp: "錯誤！農民曆中有「二十四節氣」，不是三十六節氣，代表一年各時期的氣候變化。" },
+  { q: "農民曆只有農夫耕種時才會參考，一般人的婚喪喜慶不會用到。", ans: false, exp: "錯誤！漢人傳統節慶或決定婚喪喜慶的日子，都會參考農民曆，今日仍有許多人把農民曆當作日常生活的參考用書。" },
+  { q: "農民曆上的節氣旁，也會有相對應的習俗活動。例如清明是掃墓、祭拜祖先的日子。", ans: true, exp: "正確！農民曆節氣旁確實有對應的習俗活動，例如清明節掃墓祭祖。" },
+  { q: "農民曆可以根據臺灣各地區氣候，建議可種植的農作物。", ans: true, exp: "正確！農民曆會根據各地區氣候，推薦適合當季種植的農作物，例如西瓜等。" },
+  { q: "原住民族傳統節慶或決定婚喪喜慶的日子，都會參考農民曆。", ans: false, exp: "錯誤！農民曆是漢人文化的曆法。原住民族有自己的傳統時間制度，例如布農族以小米種植時程和木刻畫曆為依據。" }
+];
+
+let idx = 0, score = 0, answered = false;
+
+function startGame() {
+  idx = 0; score = 0; answered = false;
+  document.getElementById('result-box').style.display = 'none';
+  document.getElementById('game-area').style.display = 'block';
+  renderQ();
+}
+
+function renderQ() {
+  answered = false;
+  const q = questions[idx];
+  document.getElementById('pbar').style.width = (idx / questions.length * 100) + '%';
+  document.getElementById('q-count').textContent = `第 ${idx+1} 題／共 ${questions.length} 題`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('next-btn').className = 'next-btn';
+  document.getElementById('btn-true').className = 'tf-btn';
+  document.getElementById('btn-false').className = 'tf-btn';
+  document.getElementById('btn-true').disabled = false;
+  document.getElementById('btn-false').disabled = false;
+}
+
+function answer(val) {
+  if (answered) return;
+  answered = true;
+  const q = questions[idx];
+  document.getElementById('btn-true').disabled = true;
+  document.getElementById('btn-false').disabled = true;
+  const fb = document.getElementById('feedback');
+  if (val === q.ans) {
+    score++;
+    document.getElementById('score').textContent = score;
+    (val ? document.getElementById('btn-true') : document.getElementById('btn-false')).classList.add('correct');
+    fb.textContent = '✅ ' + q.exp;
+    fb.className = 'feedback correct show';
+  } else {
+    (val ? document.getElementById('btn-true') : document.getElementById('btn-false')).classList.add('wrong');
+    (q.ans ? document.getElementById('btn-true') : document.getElementById('btn-false')).classList.add('correct');
+    fb.textContent = '❌ ' + q.exp;
+    fb.className = 'feedback wrong show';
+  }
+  document.getElementById('next-btn').className = 'next-btn show';
+}
+
+function nextQ() {
+  idx++;
+  if (idx >= questions.length) {
+    document.getElementById('game-area').style.display = 'none';
+    const rb = document.getElementById('result-box');
+    rb.style.display = 'block';
+    document.getElementById('pbar').style.width = '100%';
+    document.getElementById('final-score').textContent = score + ' / ' + questions.length;
+    const msgs = ['加油！多讀幾遍課文吧！', '再努力一點！', '普通，還有進步空間！', '不錯！', '很好！', '幾乎滿分！', '完美滿分！'];
+    document.getElementById('final-sub').textContent = msgs[score] || '太棒了！';
+  } else {
+    renderQ();
+  }
+}
+
+startGame();
+document.getElementById('qr-img').src =
+  'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=' +
+  encodeURIComponent(window.location.href);
+</script>
+</body>
+</html>
