@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>重點5：現代標準時間的引進 - 排序題</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans TC', Arial, sans-serif;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px 24px;
+      max-width: 540px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .badge { background: #0984e3; color: #fff; border-radius: 30px; padding: 4px 14px; font-size: 13px; display: inline-block; margin-bottom: 10px; }
+    h1 { font-size: 22px; color: #2d2d2d; margin-bottom: 6px; }
+    .rule { font-size: 14px; color: #888; margin-bottom: 20px; }
+    .progress-bar { background: #eee; border-radius: 10px; height: 8px; margin-bottom: 16px; overflow: hidden; }
+    .progress-fill { background: linear-gradient(90deg, #4facfe, #00f2fe); height: 100%; border-radius: 10px; transition: width 0.4s; }
+    .score-row { display: flex; justify-content: space-between; font-size: 14px; color: #666; margin-bottom: 20px; }
+    .question-text { font-size: 17px; color: #2d2d2d; margin-bottom: 18px; line-height: 1.6; font-weight: 600; }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option-btn {
+      background: #f0f8ff;
+      border: 2px solid #b3d9ff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+      min-height: 52px;
+    }
+    .option-btn:hover:not(:disabled) { border-color: #4facfe; background: #e0f3ff; }
+    .option-btn.correct { background: #e6f9f0; border-color: #2ecc71; color: #1a7a45; }
+    .option-btn.wrong { background: #fde8e8; border-color: #e74c3c; color: #8b1a1a; }
+    .feedback { margin-top: 14px; padding: 12px 16px; border-radius: 12px; font-size: 15px; display: none; line-height: 1.5; }
+    .feedback.show { display: block; }
+    .feedback.correct { background: #e6f9f0; color: #1a7a45; }
+    .feedback.wrong { background: #fde8e8; color: #8b1a1a; }
+    .next-btn { margin-top: 16px; width: 100%; padding: 14px; background: linear-gradient(90deg, #4facfe, #00f2fe); color: #fff; border: none; border-radius: 12px; font-size: 16px; cursor: pointer; display: none; }
+    .next-btn.show { display: block; }
+    .result-box { text-align: center; padding: 20px 0; display: none; }
+    .result-box h2 { font-size: 26px; margin-bottom: 10px; }
+    .result-score { font-size: 48px; font-weight: 800; color: #0984e3; }
+    .result-sub { color: #888; margin: 8px 0 20px; }
+    .replay-btn { padding: 14px 40px; background: linear-gradient(90deg, #4facfe, #00f2fe); color: #fff; border: none; border-radius: 12px; font-size: 16px; cursor: pointer; }
+    .qr-section { text-align: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid #eee; font-size: 12px; color: #aaa; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="badge">重點 5／6</div>
+  <h1>現代標準時間的引進</h1>
+  <p class="rule">每題選一個正確答案，立即獲得回饋。</p>
+  <div class="progress-bar"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
+  <div class="score-row">
+    <span id="q-count">第 1 題／共 5 題</span>
+    <span>得分：<strong id="score">0</strong></span>
+  </div>
+  <div id="game-area">
+    <div class="question-text" id="q-text"></div>
+    <div class="options" id="opts"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQ()">下一題 →</button>
+  </div>
+  <div class="result-box" id="result-box">
+    <h2>🎯 完成！</h2>
+    <div class="result-score" id="final-score"></div>
+    <div class="result-sub" id="final-sub"></div>
+    <button class="replay-btn" onclick="startGame()">再玩一次</button>
+  </div>
+  <div class="qr-section">
+    <img id="qr-img" width="100" height="100" alt="QR Code"><br>掃描開啟此遊戲
+  </div>
+</div>
+<script>
+const questions = [
+  {
+    q: "臺灣什麼時期開始引進現代標準時間制度？",
+    opts: ["清帝國時期", "日治時期", "中華民國初期", "二戰結束後"],
+    ans: 1,
+    exp: "日治時期，臺灣開始實施標準時間制度，人們從參考農民曆自行安排作息，轉變為遵循固定的制度。"
+  },
+  {
+    q: "標準時間制度引進後，大部分的學校在什麼時間上課？",
+    opts: ["上午七點", "上午八點", "上午九點", "上午十點"],
+    ans: 1,
+    exp: "標準時間制度實施後，大部分的學校都在「上午八點」上課，政府機關也有規定的上班時間。"
+  },
+  {
+    q: "中華民國政府來臺後，採用哪種紀年方式？",
+    opts: ["西元紀年", "農民曆紀年", "民國紀年", "日本年號紀年"],
+    ans: 2,
+    exp: "中華民國政府來臺後，繼續使用標準時間，並採用世界通用的國曆，同時以「民國」紀年，表示中華民國成立的年份。"
+  },
+  {
+    q: "採用現代標準時間後，臺灣與世界的運作有什麼變化？",
+    opts: ["更加不一致", "各自獨立發展", "逐漸同步發展", "完全脫節"],
+    ans: 2,
+    exp: "現今因採用現代標準時間，臺灣與世界的運作「逐漸同步發展」，人們的生活步調也趨於一致。"
+  },
+  {
+    q: "引進標準時間制度後，傳統的習俗與文化對各族群的生活有何影響？",
+    opts: ["完全消失不見", "仍然存在影響", "被政府全面禁止", "只剩原住民族保留"],
+    ans: 1,
+    exp: "即使採用現代標準時間，「傳統的習俗與文化對於各族群的生活仍存在影響」，傳統與現代並存。"
+  }
+];
+
+let idx = 0, score = 0, answered = false;
+
+function startGame() {
+  idx = 0; score = 0; answered = false;
+  document.getElementById('result-box').style.display = 'none';
+  document.getElementById('game-area').style.display = 'block';
+  renderQ();
+}
+
+function renderQ() {
+  answered = false;
+  const q = questions[idx];
+  document.getElementById('pbar').style.width = (idx / questions.length * 100) + '%';
+  document.getElementById('q-count').textContent = `第 ${idx+1} 題／共 ${questions.length} 題`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('next-btn').className = 'next-btn';
+  const opts = document.getElementById('opts');
+  opts.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = ['Ａ', 'Ｂ', 'Ｃ', 'Ｄ'][i] + '．' + o;
+    btn.onclick = () => answer(i, btn);
+    opts.appendChild(btn);
+  });
+}
+
+function answer(i, btn) {
+  if (answered) return;
+  answered = true;
+  const q = questions[idx];
+  document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+  const fb = document.getElementById('feedback');
+  if (i === q.ans) {
+    btn.classList.add('correct');
+    score++;
+    document.getElementById('score').textContent = score;
+    fb.textContent = '✅ 答對了！' + q.exp;
+    fb.className = 'feedback correct show';
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.option-btn')[q.ans].classList.add('correct');
+    fb.textContent = '❌ 答錯了！' + q.exp;
+    fb.className = 'feedback wrong show';
+  }
+  document.getElementById('next-btn').className = 'next-btn show';
+}
+
+function nextQ() {
+  idx++;
+  if (idx >= questions.length) {
+    document.getElementById('game-area').style.display = 'none';
+    document.getElementById('result-box').style.display = 'block';
+    document.getElementById('pbar').style.width = '100%';
+    document.getElementById('final-score').textContent = score + ' / ' + questions.length;
+    const msgs = ['繼續加油！', '還不錯！', '很好！', '表現優秀！', '完美滿分！'];
+    document.getElementById('final-sub').textContent = msgs[score] || msgs[msgs.length-1];
+  } else {
+    renderQ();
+  }
+}
+
+startGame();
+document.getElementById('qr-img').src =
+  'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=' +
+  encodeURIComponent(window.location.href);
+</script>
+</body>
+</html>
