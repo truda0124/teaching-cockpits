@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重點1：信仰的起源 — 選擇題</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;}
+h1{color:var(--Y);font-size:1.4rem;text-align:center;margin:16px 0 4px;}
+.subtitle{color:var(--faint);font-size:.85rem;margin-bottom:20px;}
+.card{background:var(--board);border-radius:12px;padding:24px;max-width:640px;width:100%;margin-bottom:16px;}
+.question{font-size:1.1rem;line-height:1.7;margin-bottom:18px;}
+.options{display:grid;gap:10px;}
+.opt{background:var(--dim);border:2px solid #2d5030;border-radius:8px;padding:12px 16px;cursor:pointer;font-size:1rem;text-align:left;color:var(--chalk);transition:.2s;}
+.opt:hover{border-color:var(--B);background:#1a3d20;}
+.opt.correct{border-color:var(--G);background:#1a4020;color:var(--G);}
+.opt.wrong{border-color:var(--R);background:#3a1a1a;color:var(--R);}
+.feedback{margin-top:14px;padding:12px;border-radius:8px;font-size:.95rem;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:#1a4020;color:var(--G);}
+.feedback.no{background:#3a1a1a;color:var(--R);}
+.progress{color:var(--faint);font-size:.85rem;text-align:center;margin-bottom:8px;}
+.score-bar{display:flex;justify-content:center;gap:12px;margin-bottom:20px;}
+.score-box{background:var(--dim);border-radius:8px;padding:8px 20px;font-size:1rem;}
+.score-box span{color:var(--G);font-weight:bold;}
+button.next{background:var(--B);color:#fff;border:none;border-radius:8px;padding:10px 28px;cursor:pointer;font-size:1rem;margin-top:12px;display:none;}
+button.next:hover{opacity:.85;}
+button.replay{background:var(--Y);color:#162b18;border:none;border-radius:8px;padding:10px 28px;cursor:pointer;font-size:1rem;font-weight:bold;}
+.result-card{background:var(--board);border-radius:12px;padding:32px;max-width:640px;width:100%;text-align:center;display:none;}
+.result-card h2{color:var(--Y);font-size:1.5rem;margin-bottom:12px;}
+.qr-area{margin-top:20px;}
+.qr-area p{color:var(--faint);font-size:.8rem;margin-bottom:6px;}
+</style>
+</head>
+<body>
+<h1>🌱 重點1：信仰的起源</h1>
+<p class="subtitle">4年級社會 第4單元第3課 ｜ 選擇題</p>
+<div class="score-bar">
+  <div class="score-box">得分：<span id="score">0</span></div>
+  <div class="score-box">題數：<span id="total">0</span>/6</div>
+</div>
+<div class="progress" id="progress">第 1 題，共 6 題</div>
+<div class="card" id="quiz-card">
+  <div class="question" id="q-text"></div>
+  <div class="options" id="opts"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next" id="btn-next" onclick="nextQ()">下一題 →</button>
+</div>
+<div class="result-card" id="result-card">
+  <h2>🎉 完成！</h2>
+  <p id="result-msg"></p>
+  <br>
+  <button class="replay" onclick="restart()">🔄 再玩一次</button>
+  <div class="qr-area">
+    <p>掃描 QR Code 分享此遊戲</p>
+    <img id="qr-img" src="" alt="QR Code" width="120" height="120">
+  </div>
+</div>
+
+<script>
+const QS=[
+  {q:"早期人們對大自然感到敬畏，因而出現什麼現象？",opts:["崇拜自然","建立學校","發展農業","製作工具"],ans:0,exp:"人們對大自然力量感到敬畏，因而出現「崇拜自然」的現象。"},
+  {q:"臺灣原住民族認為天地萬物都存在神靈，因此發展出哪些信仰？",opts:["媽祖、土地公","山神、太陽神、小米神","阿拉、耶穌","老子、釋迦牟尼"],ans:1,exp:"原住民族認為天地萬物都有神靈，發展出山神、太陽神、小米神等信仰。"},
+  {q:"早期漢人會祭拜哪些東西來祈求平安與開墾順利？",opts:["金銀財寶","具有神話傳說的石頭、大樹或動物","外來的神明","農具與糧食"],ans:1,exp:"漢人會祭拜具有神話傳說的石頭、大樹或動物，祈求平安與開墾順利。"},
+  {q:"宗教的形成，主要是人們對什麼議題尋求解答？",opts:["如何賺錢","如何種田","生、老、病、死的生命歷程","如何建造房屋"],ans:2,exp:"當人們對生、老、病、死的生命歷程尋求解答時，世界各地逐漸產生各種宗教。"},
+  {q:"下列哪一項不是臺灣常見的世界主要宗教？",opts:["基督宗教","伊斯蘭教","神道教","佛教"],ans:2,exp:"臺灣常見的世界主要宗教有：基督宗教、伊斯蘭教、佛教與道教。神道教主要在日本，不是臺灣常見的四大宗教之一。"},
+  {q:"民間信仰中的「虎爺」，傳說是由誰收服老虎後轉化而來？",opts:["媽祖","關公","土地公","城隍"],ans:2,exp:"傳說土地公收服凶惡的老虎後，老虎轉成人們祭拜的虎爺，以凶猛的威力驅逐不好的事物。"},
+];
+let cur=0,score=0;
+function render(){
+  const q=QS[cur];
+  document.getElementById('progress').textContent=`第 ${cur+1} 題，共 ${QS.length} 題`;
+  document.getElementById('q-text').textContent=q.q;
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='opt';b.textContent=`${['Ａ','Ｂ','Ｃ','Ｄ'][i]}　${o}`;
+    b.onclick=()=>answer(i);opts.appendChild(b);
+  });
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('feedback').textContent='';
+  document.getElementById('btn-next').style.display='none';
+}
+function answer(i){
+  const q=QS[cur];
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=null);
+  const btns=document.querySelectorAll('.opt');
+  const fb=document.getElementById('feedback');
+  document.getElementById('total').textContent=cur+1;
+  if(i===q.ans){
+    btns[i].classList.add('correct');
+    fb.className='feedback show ok';fb.textContent='✅ 答對了！'+q.exp;
+    score++;document.getElementById('score').textContent=score;
+  } else {
+    btns[i].classList.add('wrong');btns[q.ans].classList.add('correct');
+    fb.className='feedback show no';fb.textContent='❌ 答錯了！正確答案：'+q.opts[q.ans]+'。'+q.exp;
+  }
+  document.getElementById('btn-next').style.display='inline-block';
+}
+function nextQ(){
+  cur++;
+  if(cur>=QS.length){showResult();}else{render();}
+}
+function showResult(){
+  document.getElementById('quiz-card').style.display='none';
+  document.getElementById('progress').style.display='none';
+  const rc=document.getElementById('result-card');rc.style.display='block';
+  const pct=Math.round(score/QS.length*100);
+  document.getElementById('result-msg').textContent=`你答對了 ${score} / ${QS.length} 題（${pct}%）${pct>=80?'🌟 優秀！':pct>=60?'👍 不錯！':'💪 再試試看！'}`;
+  document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=120x120&data='+encodeURIComponent(window.location.href);
+}
+function restart(){
+  cur=0;score=0;
+  document.getElementById('score').textContent=0;document.getElementById('total').textContent=0;
+  document.getElementById('quiz-card').style.display='block';
+  document.getElementById('progress').style.display='block';
+  document.getElementById('result-card').style.display='none';
+  render();
+}
+render();
+</script>
+</body>
+</html>
