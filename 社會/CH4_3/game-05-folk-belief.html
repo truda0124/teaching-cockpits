@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重點5：臺灣民間信仰 — 選擇題</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;}
+h1{color:var(--Y);font-size:1.4rem;text-align:center;margin:16px 0 4px;}
+.subtitle{color:var(--faint);font-size:.85rem;margin-bottom:20px;}
+.card{background:var(--board);border-radius:12px;padding:24px;max-width:640px;width:100%;margin-bottom:16px;}
+.question{font-size:1.1rem;line-height:1.7;margin-bottom:18px;}
+.options{display:grid;gap:10px;}
+.opt{background:var(--dim);border:2px solid #2d5030;border-radius:8px;padding:12px 16px;cursor:pointer;font-size:1rem;text-align:left;color:var(--chalk);transition:.2s;}
+.opt:hover{border-color:var(--B);background:#1a3d20;}
+.opt.correct{border-color:var(--G);background:#1a4020;color:var(--G);}
+.opt.wrong{border-color:var(--R);background:#3a1a1a;color:var(--R);}
+.feedback{margin-top:14px;padding:12px;border-radius:8px;font-size:.95rem;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:#1a4020;color:var(--G);}
+.feedback.no{background:#3a1a1a;color:var(--R);}
+.progress{color:var(--faint);font-size:.85rem;text-align:center;margin-bottom:8px;}
+.score-bar{display:flex;justify-content:center;gap:12px;margin-bottom:20px;}
+.score-box{background:var(--dim);border-radius:8px;padding:8px 20px;font-size:1rem;}
+.score-box span{color:var(--G);font-weight:bold;}
+button.next{background:var(--B);color:#fff;border:none;border-radius:8px;padding:10px 28px;cursor:pointer;font-size:1rem;margin-top:12px;display:none;}
+.result-card{background:var(--board);border-radius:12px;padding:32px;max-width:640px;width:100%;text-align:center;display:none;}
+.result-card h2{color:var(--Y);font-size:1.5rem;margin-bottom:12px;}
+button.replay{background:var(--Y);color:#162b18;border:none;border-radius:8px;padding:10px 28px;cursor:pointer;font-size:1rem;font-weight:bold;}
+.qr-area{margin-top:20px;}
+.qr-area p{color:var(--faint);font-size:.8rem;margin-bottom:6px;}
+</style>
+</head>
+<body>
+<h1>🏮 重點5：臺灣民間信仰</h1>
+<p class="subtitle">5年級社會 第4單元第3課 ｜ 選擇題</p>
+<div class="score-bar">
+  <div class="score-box">得分：<span id="score">0</span></div>
+  <div class="score-box">題數：<span id="total">0</span>/6</div>
+</div>
+<div class="progress" id="progress">第 1 題，共 6 題</div>
+<div class="card" id="quiz-card">
+  <div class="question" id="q-text"></div>
+  <div class="options" id="opts"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next" id="btn-next" onclick="nextQ()">下一題 →</button>
+</div>
+<div class="result-card" id="result-card">
+  <h2>🎉 完成！</h2>
+  <p id="result-msg"></p>
+  <br>
+  <button class="replay" onclick="restart()">🔄 再玩一次</button>
+  <div class="qr-area">
+    <p>掃描 QR Code 分享此遊戲</p>
+    <img id="qr-img" src="" alt="QR Code" width="120" height="120">
+  </div>
+</div>
+
+<script>
+const QS=[
+  {q:"臺灣民間信仰是融合了哪些元素發展而來？",opts:["佛教+基督宗教+移民信仰","佛道教儀式+移民家鄉信仰+族群開墾","伊斯蘭教+道教+原住民族信仰","基督宗教+儒家思想+民間習俗"],ans:1,exp:"民間信仰融合佛、道教的儀式與族群的開墾後，發展出具包容性的臺灣民間信仰。"},
+  {q:"根據美國研究機構皮尤研究中心的調查，臺灣的宗教多樣性指數在全球排名第幾？",opts:["第一","第二","第三","第五"],ans:1,exp:"臺灣以8.2分名列全球第2，僅次於新加坡的9分，證明臺灣社會對宗教信仰的多元與包容。"},
+  {q:"下列哪一項是臺灣民間信仰的主要特色？",opts:["只接受特定族群信仰","具有排他性","具包容性，是最多臺灣人信仰的宗教","只在都市地區流傳"],ans:2,exp:"民間信仰具包容性，是最多臺灣人信仰的宗教，傳承民俗文化，在生活中展現特色。"},
+  {q:"「燒王船」這個民間信仰活動，其主要目的是什麼？",opts:["祈求豐收","送瘟疫離開、驅除惡靈與祈求平安","慶祝新年","紀念媽祖誕辰"],ans:1,exp:"燒王船是送瘟疫離開、驅除惡靈與祈求平安的活動，「東港迎王平安祭典」已成為國家重要的無形文化資產。"},
+  {q:"艋舺龍山寺最初是由哪些人集資建造的？",opts:["日本移民","原住民族","來自泉州的漢人移民","西班牙傳教士"],ans:2,exp:"清帝國時期，移民帶著泉州龍山寺香火袋渡海來臺，居民捐地、捐錢建龍山寺，成為地方信仰中心。"},
+  {q:"臺灣之所以發展出多元豐富的民間信仰，主要原因是？",opts:["政府法律規定","不同族群移民帶來不同信仰，臺灣社會包容性強","外國傳教士的積極推廣","臺灣氣候特殊適合宗教發展"],ans:1,exp:"臺灣是移民社會，不同移民從家鄉帶來不同信仰，使得臺灣信仰非常多元；也因為信仰著不同的宗教，人們對於與自己信仰相異的人，也可以包容、理解。"},
+];
+let cur=0,score=0;
+function render(){
+  const q=QS[cur];
+  document.getElementById('progress').textContent=`第 ${cur+1} 題，共 ${QS.length} 題`;
+  document.getElementById('q-text').textContent=q.q;
+  const opts=document.getElementById('opts');opts.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');b.className='opt';b.textContent=`${['Ａ','Ｂ','Ｃ','Ｄ'][i]}　${o}`;b.onclick=()=>answer(i);opts.appendChild(b);
+  });
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('btn-next').style.display='none';
+}
+function answer(i){
+  const q=QS[cur];document.querySelectorAll('.opt').forEach(b=>b.onclick=null);
+  const btns=document.querySelectorAll('.opt');const fb=document.getElementById('feedback');
+  document.getElementById('total').textContent=cur+1;
+  if(i===q.ans){btns[i].classList.add('correct');fb.className='feedback show ok';fb.textContent='✅ 答對了！'+q.exp;score++;document.getElementById('score').textContent=score;}
+  else{btns[i].classList.add('wrong');btns[q.ans].classList.add('correct');fb.className='feedback show no';fb.textContent='❌ 答錯了！'+q.exp;}
+  document.getElementById('btn-next').style.display='inline-block';
+}
+function nextQ(){cur++;if(cur>=QS.length)showResult();else render();}
+function showResult(){
+  document.getElementById('quiz-card').style.display='none';document.getElementById('progress').style.display='none';
+  const rc=document.getElementById('result-card');rc.style.display='block';
+  const pct=Math.round(score/QS.length*100);
+  document.getElementById('result-msg').textContent=`你答對了 ${score} / ${QS.length} 題（${pct}%）${pct>=80?'🌟 優秀！':pct>=60?'👍 不錯！':'💪 再試試看！'}`;
+  document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=120x120&data='+encodeURIComponent(window.location.href);
+}
+function restart(){
+  cur=0;score=0;document.getElementById('score').textContent=0;document.getElementById('total').textContent=0;
+  document.getElementById('quiz-card').style.display='block';document.getElementById('progress').style.display='block';
+  document.getElementById('result-card').style.display='none';render();
+}
+render();
+</script>
+</body>
+</html>
