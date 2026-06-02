@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4-3 世界宗教如何在臺灣傳播發展？ | 教學駕駛艙</title>
+<style>
+:root{
+  --bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;
+  --chalk:#f0ece2;--faint:#9aaa9c;
+  --Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;}
+
+/* ── Header ── */
+.site-header{
+  background:var(--dim);border-bottom:2px solid #2d5030;
+  padding:12px 20px;display:flex;align-items:center;gap:14px;
+}
+.back-btn{
+  background:none;border:1px solid #2d5030;border-radius:6px;
+  padding:6px 12px;color:var(--faint);cursor:pointer;font-size:.85rem;text-decoration:none;
+}
+.back-btn:hover{border-color:var(--B);color:var(--B);}
+.header-tag{background:#2d5030;border-radius:4px;padding:3px 10px;font-size:.75rem;color:var(--faint);}
+.header-title{color:var(--Y);font-size:1.1rem;font-weight:bold;}
+
+/* ── Hero ── */
+.hero{
+  background:linear-gradient(135deg,#0e1e10 0%,#1d3a1f 60%,#162b18 100%);
+  padding:36px 20px 28px;text-align:center;
+  border-bottom:2px solid #2d5030;
+}
+.hero .unit-tag{color:var(--G);font-size:.9rem;margin-bottom:8px;}
+.hero h1{color:var(--Y);font-size:1.7rem;margin-bottom:10px;line-height:1.4;}
+.hero .desc{color:var(--faint);font-size:.95rem;max-width:640px;margin:0 auto;}
+.badge-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;}
+.badge{background:var(--dim);border:1px solid #2d5030;border-radius:20px;padding:4px 14px;font-size:.8rem;color:var(--chalk);}
+
+/* ── Section ── */
+.section{padding:28px 16px;max-width:900px;margin:0 auto;}
+.section-label{
+  display:flex;align-items:center;gap:8px;
+  color:var(--Y);font-size:1rem;font-weight:bold;
+  margin-bottom:16px;padding-bottom:8px;
+  border-bottom:1px solid #2d5030;
+}
+
+/* ── Carousel ── */
+.carousel-wrap{position:relative;background:var(--dim);border-radius:12px;overflow:hidden;aspect-ratio:16/9;}
+.carousel-img{width:100%;height:100%;object-fit:contain;display:none;}
+.carousel-img.active{display:block;}
+.carousel-nav{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:8px;}
+.carousel-btn{
+  background:var(--board);border:1px solid #2d5030;border-radius:8px;
+  padding:8px 18px;color:var(--chalk);cursor:pointer;font-size:1rem;
+}
+.carousel-btn:hover{border-color:var(--B);color:var(--B);}
+.carousel-counter{color:var(--faint);font-size:.85rem;}
+.carousel-dots{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:8px;}
+.dot{width:8px;height:8px;border-radius:50%;background:#2d5030;cursor:pointer;transition:.2s;}
+.dot.active{background:var(--Y);}
+.slide-fallback{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;min-height:300px;gap:12px;
+}
+.slide-fallback p{color:var(--faint);font-size:.9rem;}
+
+/* ── Video ── */
+.video-wrap{border-radius:12px;overflow:hidden;background:#000;aspect-ratio:16/9;}
+.video-wrap video{width:100%;height:100%;display:block;}
+
+/* ── Audio ── */
+.audio-wrap{
+  background:var(--board);border-radius:12px;padding:20px;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+}
+.audio-title{color:var(--G);font-size:1rem;}
+audio{width:100%;max-width:500px;}
+
+/* ── Infographic ── */
+.infographic-wrap{border-radius:12px;overflow:hidden;text-align:center;}
+.infographic-wrap img{width:100%;border-radius:12px;}
+
+/* ── Games Grid ── */
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.game-card{
+  background:var(--board);border:1px solid #2d5030;border-radius:12px;
+  padding:18px;text-decoration:none;color:var(--chalk);
+  transition:.2s;display:flex;flex-direction:column;gap:8px;
+}
+.game-card:hover{border-color:var(--B);transform:translateY(-2px);}
+.game-icon{font-size:2rem;}
+.game-title{color:var(--Y);font-size:1rem;font-weight:bold;}
+.game-type{color:var(--G);font-size:.75rem;background:#1a4020;border-radius:4px;padding:2px 8px;display:inline-block;}
+.game-desc{color:var(--faint);font-size:.82rem;line-height:1.5;}
+.game-qr{margin-top:auto;display:flex;align-items:center;gap:8px;}
+.game-qr img{border-radius:4px;background:#fff;}
+.game-qr span{color:var(--faint);font-size:.75rem;}
+
+/* ── Footer ── */
+footer{
+  text-align:center;padding:24px;color:var(--faint);font-size:.8rem;
+  border-top:1px solid #2d5030;margin-top:20px;
+}
+footer a{color:var(--B);text-decoration:none;}
+
+@media(max-width:600px){
+  .hero h1{font-size:1.3rem;}
+  .games-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <a class="back-btn" href="https://truda0124.github.io/teaching-cockpits/">← 社會科首頁</a>
+  <span class="header-tag">國小五年級 · 社會</span>
+  <span class="header-title">第4單元第3課</span>
+</header>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="unit-tag">🌏 第四單元 · 從臺灣探索世界文化</div>
+  <h1>世界宗教如何在臺灣傳播發展？</h1>
+  <p class="desc">探索信仰的起源、基督宗教、伊斯蘭教、佛教、道教與媽祖信仰，了解多元宗教如何融入臺灣生活文化。</p>
+  <div class="badge-row">
+    <span class="badge">🖼 簡報輪播</span>
+    <span class="badge">🎬 教學影片</span>
+    <span class="badge">🔊 複習語音</span>
+    <span class="badge">📊 資訊圖表</span>
+    <span class="badge">✏️ 6款評量遊戲</span>
+  </div>
+</div>
+
+<!-- 1. 簡報輪播 -->
+<div class="section">
+  <div class="section-label">🖼️ 簡報輪播</div>
+  <div class="carousel-wrap" id="carousel-wrap">
+    <div class="slide-fallback" id="slide-fallback">
+      <div style="font-size:2.5rem;">📊</div>
+      <p>簡報圖片載入中…若長時間未出現，請重新整理頁面。</p>
+      <p style="font-size:.8rem;">（簡報圖片由 NotebookLM 生成，轉換後將自動顯示）</p>
+    </div>
+  </div>
+  <div class="carousel-nav" id="carousel-nav" style="display:none;">
+    <button class="carousel-btn" onclick="prevSlide()">← 上一張</button>
+    <span class="carousel-counter" id="counter">1 / 1</span>
+    <button class="carousel-btn" onclick="nextSlide()">下一張 →</button>
+  </div>
+  <div class="carousel-dots" id="carousel-dots"></div>
+</div>
+
+<!-- 2. 教學影片 -->
+<div class="section">
+  <div class="section-label">🎬 教學影片</div>
+  <div class="video-wrap">
+    <video controls preload="metadata"
+      src="https://lh3.googleusercontent.com/notebooklm/AKXwDQFqdo7y19UXPP_w7XgH81YRPIXF-J-XgYBQ0NeAMiSFCgTtFeV3ittk16w7uQgcYuhKL_JIo6aAVZfLMsXbG6VynyCKsgCr66fnPkvFv7-Y8ZT6PKjlUP1gUbeP4eU2mbMmXEfFq4GuIwlZXemssG8DmhBrlyQ=m22-dv"
+      poster="">
+      您的瀏覽器不支援影片播放。
+    </video>
+  </div>
+  <p style="color:var(--faint);font-size:.8rem;margin-top:8px;text-align:center;">
+    🎬 4-3_臺灣世界宗教 ｜ 由 NotebookLM AI 生成
+  </p>
+</div>
+
+<!-- 3. 複習語音 -->
+<div class="section">
+  <div class="section-label">🔊 複習語音</div>
+  <div class="audio-wrap">
+    <div class="audio-title">🎙️ 4-3_台灣宗教全球多樣第二的關鍵</div>
+    <audio controls preload="metadata"
+      src="https://lh3.googleusercontent.com/notebooklm/AKXwDQE0kaE1uAjp75VBontQt8t16GM6d4zdRAXMUjI7j4AE72AF4RHrbB-YZ4whk6HYtSCD-EdtGN4ukdlMXZiCo2YqHIlg6vIzcImf5Xm3rhxC8744jduxnRSs1025r-0RoCKIX34GwnMNs5mZDBye2vO1X4S-HNc=m140-dv">
+      您的瀏覽器不支援音頻播放。
+    </audio>
+    <p style="color:var(--faint);font-size:.78rem;">由 NotebookLM AI 生成 ｜ 適合課前預習或課後複習聆聽</p>
+  </div>
+</div>
+
+<!-- 4. 資訊圖表 -->
+<div class="section">
+  <div class="section-label">📊 資訊圖表</div>
+  <div class="infographic-wrap">
+    <img
+      src="slides/infographic.jpg"
+      onerror="this.src='https://lh3.googleusercontent.com/notebooklm/AKXwDQGEpFz6DBGRjMFVEkfXM8trsd91KrvnDW-HRd5V1CdsNf6knNOSx0Xu25QYZ2_fv9Q_STifTSFSDoUMFbUWeAKJng4c1nMFc2s7UgdpvzRS4cMAFspR7kjyhXq9y8XjhGV5l40edWubn1SD34ya9EqiOizOUA=w2752-d-h1536-mp2'"
+      alt="臺灣多元文化宗教地圖 資訊圖表">
+  </div>
+</div>
+
+<!-- 5. 評量遊戲 -->
+<div class="section">
+  <div class="section-label">🎮 形成性評量遊戲</div>
+  <div class="games-grid">
+
+    <a class="game-card" href="game-01-faith-origin.html" target="_blank">
+      <div class="game-icon">🌱</div>
+      <div class="game-title">重點1：信仰的起源</div>
+      <span class="game-type">選擇題 ｜ 6題</span>
+      <div class="game-desc">人類對大自然的敬畏→崇拜自然→宗教的形成；原住民族與漢人的不同信仰發展。</div>
+      <div class="game-qr">
+        <img id="qr1" src="" alt="QR" width="60" height="60">
+        <span>掃碼直接玩</span>
+      </div>
+    </a>
+
+    <a class="game-card" href="game-02-christianity.html" target="_blank">
+      <div class="game-icon">✝️</div>
+      <div class="game-title">重點2：基督宗教在臺灣</div>
+      <span class="game-type">填充題 ｜ 5題</span>
+      <div class="game-desc">信仰上帝、聖經；大航海時代荷蘭/西班牙傳入；清帝國開港後傳教士建教堂/醫院/學校。</div>
+      <div class="game-qr">
+        <img id="qr2" src="" alt="QR" width="60" height="60">
+        <span>掃碼直接玩</span>
+      </div>
+    </a>
+
+    <a class="game-card" href="game-03-islam.html" target="_blank">
+      <div class="game-icon">☪️</div>
+      <div class="game-title">重點3：伊斯蘭教在臺灣</div>
+      <span class="game-type">是非題 ｜ 6題</span>
+      <div class="game-desc">信奉阿拉、古蘭經；穆斯林每日祈禱五次；政府設祈禱室；清真寺喚拜尖塔。</div>
+      <div class="game-qr">
+        <img id="qr3" src="" alt="QR" width="60" height="60">
+        <span>掃碼直接玩</span>
+      </div>
+    </a>
+
+    <a class="game-card" href="game-04-buddhism-taoism.html" target="_blank">
+      <div class="game-icon">☸️</div>
+      <div class="game-title">重點4：佛教與道教</div>
+      <span class="game-type">配對題 ｜ 8組</span>
+      <div class="game-desc">佛教起源印度（釋迦牟尼）；道教起源中國（老子/道德經）；隨移民傳入；佛教做社會救助。</div>
+      <div class="game-qr">
+        <img id="qr4" src="" alt="QR" width="60" height="60">
+        <span>掃碼直接玩</span>
+      </div>
+    </a>
+
+    <a class="game-card" href="game-05-folk-belief.html" target="_blank">
+      <div class="game-icon">🏮</div>
+      <div class="game-title">重點5：臺灣民間信仰</div>
+      <span class="game-type">選擇題 ｜ 6題</span>
+      <div class="game-desc">融合佛道教+移民信仰；最多人信仰；宗教多樣性全球第二；東港燒王船；艋舺龍山寺。</div>
+      <div class="game-qr">
+        <img id="qr5" src="" alt="QR" width="60" height="60">
+        <span>掃碼直接玩</span>
+      </div>
+    </a>
+
+    <a class="game-card" href="game-06-mazu.html" target="_blank">
+      <div class="game-icon">🛐</div>
+      <div class="game-title">重點6：媽祖信仰與遶境文化</div>
+      <span class="game-type">選擇題 ｜ 7題</span>
+      <div class="game-desc">媽祖出生福建；移民渡海依靠；大甲遶境超百萬人；Discovery 世界三大宗教慶典之一。</div>
+      <div class="game-qr">
+        <img id="qr6" src="" alt="QR" width="60" height="60">
+        <span>掃碼直接玩</span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<footer>
+  <p>國小五年級 社會下冊 第4單元第3課 ｜ 教學駕駛艙</p>
+  <p style="margin-top:4px;"><a href="https://truda0124.github.io/teaching-cockpits/">← 返回社會科首頁</a></p>
+</footer>
+
+<script>
+/* ── Slide Carousel ── */
+const SLIDE_DIR = 'slides/';
+const MAX_SLIDES = 25;
+let slides = [], curSlide = 0;
+
+async function probeSlides() {
+  for (let i = 1; i <= MAX_SLIDES; i++) {
+    const fname = SLIDE_DIR + 'slide_' + String(i).padStart(2, '0') + '.jpg';
+    try {
+      const r = await fetch(fname, { method: 'HEAD' });
+      if (r.ok) slides.push(fname); else break;
+    } catch { break; }
+  }
+  if (slides.length > 0) buildCarousel();
+}
+
+function buildCarousel() {
+  const wrap = document.getElementById('carousel-wrap');
+  document.getElementById('slide-fallback').style.display = 'none';
+  slides.forEach((src, i) => {
+    const img = document.createElement('img');
+    img.className = 'carousel-img' + (i === 0 ? ' active' : '');
+    img.src = src; img.alt = `投影片 ${i + 1}`;
+    wrap.appendChild(img);
+  });
+  document.getElementById('carousel-nav').style.display = 'flex';
+  buildDots();
+  updateCounter();
+}
+
+function buildDots() {
+  const dc = document.getElementById('carousel-dots');
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goSlide(i);
+    dc.appendChild(d);
+  });
+}
+
+function goSlide(n) {
+  document.querySelectorAll('.carousel-img').forEach((el, i) => el.classList.toggle('active', i === n));
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === n));
+  curSlide = n; updateCounter();
+}
+
+function prevSlide() { goSlide((curSlide - 1 + slides.length) % slides.length); }
+function nextSlide() { goSlide((curSlide + 1) % slides.length); }
+function updateCounter() {
+  document.getElementById('counter').textContent = `${curSlide + 1} / ${slides.length}`;
+}
+
+/* keyboard navigation */
+document.addEventListener('keydown', e => {
+  if (slides.length === 0) return;
+  if (e.key === 'ArrowRight') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+});
+
+probeSlides();
+
+/* ── QR Codes ── */
+const base = window.location.href.replace('index.html','').replace(/\/$/, '');
+const games = [
+  ['qr1', 'game-01-faith-origin.html'],
+  ['qr2', 'game-02-christianity.html'],
+  ['qr3', 'game-03-islam.html'],
+  ['qr4', 'game-04-buddhism-taoism.html'],
+  ['qr5', 'game-05-folk-belief.html'],
+  ['qr6', 'game-06-mazu.html'],
+];
+games.forEach(([id, file]) => {
+  const el = document.getElementById(id);
+  if (el) el.src = 'https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=' + encodeURIComponent(base + '/' + file);
+});
+</script>
+</body>
+</html>
