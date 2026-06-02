@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重點4：佛教與道教 — 配對題</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;}
+h1{color:var(--Y);font-size:1.4rem;text-align:center;margin:16px 0 4px;}
+.subtitle{color:var(--faint);font-size:.85rem;margin-bottom:16px;}
+.score-bar{display:flex;justify-content:center;gap:12px;margin-bottom:16px;}
+.score-box{background:var(--dim);border-radius:8px;padding:8px 20px;font-size:1rem;}
+.score-box span{color:var(--G);font-weight:bold;}
+.instructions{color:var(--faint);font-size:.85rem;text-align:center;margin-bottom:16px;}
+.match-area{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:680px;width:100%;}
+.col-header{color:var(--Y);font-size:.9rem;text-align:center;padding:6px;margin-bottom:4px;}
+.items-col{display:flex;flex-direction:column;gap:8px;}
+.item{background:var(--board);border:2px solid #2d5030;border-radius:8px;padding:12px;cursor:pointer;font-size:.95rem;text-align:center;transition:.2s;min-height:52px;display:flex;align-items:center;justify-content:center;}
+.item:hover:not(.matched){border-color:var(--B);}
+.item.selected{border-color:var(--Y);background:#2a3a10;}
+.item.matched-ok{border-color:var(--G);background:#1a4020;color:var(--G);cursor:default;}
+.item.matched-no{border-color:var(--R);background:#3a1a1a;cursor:default;}
+.feedback-bar{text-align:center;min-height:40px;font-size:.95rem;margin:12px 0;color:var(--faint);}
+.result-card{background:var(--board);border-radius:12px;padding:32px;max-width:640px;width:100%;text-align:center;display:none;margin-top:16px;}
+.result-card h2{color:var(--Y);font-size:1.5rem;margin-bottom:12px;}
+button.replay{background:var(--Y);color:#162b18;border:none;border-radius:8px;padding:10px 28px;cursor:pointer;font-size:1rem;font-weight:bold;}
+.qr-area{margin-top:20px;}
+.qr-area p{color:var(--faint);font-size:.8rem;margin-bottom:6px;}
+</style>
+</head>
+<body>
+<h1>☸️ 重點4：佛教與道教</h1>
+<p class="subtitle">5年級社會 第4單元第3課 ｜ 配對題</p>
+<div class="score-bar">
+  <div class="score-box">配對正確：<span id="score">0</span> / <span id="total">8</span></div>
+</div>
+<p class="instructions">點選左欄一個項目，再點選右欄對應答案，完成配對！</p>
+<div class="match-area">
+  <div>
+    <div class="col-header">📌 項目</div>
+    <div class="items-col" id="left-col"></div>
+  </div>
+  <div>
+    <div class="col-header">📌 對應答案</div>
+    <div class="items-col" id="right-col"></div>
+  </div>
+</div>
+<div class="feedback-bar" id="fb"></div>
+<div class="result-card" id="result-card">
+  <h2>🎉 全部配對完成！</h2>
+  <p id="result-msg"></p>
+  <br>
+  <button class="replay" onclick="restart()">🔄 再玩一次</button>
+  <div class="qr-area">
+    <p>掃描 QR Code 分享此遊戲</p>
+    <img id="qr-img" src="" alt="QR Code" width="120" height="120">
+  </div>
+</div>
+
+<script>
+const PAIRS=[
+  {left:"佛教的創始人",right:"釋迦牟尼"},
+  {left:"佛教的起源地",right:"印度"},
+  {left:"道教的教祖",right:"老子"},
+  {left:"道教的主要經典",right:"道德經"},
+  {left:"道教的起源地",right:"中國"},
+  {left:"佛教的戒律（兩項之一）",right:"不殺生、不偷盜"},
+  {left:"道士的宗教儀式",right:"畫符、念咒"},
+  {left:"道教的大型祭典俗稱",right:"做醮"},
+];
+let selectedLeft=null,score=0,total=PAIRS.length,wrongCount=0;
+function shuffle(arr){return arr.sort(()=>Math.random()-.5);}
+function render(){
+  score=0;wrongCount=0;selectedLeft=null;
+  document.getElementById('score').textContent=0;
+  document.getElementById('feedback-bar')&&(document.getElementById('feedback-bar').textContent='');
+  const lc=document.getElementById('left-col');const rc=document.getElementById('right-col');
+  lc.innerHTML='';rc.innerHTML='';
+  const rights=shuffle([...PAIRS.map(p=>p.right)]);
+  PAIRS.forEach((p,i)=>{
+    const l=document.createElement('div');l.className='item';l.textContent=p.left;l.dataset.idx=i;l.onclick=()=>selectLeft(l,i);lc.appendChild(l);
+  });
+  rights.forEach((r,i)=>{
+    const el=document.createElement('div');el.className='item';el.textContent=r;el.dataset.val=r;el.onclick=()=>selectRight(el,r);rc.appendChild(el);
+  });
+}
+function selectLeft(el,idx){
+  if(el.classList.contains('matched-ok'))return;
+  document.querySelectorAll('#left-col .item').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');selectedLeft={el,idx};
+  document.getElementById('fb').textContent='👉 再點右欄對應的答案';
+}
+function selectRight(el,val){
+  if(!selectedLeft)return;
+  if(el.classList.contains('matched-ok'))return;
+  const correct=PAIRS[selectedLeft.idx].right===val;
+  if(correct){
+    selectedLeft.el.classList.remove('selected');selectedLeft.el.classList.add('matched-ok');
+    el.classList.add('matched-ok');score++;
+    document.getElementById('score').textContent=score;
+    document.getElementById('fb').textContent='✅ 配對正確！';
+    selectedLeft=null;
+    if(score===total)setTimeout(showResult,600);
+  } else {
+    wrongCount++;
+    selectedLeft.el.classList.remove('selected');
+    el.classList.add('matched-no');
+    document.getElementById('fb').style.color='var(--R)';
+    document.getElementById('fb').textContent='❌ 配對錯誤，再試試！';
+    setTimeout(()=>{el.classList.remove('matched-no');document.getElementById('fb').style.color='';document.getElementById('fb').textContent='';},900);
+    selectedLeft=null;
+  }
+}
+function showResult(){
+  document.getElementById('result-card').style.display='block';
+  document.getElementById('result-card').scrollIntoView({behavior:'smooth'});
+  const pct=Math.round((score-wrongCount/2)/total*100);
+  document.getElementById('result-msg').textContent=`全部配對完成！答錯 ${wrongCount} 次 ${wrongCount===0?'🌟 完美！':wrongCount<=2?'👍 很棒！':'💪 再練習！'}`;
+  document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=120x120&data='+encodeURIComponent(window.location.href);
+}
+function restart(){document.getElementById('result-card').style.display='none';render();}
+render();
+</script>
+</body>
+</html>
