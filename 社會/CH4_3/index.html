@@ -80,8 +80,29 @@ body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-ser
 audio{width:100%;max-width:500px;}
 
 /* ── Infographic ── */
-.infographic-wrap{border-radius:12px;overflow:hidden;text-align:center;}
-.infographic-wrap img{width:100%;border-radius:12px;}
+.infographic-wrap{border-radius:12px;overflow:hidden;text-align:center;position:relative;}
+.infographic-wrap img{width:100%;border-radius:12px;cursor:zoom-in;transition:.2s;}
+.infographic-wrap img:hover{opacity:.9;}
+.infographic-toolbar{display:flex;gap:10px;justify-content:flex-end;margin-bottom:8px;}
+.infographic-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--board);border:1px solid #2d5030;border-radius:8px;
+  padding:7px 14px;color:var(--B);font-size:.85rem;text-decoration:none;cursor:pointer;
+  transition:.2s;
+}
+.infographic-btn:hover{border-color:var(--B);background:#1a3d20;}
+/* Lightbox */
+.lightbox{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);
+  z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;
+}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:95vw;max-height:92vh;border-radius:8px;object-fit:contain;box-shadow:0 0 40px rgba(0,0,0,.6);}
+.lightbox-close{
+  position:fixed;top:16px;right:20px;font-size:2rem;color:#fff;cursor:pointer;
+  line-height:1;opacity:.8;
+}
+.lightbox-close:hover{opacity:1;}
 
 /* ── Games Grid ── */
 .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
@@ -184,12 +205,33 @@ footer a{color:var(--B);text-decoration:none;}
 <!-- 4. 資訊圖表 -->
 <div class="section">
   <div class="section-label">📊 資訊圖表</div>
-  <div class="infographic-wrap">
+  <div class="infographic-toolbar">
+    <a class="infographic-btn" href="slides/infographic.jpg" target="_blank">
+      🔗 原圖連結
+    </a>
+    <button class="infographic-btn" onclick="openLightbox()">
+      🔍 放大檢視
+    </button>
+  </div>
+  <div class="infographic-wrap" onclick="openLightbox()">
     <img
+      id="infographic-img"
       src="slides/infographic.jpg"
       onerror="this.src='https://lh3.googleusercontent.com/notebooklm/AKXwDQGEpFz6DBGRjMFVEkfXM8trsd91KrvnDW-HRd5V1CdsNf6knNOSx0Xu25QYZ2_fv9Q_STifTSFSDoUMFbUWeAKJng4c1nMFc2s7UgdpvzRS4cMAFspR7kjyhXq9y8XjhGV5l40edWubn1SD34ya9EqiOizOUA=w2752-d-h1536-mp2'"
-      alt="臺灣多元文化宗教地圖 資訊圖表">
+      alt="臺灣多元文化宗教地圖 資訊圖表（點擊放大）"
+      title="點擊放大">
   </div>
+  <p style="color:var(--faint);font-size:.78rem;text-align:center;margin-top:8px;">
+    🖱️ 點擊圖片或「放大檢視」可全螢幕觀看・按 ESC 或點擊空白處關閉
+  </p>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close" onclick="closeLightbox()">✕</span>
+  <img id="lightbox-img" src="slides/infographic.jpg"
+    onerror="this.src='https://lh3.googleusercontent.com/notebooklm/AKXwDQGEpFz6DBGRjMFVEkfXM8trsd91KrvnDW-HRd5V1CdsNf6knNOSx0Xu25QYZ2_fv9Q_STifTSFSDoUMFbUWeAKJng4c1nMFc2s7UgdpvzRS4cMAFspR7kjyhXq9y8XjhGV5l40edWubn1SD34ya9EqiOizOUA=w2752-d-h1536-mp2'"
+    alt="資訊圖表放大" onclick="event.stopPropagation()">
 </div>
 
 <!-- 5. 評量遊戲 -->
@@ -332,6 +374,17 @@ document.addEventListener('keydown', e => {
 });
 
 probeSlides();
+
+/* ── Lightbox ── */
+function openLightbox(){
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLightbox(); });
 
 /* ── QR Codes ── */
 const base = window.location.href.replace('index.html','').replace(/\/$/, '');
