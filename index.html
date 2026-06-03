@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>教學駕駛艙集合 · Teaching Cockpits</title>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#162b18;--board:#1d3a1f;--board2:#254a28;--dim:#0e1e10;
@@ -23,8 +23,11 @@ header{background:var(--dim);border-bottom:2px solid #2e4e30;
 .section-label{font-family:'Caveat',cursive;font-size:1.4rem;color:var(--faint);
   margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #2e4e30;
   display:flex;align-items:center;gap:8px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;
-  margin-bottom:40px}
+/* 第一排 2欄，第二排 3欄 */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px;}
+@media(max-width:680px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+@media(min-width:681px) and (max-width:860px){.grid-3{grid-template-columns:repeat(2,1fr);}}
 .cockpit-card{background:var(--board);border:1px solid #3a5c3d;border-radius:10px;
   padding:20px;display:flex;flex-direction:column;gap:10px;
   transition:border-color .2s,transform .15s,box-shadow .2s;text-decoration:none;color:inherit}
@@ -33,8 +36,23 @@ header{background:var(--dim);border-bottom:2px solid #2e4e30;
 .card-tag{font-size:.68rem;background:#1a3320;border:1px solid #3a5c3d;
   border-radius:12px;padding:2px 10px;color:var(--faint);display:inline-block;
   width:fit-content}
-.card-title{font-family:'Caveat',cursive;font-size:1.3rem;color:var(--Y);
-  line-height:1.3}
+/* 標題：明顯粗黑字體 */
+.card-title{
+  font-family:'Noto Sans TC',sans-serif;
+  font-weight:900;
+  font-size:1.05rem;
+  color:var(--Y);
+  line-height:1.55;
+  letter-spacing:.02em;
+}
+.card-title .unit{
+  display:block;
+  font-size:.72rem;
+  font-weight:500;
+  color:var(--faint);
+  margin-bottom:4px;
+  letter-spacing:.04em;
+}
 .card-desc{font-size:.8rem;color:var(--faint);line-height:1.6}
 .card-badge{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
 .badge{font-size:.65rem;background:#254a28;border-radius:10px;
@@ -59,11 +77,16 @@ footer a{color:var(--B);text-decoration:none}
 
   <!-- 社會科 -->
   <div class="section-label">📚 社會科</div>
-  <div class="grid">
+
+  <!-- 第一排：CH3_1  CH3_2 -->
+  <div class="grid-2">
 
     <a class="cockpit-card" href="./社會/CH3_1/index.html">
       <span class="card-tag">國小五年級 · 社會</span>
-      <div class="card-title">走向民主的中華民國<br>CH3_1 中華民國政府為何在臺灣實施戒嚴？</div>
+      <div class="card-title">
+        <span class="unit">走向民主的中華民國 · CH3-1</span>
+        中華民國政府為何在臺灣實施戒嚴？
+      </div>
       <div class="card-desc">戰後接收與治理、二二八事件始末、戒嚴時期的嚴密控制與白色恐怖</div>
       <div class="card-badge">
         <span class="badge">🖼 簡報輪播</span>
@@ -75,9 +98,34 @@ footer a{color:var(--B);text-decoration:none}
       <div class="card-footer">▶ 開啟教學駕駛艙</div>
     </a>
 
+    <a class="cockpit-card" href="./社會/CH3_2/index.html">
+      <span class="card-tag">國小五年級 · 社會</span>
+      <div class="card-title">
+        <span class="unit">走向民主的中華民國 · CH3-2</span>
+        臺灣為什麼能走向民主社會？
+      </div>
+      <div class="card-desc">戒嚴時期地方自治、美麗島事件、解嚴、野百合學運、首次總統直選、公民參與民主社會</div>
+      <div class="card-badge">
+        <span class="badge">🖼 簡報輪播</span>
+        <span class="badge">🎬 影片</span>
+        <span class="badge">🔊 語音</span>
+        <span class="badge">📊 圖表</span>
+        <span class="badge">✏️ 6 款遊戲</span>
+      </div>
+      <div class="card-footer">▶ 開啟教學駕駛艙</div>
+    </a>
+
+  </div>
+
+  <!-- 第二排：CH4_1  CH4_2  CH4_3 -->
+  <div class="grid-3">
+
     <a class="cockpit-card" href="./社會/CH4_1/教學駕駛艙_CH4_1.html">
       <span class="card-tag">國小五年級 · 社會</span>
-      <div class="card-title">從臺灣探索世界文化<br>CH4_1 走進博物館</div>
+      <div class="card-title">
+        <span class="unit">從臺灣探索世界文化 · CH4-1</span>
+        走進博物館
+      </div>
       <div class="card-desc">博物館的功能與文化意義、臺灣與世界各地的博物館特色</div>
       <div class="card-badge">
         <span class="badge">🖼 簡報輪播</span>
@@ -91,7 +139,10 @@ footer a{color:var(--B);text-decoration:none}
 
     <a class="cockpit-card" href="./社會/CH4_2/index.html">
       <span class="card-tag">國小五年級 · 社會</span>
-      <div class="card-title">從臺灣探索世界文化<br>CH4_2 各族群生活方式如何形成文化？</div>
+      <div class="card-title">
+        <span class="unit">從臺灣探索世界文化 · CH4-2</span>
+        各族群生活方式如何形成文化？
+      </div>
       <div class="card-desc">曆法的發展、布農族三大祭典與木刻畫曆、農民曆知識、漢人農業社會作息、現代標準時間的引進、多元族群文化保障</div>
       <div class="card-badge">
         <span class="badge">🔵 選擇題</span>
@@ -105,7 +156,10 @@ footer a{color:var(--B);text-decoration:none}
 
     <a class="cockpit-card" href="./社會/CH4_3/index.html">
       <span class="card-tag">國小五年級 · 社會</span>
-      <div class="card-title">從臺灣探索世界文化<br>CH4_3 世界宗教如何在臺灣傳播發展？</div>
+      <div class="card-title">
+        <span class="unit">從臺灣探索世界文化 · CH4-3</span>
+        世界宗教如何在臺灣傳播發展？
+      </div>
       <div class="card-desc">信仰起源、基督宗教、伊斯蘭教、佛教與道教、臺灣民間信仰、媽祖信仰與大甲遶境文化</div>
       <div class="card-badge">
         <span class="badge">🖼 簡報輪播</span>
@@ -117,31 +171,9 @@ footer a{color:var(--B);text-decoration:none}
       <div class="card-footer">▶ 開啟教學駕駛艙</div>
     </a>
 
-    <a class="cockpit-card" href="./社會/CH3_2/index.html">
-      <span class="card-tag">國小五年級 · 社會</span>
-      <div class="card-title">走向民主的中華民國<br>CH3_2 臺灣為什麼能走向民主社會？</div>
-      <div class="card-desc">戒嚴時期地方自治、美麗島事件、解嚴、野百合學運、首次總統直選、公民參與民主社會</div>
-      <div class="card-badge">
-        <span class="badge">🖼 簡報輪播</span>
-        <span class="badge">🎬 影片</span>
-        <span class="badge">🔊 語音</span>
-        <span class="badge">📊 圖表</span>
-        <span class="badge">✏️ 6 款遊戲</span>
-      </div>
-      <div class="card-footer">▶ 開啟教學駕駛艙</div>
-    </a>
-
-    <!-- 未來的社會科駕駛艙會加在這裡 -->
-
   </div>
 
   <!-- 未來的科目區塊 -->
-  <!-- 範例：
-  <div class="section-label">🔢 數學科</div>
-  <div class="grid">
-    ...
-  </div>
-  -->
 
 </div>
 
