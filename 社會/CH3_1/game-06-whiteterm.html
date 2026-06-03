@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重點6：戒嚴時期對人民的影響</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;}
+h1{color:var(--Y);font-size:1.4rem;text-align:center;margin-bottom:4px;}
+.subtitle{color:var(--faint);font-size:.85rem;margin-bottom:20px;text-align:center;}
+.progress{width:100%;max-width:560px;background:var(--dim);border-radius:8px;height:8px;margin-bottom:16px;}
+.progress-bar{height:8px;border-radius:8px;background:var(--G);transition:width .4s;}
+.card{background:var(--board);border-radius:12px;padding:24px;max-width:560px;width:100%;}
+.qnum{color:var(--faint);font-size:.8rem;margin-bottom:8px;}
+.question{font-size:1.05rem;line-height:1.6;margin-bottom:20px;}
+.tf-row{display:flex;gap:12px;}
+.tf-btn{flex:1;padding:16px;border-radius:8px;border:2px solid var(--faint);background:var(--dim);color:var(--chalk);font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.tf-btn:hover{border-color:var(--B);}
+.tf-btn.correct{border-color:var(--G);background:#1a3d1a;}
+.tf-btn.wrong{border-color:var(--R);background:#3d1a1a;}
+.feedback{margin-top:16px;padding:12px;border-radius:8px;font-size:.9rem;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:#1a3d1a;color:var(--G);}
+.feedback.no{background:#3d1a1a;color:var(--R);}
+.btn{margin-top:16px;padding:10px 28px;background:var(--Y);color:#162b18;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;display:none;}
+.btn.show{display:inline-block;}
+.score-box{text-align:center;padding:24px;display:none;}
+.score-box.show{display:block;}
+.score-num{font-size:3rem;color:var(--Y);font-weight:700;}
+.qr-area{margin-top:24px;text-align:center;}
+.qr-area img{border:4px solid var(--board);border-radius:8px;}
+.qr-area p{color:var(--faint);font-size:.75rem;margin-top:6px;}
+.tag{display:inline-block;background:var(--dim);color:var(--B);border-radius:4px;padding:2px 8px;font-size:.75rem;margin-bottom:12px;}
+</style>
+</head>
+<body>
+<h1>😰 重點6：戒嚴時期對人民的影響</h1>
+<p class="subtitle">國小社會5下・第三單元第1課 形成性評量</p>
+<div class="progress"><div class="progress-bar" id="pbar" style="width:0%"></div></div>
+<div class="card" id="card">
+  <div class="tag">是非題 T/F</div>
+  <div class="qnum" id="qnum">第 1 題／共 5 題</div>
+  <div class="question" id="question"></div>
+  <div class="tf-row">
+    <button class="tf-btn" id="btnT" onclick="answer(true)">⭕ 正確</button>
+    <button class="tf-btn" id="btnF" onclick="answer(false)">❌ 錯誤</button>
+  </div>
+  <div class="feedback" id="feedback"></div>
+  <button class="btn" id="nextBtn" onclick="next()">下一題 →</button>
+</div>
+<div class="score-box" id="scorebox">
+  <div style="font-size:1.2rem;margin-bottom:8px;">🎉 完成！你的得分</div>
+  <div class="score-num" id="scorenum"></div>
+  <div style="color:var(--faint);margin-bottom:16px;">分（滿分 100 分）</div>
+  <button onclick="restart()" style="padding:10px 28px;background:var(--Y);color:#162b18;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;">🔄 重新挑戰</button>
+</div>
+<div class="qr-area">
+  <img id="qr-img" src="" alt="QR Code" width="120" height="120">
+  <p>掃描 QR Code 分享此遊戲</p>
+</div>
+
+<script>
+document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data='+encodeURIComponent(window.location.href);
+
+const qs=[
+  {q:'戒嚴時期，政府為了防止共產黨滲透，透過各種管道監視人民。',ans:true,exp:'正確！政府為防止中國共產黨的滲透，透過各種管道監視人民，讓人民不敢自由表達意見。'},
+  {q:'戒嚴時期，所有被逮捕的民眾都能獲得公平、公開的審判。',ans:false,exp:'錯誤！戒嚴時期沒有公平、公開的審判制度，有不少民眾無辜遭到逮捕，對當事人及家屬的身心造成難以抹滅的傷害。'},
+  {q:'戒嚴時期政府監聽政治犯與家屬的面會談話內容。',ans:true,exp:'正確！政治犯與家屬在隔著玻璃的面會室透過電話交談，內容會被監聽和錄音。'},
+  {q:'綠島是戒嚴時期關押政治犯的地方之一。',ans:true,exp:'正確！綠島紀念園區（包含新生訓導處和綠洲山莊）是戒嚴時期監禁政治犯的重要地點。'},
+  {q:'戒嚴時期，人民可以自由組成政黨，參與各種政治活動。',ans:false,exp:'錯誤！戒嚴時期嚴格限制人民的政治活動，不能自由組成政黨，言論、集會、出版等自由都受到限制。'},
+];
+
+let cur=0,score=0;
+function render(){
+  const q=qs[cur];
+  document.getElementById('qnum').textContent=`第 ${cur+1} 題／共 ${qs.length} 題`;
+  document.getElementById('pbar').style.width=`${(cur/qs.length)*100}%`;
+  document.getElementById('question').textContent=q.q;
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('nextBtn').className='btn';
+  document.getElementById('btnT').className='tf-btn';
+  document.getElementById('btnF').className='tf-btn';
+  document.getElementById('btnT').onclick=()=>answer(true);
+  document.getElementById('btnF').onclick=()=>answer(false);
+}
+function answer(val){
+  document.getElementById('btnT').onclick=null;
+  document.getElementById('btnF').onclick=null;
+  const q=qs[cur];
+  const fb=document.getElementById('feedback');
+  if(val===q.ans){score++;(val?document.getElementById('btnT'):document.getElementById('btnF')).classList.add('correct');fb.className='feedback show ok';fb.textContent='✅ 正確！'+q.exp;}
+  else{(val?document.getElementById('btnT'):document.getElementById('btnF')).classList.add('wrong');(q.ans?document.getElementById('btnT'):document.getElementById('btnF')).classList.add('correct');fb.className='feedback show no';fb.textContent='❌ 答錯了！'+q.exp;}
+  document.getElementById('nextBtn').className='btn show';
+}
+function next(){cur++;if(cur>=qs.length){document.getElementById('card').style.display='none';document.getElementById('scorebox').className='score-box show';document.getElementById('scorenum').textContent=Math.round(score/qs.length*100);}else render();}
+function restart(){cur=0;score=0;document.getElementById('card').style.display='';document.getElementById('scorebox').className='score-box';render();}
+render();
+</script>
+</body>
+</html>
