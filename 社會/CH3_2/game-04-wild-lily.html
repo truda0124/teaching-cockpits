@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重點4：野百合學運 — 是非題</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;}
+h1{color:var(--Y);font-size:1.2rem;margin-bottom:4px;text-align:center;}
+.subtitle{color:var(--faint);font-size:.8rem;margin-bottom:20px;}
+.card{background:var(--board);border-radius:12px;padding:24px;max-width:560px;width:100%;}
+.q-num{color:var(--faint);font-size:.8rem;margin-bottom:8px;}
+.q-text{font-size:1.05rem;line-height:1.7;margin-bottom:22px;}
+.tf-btns{display:flex;gap:16px;}
+.tf-btn{flex:1;padding:16px;border:2px solid transparent;border-radius:10px;cursor:pointer;font-size:1.1rem;font-weight:700;transition:all .2s;background:var(--dim);}
+.tf-btn.true-btn{color:var(--G);}
+.tf-btn.false-btn{color:var(--R);}
+.tf-btn:hover{border-color:var(--faint);}
+.tf-btn.correct{border-color:var(--G);background:#1a3d1e;}
+.tf-btn.wrong{border-color:var(--R);background:#3d1a1a;}
+.feedback{margin-top:16px;padding:12px;border-radius:8px;font-size:.9rem;display:none;line-height:1.6;}
+.feedback.show{display:block;}
+.feedback.ok{background:#1a3d1e;border-left:4px solid var(--G);}
+.feedback.ng{background:#3d1a1a;border-left:4px solid var(--R);}
+.score-bar{display:flex;justify-content:space-between;align-items:center;max-width:560px;width:100%;margin-bottom:12px;}
+.score{color:var(--Y);font-size:.9rem;}
+.progress{color:var(--faint);font-size:.8rem;}
+.nav{margin-top:18px;}
+.btn-next{padding:10px 22px;border:none;border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:700;background:var(--B);color:#0a1a2a;display:none;}
+.result-card{display:none;background:var(--board);border-radius:12px;padding:30px;max-width:560px;width:100%;text-align:center;}
+.result-card.show{display:block;}
+.result-score{font-size:2.5rem;color:var(--Y);font-weight:700;margin:12px 0;}
+.btn{padding:10px 22px;border:none;border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:700;background:var(--Y);color:#1a1200;margin-top:16px;}
+.qr-area{margin-top:30px;text-align:center;}
+.qr-area img{border-radius:8px;border:3px solid var(--board);}
+.qr-area p{color:var(--faint);font-size:.75rem;margin-top:6px;}
+</style>
+</head>
+<body>
+<h1>重點4：野百合學運</h1>
+<p class="subtitle">是非題 ✦ 共5題</p>
+<div class="score-bar">
+  <span class="score">得分：<span id="score">0</span></span>
+  <span class="progress"><span id="cur">1</span> / 5</span>
+</div>
+<div class="card" id="q-card">
+  <div class="q-num" id="q-num"></div>
+  <div class="q-text" id="q-text"></div>
+  <div class="tf-btns">
+    <button class="tf-btn true-btn" onclick="answer(true)">⭕ 是</button>
+    <button class="tf-btn false-btn" onclick="answer(false)">❌ 非</button>
+  </div>
+  <div class="feedback" id="feedback"></div>
+  <div class="nav">
+    <button class="btn-next" id="btn-next" onclick="nextQ()">下一題 →</button>
+  </div>
+</div>
+<div class="result-card" id="result">
+  <div style="font-size:1.3rem;font-weight:700;color:var(--Y)">測驗完成！🎉</div>
+  <div class="result-score"><span id="final-score">0</span> / 5</div>
+  <div style="color:var(--faint);font-size:.9rem" id="result-msg"></div>
+  <button class="btn" onclick="restart()">再玩一次 🔄</button>
+</div>
+<div class="qr-area">
+  <img id="qr-img" src="" width="100" height="100" alt="QR Code">
+  <p>掃描分享此遊戲</p>
+</div>
+<script>
+const qs=[
+  {q:"野百合學運發生在民國79年（西元1990年）。",ans:true,exp:"正確！民國79年，學生到中正紀念堂發起靜坐行動，被稱為野百合學運。"},
+  {q:"野百合學運的學生是到立法院靜坐抗議。",ans:false,exp:"錯誤！學生是到中正紀念堂廣場靜坐，不是立法院。"},
+  {q:"野百合學運的訴求之一是「總統直選」。",ans:true,exp:"正確！學生提出總統直選等政治改革訴求，是當時四大訴求之一。"},
+  {q:"野百合學運是中華民國政府遷臺後第一次大規模學生抗議運動。",ans:true,exp:"正確！此次運動是政府遷臺後發生的第一次大規模學生抗議運動。"},
+  {q:"野百合學運又稱為「五月學運」。",ans:false,exp:"錯誤！野百合學運又稱為「三月學運」，因為發生在民國79年3月。"}
+];
+let cur=0,score=0,answered=false;
+function render(){
+  const q=qs[cur];
+  document.getElementById('q-num').textContent=`第 ${cur+1} 題`;
+  document.getElementById('q-text').textContent=q.q;
+  document.getElementById('cur').textContent=cur+1;
+  document.querySelectorAll('.tf-btn').forEach(b=>{b.classList.remove('correct','wrong');b.disabled=false;});
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('btn-next').style.display='none';
+  answered=false;
+}
+function answer(val){
+  if(answered)return;answered=true;
+  const q=qs[cur];
+  const btns=document.querySelectorAll('.tf-btn');
+  const fb=document.getElementById('feedback');
+  btns.forEach(b=>b.disabled=true);
+  if(val===q.ans){
+    score++;document.getElementById('score').textContent=score;
+    btns[val?0:1].classList.add('correct');
+    fb.className='feedback show ok';fb.textContent='✅ 答對了！'+q.exp;
+  } else {
+    btns[val?0:1].classList.add('wrong');
+    btns[q.ans?0:1].classList.add('correct');
+    fb.className='feedback show ng';fb.textContent='❌ 答錯了。'+q.exp;
+  }
+  if(cur<qs.length-1)document.getElementById('btn-next').style.display='block';
+  else setTimeout(showResult,800);
+}
+function nextQ(){cur++;render();}
+function showResult(){
+  document.getElementById('q-card').style.display='none';
+  const r=document.getElementById('result');r.classList.add('show');
+  document.getElementById('final-score').textContent=score;
+  const msgs=['繼續加油！📖','再複習一下 💪','很棒！🌟','滿分！🏆'];
+  document.getElementById('result-msg').textContent=score<=1?msgs[0]:score<=3?msgs[1]:score<=4?msgs[2]:msgs[3];
+}
+function restart(){cur=0;score=0;answered=false;document.getElementById('score').textContent=0;document.getElementById('q-card').style.display='block';document.getElementById('result').classList.remove('show');render();}
+render();
+document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(window.location.href);
+</script>
+</body>
+</html>
