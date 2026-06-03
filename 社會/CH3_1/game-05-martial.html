@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重點5：戒嚴的背景與實施</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;}
+h1{color:var(--Y);font-size:1.4rem;text-align:center;margin-bottom:4px;}
+.subtitle{color:var(--faint);font-size:.85rem;margin-bottom:20px;text-align:center;}
+.progress{width:100%;max-width:560px;background:var(--dim);border-radius:8px;height:8px;margin-bottom:16px;}
+.progress-bar{height:8px;border-radius:8px;background:var(--G);transition:width .4s;}
+.card{background:var(--board);border-radius:12px;padding:24px;max-width:560px;width:100%;}
+.qnum{color:var(--faint);font-size:.8rem;margin-bottom:8px;}
+.question{font-size:1.1rem;line-height:1.6;margin-bottom:20px;}
+.choices{display:flex;flex-direction:column;gap:10px;}
+.choice{background:var(--dim);border:2px solid transparent;border-radius:8px;padding:12px 16px;cursor:pointer;transition:all .2s;font-size:.95rem;}
+.choice:hover{border-color:var(--B);}
+.choice.correct{border-color:var(--G);background:#1a3d1a;}
+.choice.wrong{border-color:var(--R);background:#3d1a1a;}
+.feedback{margin-top:16px;padding:12px;border-radius:8px;font-size:.9rem;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:#1a3d1a;color:var(--G);}
+.feedback.no{background:#3d1a1a;color:var(--R);}
+.btn{margin-top:16px;padding:10px 28px;background:var(--Y);color:#162b18;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;display:none;}
+.btn.show{display:inline-block;}
+.score-box{text-align:center;padding:24px;display:none;}
+.score-box.show{display:block;}
+.score-num{font-size:3rem;color:var(--Y);font-weight:700;}
+.qr-area{margin-top:24px;text-align:center;}
+.qr-area img{border:4px solid var(--board);border-radius:8px;}
+.qr-area p{color:var(--faint);font-size:.75rem;margin-top:6px;}
+.tag{display:inline-block;background:var(--dim);color:var(--B);border-radius:4px;padding:2px 8px;font-size:.75rem;margin-bottom:12px;}
+</style>
+</head>
+<body>
+<h1>🔒 重點5：戒嚴的背景與實施</h1>
+<p class="subtitle">國小社會5下・第三單元第1課 形成性評量</p>
+<div class="progress"><div class="progress-bar" id="pbar" style="width:0%"></div></div>
+<div class="card" id="card">
+  <div class="tag">選擇題 MCQ</div>
+  <div class="qnum" id="qnum">第 1 題／共 5 題</div>
+  <div class="question" id="question"></div>
+  <div class="choices" id="choices"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="btn" id="nextBtn" onclick="next()">下一題 →</button>
+</div>
+<div class="score-box" id="scorebox">
+  <div style="font-size:1.2rem;margin-bottom:8px;">🎉 完成！你的得分</div>
+  <div class="score-num" id="scorenum"></div>
+  <div style="color:var(--faint);margin-bottom:16px;">分（滿分 100 分）</div>
+  <button onclick="restart()" style="padding:10px 28px;background:var(--Y);color:#162b18;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;">🔄 重新挑戰</button>
+</div>
+<div class="qr-area">
+  <img id="qr-img" src="" alt="QR Code" width="120" height="120">
+  <p>掃描 QR Code 分享此遊戲</p>
+</div>
+
+<script>
+document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data='+encodeURIComponent(window.location.href);
+
+const qs=[
+  {q:'民國幾年，中華民國政府宣布臺灣實施戒嚴？',choices:['民國34年（西元1945年）','民國36年（西元1947年）','民國38年（西元1949年）','民國76年（西元1987年）'],ans:2,exp:'民國38年（西元1949年），政府以維護社會秩序為由，宣布臺灣實施戒嚴。'},
+  {q:'政府實施戒嚴的官方理由是什麼？',choices:['為了舉辦民主選舉','維護國家社會秩序','發展臺灣的經濟','推廣國語教育'],ans:1,exp:'政府以「維護社會秩序」為由宣布戒嚴，並以防止中國共產黨滲透為名，限制人民的各種自由。'},
+  {q:'戒嚴時期，政府限制了哪些自由？（下列哪一項是正確的？）',choices:['限制人民言論、集會、出版等自由','開放人民自由組成政黨','允許人民批評政府施政','保障媒體新聞自由'],ans:0,exp:'戒嚴時期，政府透過增修法律，限制人民言論、集會、出版等自由，還查禁部分歌曲與書籍。'},
+  {q:'下列哪首歌曲在戒嚴時期曾遭到查禁？',choices:['生日快樂歌','媽媽請你也保重','臺灣國歌','小星星'],ans:1,exp:'台語歌曲〈媽媽請你也保重〉被政府以「擾亂軍心、減損士氣」等理由查禁，是知名的禁歌之一。'},
+  {q:'戒嚴時期，《自由中國》雜誌遭到查禁的原因是？',choices:['內容太過無聊乏味','刊登批評政府施政不當的文章','雜誌紙張品質太差','違反版權法規'],ans:1,exp:'《自由中國》雜誌為了推廣自由民主觀念而創立，但因刊登批評政府施政不當的文章，遭到查禁與停刊。'},
+];
+
+let cur=0,score=0;
+function render(){
+  const q=qs[cur];
+  document.getElementById('qnum').textContent=`第 ${cur+1} 題／共 ${qs.length} 題`;
+  document.getElementById('pbar').style.width=`${(cur/qs.length)*100}%`;
+  document.getElementById('question').textContent=q.q;
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('nextBtn').className='btn';
+  const ch=document.getElementById('choices');
+  ch.innerHTML='';
+  q.choices.forEach((c,i)=>{
+    const d=document.createElement('div');
+    d.className='choice';
+    d.textContent=`${['Ａ','Ｂ','Ｃ','Ｄ'][i]}、${c}`;
+    d.onclick=()=>answer(i,d,q);
+    ch.appendChild(d);
+  });
+}
+function answer(i,el,q){
+  document.querySelectorAll('.choice').forEach(c=>c.onclick=null);
+  const fb=document.getElementById('feedback');
+  if(i===q.ans){score++;el.classList.add('correct');fb.className='feedback show ok';fb.textContent='✅ 正確！'+q.exp;}
+  else{el.classList.add('wrong');document.querySelectorAll('.choice')[q.ans].classList.add('correct');fb.className='feedback show no';fb.textContent='❌ 答錯了！'+q.exp;}
+  document.getElementById('nextBtn').className='btn show';
+}
+function next(){cur++;if(cur>=qs.length){document.getElementById('card').style.display='none';document.getElementById('scorebox').className='score-box show';document.getElementById('scorenum').textContent=Math.round(score/qs.length*100);}else render();}
+function restart(){cur=0;score=0;document.getElementById('card').style.display='';document.getElementById('scorebox').className='score-box';render();}
+render();
+</script>
+</body>
+</html>
