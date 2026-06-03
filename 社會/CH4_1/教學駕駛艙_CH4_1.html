@@ -25,6 +25,11 @@ header{height:48px;display:flex;align-items:center;gap:12px;padding:0 14px;
 .mbtn{padding:3px 14px;border-radius:18px;border:none;background:transparent;
   color:var(--faint);cursor:pointer;font-size:.78rem;font-family:'Noto Sans TC',sans-serif;transition:.2s}
 .mbtn.on{background:var(--Y);color:#1a1a1a;font-weight:700}
+.home-btn{display:flex;align-items:center;gap:5px;padding:4px 12px;
+  background:var(--board);border:1px solid #3a5c3d;border-radius:16px;
+  color:var(--faint);font-size:.78rem;font-family:'Noto Sans TC',sans-serif;
+  text-decoration:none;transition:.2s;white-space:nowrap;flex-shrink:0}
+.home-btn:hover{border-color:var(--B);color:var(--B);background:#152a17}
 
 /* TABS */
 .tabs{height:44px;display:flex;align-items:flex-end;gap:3px;padding:0 12px;
@@ -392,6 +397,9 @@ body.student .t-hint{display:none}
     <div class="sub" id="site-sub">從臺灣探索世界文化 · CH4_1 · 國小社會 五年級下</div>
   </div>
   <div class="sp"></div>
+  <a class="home-btn" href="https://truda0124.github.io/teaching-cockpits/" target="_blank" rel="noopener">
+    🏠 社會科首頁
+  </a>
   <div class="mode-wrap">
     <button class="mbtn on" onclick="setMode('teacher')">👨‍🏫 教師模式</button>
     <button class="mbtn" onclick="setMode('student')">🎒 學生模式</button>
