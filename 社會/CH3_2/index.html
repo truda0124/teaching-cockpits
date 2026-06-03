@@ -9,6 +9,11 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;}
 
+/* Back bar */
+.back-bar{background:var(--dim);padding:10px 20px;border-bottom:1px solid #2a4a2c;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--faint);color:var(--faint);border-radius:6px;padding:6px 14px;font-size:.82rem;text-decoration:none;transition:all .2s;}
+.back-btn:hover{border-color:var(--Y);color:var(--Y);}
+
 /* Header */
 .header{background:var(--dim);padding:24px 20px 20px;text-align:center;border-bottom:2px solid #2a4a2c;}
 .tag{display:inline-block;background:#2a4a2c;color:var(--G);font-size:.75rem;padding:3px 10px;border-radius:20px;margin-bottom:10px;}
@@ -82,6 +87,9 @@ video.media-player{max-height:240px;background:#000;}
 </head>
 <body>
 
+<div class="back-bar">
+  <a class="back-btn" href="https://truda0124.github.io/teaching-cockpits/" target="_blank">← 返回社會科教學駕駛艙首頁</a>
+</div>
 <div class="header">
   <div class="tag">國小五年級 · 社會 · 第3單元</div>
   <h1>3-2 臺灣為什麼能走向民主社會？</h1>
@@ -198,7 +206,8 @@ video.media-player{max-height:240px;background:#000;}
 </div>
 
 <div class="footer">
-  3-2 臺灣為什麼能走向民主社會 · 國小五年級社會 · 114學年度
+  3-2 臺灣為什麼能走向民主社會 · 國小五年級社會 · 114學年度<br>
+  <a href="https://truda0124.github.io/teaching-cockpits/" target="_blank" style="color:var(--B);text-decoration:none;margin-top:8px;display:inline-block;">← 返回社會科教學駕駛艙首頁</a>
 </div>
 
 <script>
