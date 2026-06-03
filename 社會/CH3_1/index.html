@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3-1 中華民國政府為何在臺灣實施戒嚴？ 教學駕駛艙</title>
+<style>
+:root{
+  --bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;
+  --chalk:#f0ece2;--faint:#9aaa9c;
+  --Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',Arial,sans-serif;min-height:100vh;}
+
+/* header */
+.header{background:var(--dim);border-bottom:2px solid #2d4a2f;padding:20px 24px;text-align:center;}
+.header-tag{display:inline-block;background:var(--Y);color:#162b18;border-radius:4px;padding:2px 10px;font-size:.78rem;font-weight:700;margin-bottom:8px;}
+.header h1{font-size:1.5rem;color:var(--chalk);line-height:1.4;}
+.header p{color:var(--faint);font-size:.85rem;margin-top:4px;}
+
+/* section */
+.section{padding:28px 20px;max-width:900px;margin:0 auto;}
+.section-label{display:flex;align-items:center;gap:8px;color:var(--Y);font-size:1rem;font-weight:700;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #2d4a2f;}
+
+/* carousel */
+.carousel-wrap{position:relative;background:var(--board);border-radius:12px;overflow:hidden;}
+.carousel-img{width:100%;display:block;aspect-ratio:16/9;object-fit:contain;background:#000;}
+.carousel-nav{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--dim);}
+.carousel-btn{background:none;border:1px solid var(--faint);color:var(--chalk);border-radius:6px;padding:6px 14px;cursor:pointer;font-size:.9rem;transition:all .2s;}
+.carousel-btn:hover{border-color:var(--Y);color:var(--Y);}
+.carousel-counter{color:var(--faint);font-size:.85rem;}
+.carousel-dots{display:flex;gap:6px;justify-content:center;padding:8px 0;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--faint);cursor:pointer;transition:all .2s;}
+.dot.active{background:var(--Y);transform:scale(1.3);}
+
+/* video */
+.video-wrap{background:var(--board);border-radius:12px;overflow:hidden;}
+.video-wrap video{width:100%;display:block;max-height:480px;}
+
+/* audio */
+.audio-wrap{background:var(--board);border-radius:12px;padding:20px 24px;display:flex;align-items:center;gap:16px;}
+.audio-icon{font-size:2.5rem;}
+.audio-info{flex:1;}
+.audio-info strong{display:block;color:var(--Y);margin-bottom:4px;}
+.audio-info p{color:var(--faint);font-size:.82rem;margin-bottom:10px;}
+.audio-wrap audio{width:100%;}
+
+/* infographic */
+.infographic-wrap{background:var(--board);border-radius:12px;overflow:hidden;text-align:center;}
+.infographic-wrap img{width:100%;display:block;}
+
+/* games */
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+.game-card{background:var(--board);border-radius:12px;padding:20px;text-decoration:none;color:var(--chalk);transition:all .2s;display:block;border:2px solid transparent;}
+.game-card:hover{border-color:var(--Y);transform:translateY(-2px);}
+.game-card .badge{display:inline-block;background:var(--dim);color:var(--B);border-radius:4px;padding:2px 8px;font-size:.72rem;margin-bottom:10px;}
+.game-card h3{font-size:1rem;color:var(--Y);margin-bottom:6px;}
+.game-card p{color:var(--faint);font-size:.82rem;line-height:1.5;}
+.game-card .arrow{margin-top:12px;color:var(--G);font-size:.85rem;font-weight:700;}
+
+/* qr section */
+.qr-row{display:flex;flex-wrap:wrap;gap:12px;}
+.qr-item{background:var(--board);border-radius:10px;padding:12px;text-align:center;flex:1;min-width:120px;}
+.qr-item img{border-radius:4px;margin-bottom:6px;}
+.qr-item p{color:var(--faint);font-size:.7rem;line-height:1.3;}
+
+/* footer */
+.footer{text-align:center;padding:24px;color:var(--faint);font-size:.78rem;border-top:1px solid #2d4a2f;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-tag">國小社會 5 下・第三單元</div>
+  <h1>🏛️ 中華民國政府為何在臺灣實施戒嚴？</h1>
+  <p>第一課 教學駕駛艙 ｜ 簡報輪播・教學影片・複習語音・資訊圖表・6 款評量遊戲</p>
+</div>
+
+<!-- ① 簡報輪播 -->
+<div class="section">
+  <div class="section-label">🖼️ 教學簡報輪播</div>
+  <div class="carousel-wrap">
+    <img class="carousel-img" id="slide-img" src="slides/slide_01.jpg" alt="投影片">
+    <div class="carousel-nav">
+      <button class="carousel-btn" onclick="prevSlide()">◀ 上一頁</button>
+      <span class="carousel-counter" id="slide-counter">1 / 11</span>
+      <button class="carousel-btn" onclick="nextSlide()">下一頁 ▶</button>
+    </div>
+  </div>
+  <div class="carousel-dots" id="dots"></div>
+</div>
+
+<!-- ② 教學影片 -->
+<div class="section">
+  <div class="section-label">🎬 教學影片</div>
+  <div class="video-wrap">
+    <video controls preload="metadata"
+      src="https://lh3.googleusercontent.com/notebooklm/AKXwDQH4B5BLMfEokLjb5544KWlSRY9IqcgjkT_qzXL7zsOqO7emFKmpP0QinV9YLTXqZypmzY8GkyagBWuaJZzNM8IRTWCYLlQkJMgJQN2YRsu95SK3pi76tk2pXmY5psE_elxLoF7-9-MxUw=m22-dv">
+      您的瀏覽器不支援影片播放。
+    </video>
+  </div>
+</div>
+
+<!-- ③ 複習語音 -->
+<div class="section">
+  <div class="section-label">🔊 複習語音</div>
+  <div class="audio-wrap">
+    <div class="audio-icon">🎙️</div>
+    <div class="audio-info">
+      <strong>3-1 二二八與戒嚴必考重點</strong>
+      <p>AI 老師整理核心重點・適合考前複習聆聽</p>
+      <audio controls preload="metadata"
+        src="https://lh3.googleusercontent.com/notebooklm/AKXwDQFp_aSX4wuQR74kwL2MHe_zp-Rm1ClPlR4JE-YwV7BTd3gkVtQlT1-BL6wTa_TWVK18wGvccVVHWKRRjxyL96Aqj9VsS6ErjvX6yoCnFituNmhNLY5nQJ7vy1xri5qRo6GjBXk9Lp9qNfMob4nylnMpVyBr5X0=m140-dv">
+      </audio>
+    </div>
+  </div>
+</div>
+
+<!-- ④ 資訊圖表 -->
+<div class="section">
+  <div class="section-label">📊 資訊圖表</div>
+  <div class="infographic-wrap">
+    <img src="slides/infographic.jpg"
+      onerror="this.src='https://lh3.googleusercontent.com/notebooklm/AKXwDQGWz-_vZDAghXpbx5h3Pn26nX3vgsOMZAX0Bfq1dUGYwcwAhMW4MsTwnqIrXs-T8rnXYztD8YxkmeJlvru5K_HwD_Nw02cjyTJZFHFOlGYtSSF-dGffafenSInCb3eDPdy8fL8hBW_JrVjf9hLfi64h7bUl52M=w2752-d-h1536-mp2'"
+      alt="臺灣民主轉型歷史回顧資訊圖表">
+  </div>
+</div>
+
+<!-- ⑤ 評量遊戲 -->
+<div class="section">
+  <div class="section-label">🎮 形成性評量遊戲（6 款）</div>
+  <div class="games-grid">
+    <a class="game-card" href="game-01-postwar.html" target="_blank">
+      <span class="badge">選擇題 MCQ</span>
+      <h3>重點1：戰後的接收與治理</h3>
+      <p>1945年接收・語言文化差異・官員貪汙・物資短缺</p>
+      <div class="arrow">▶ 開始遊戲</div>
+    </a>
+    <a class="game-card" href="game-02-228cause.html" target="_blank">
+      <span class="badge">是非題 T/F</span>
+      <h3>重點2：二二八事件的起因</h3>
+      <p>查緝私菸・民怨爆發・全臺衝突・廣播傳播</p>
+      <div class="arrow">▶ 開始遊戲</div>
+    </a>
+    <a class="game-card" href="game-03-228event.html" target="_blank">
+      <span class="badge">配對題 Match</span>
+      <h3>重點3：二二八事件的經過與影響</h3>
+      <p>陳儀派兵・委員會・死傷慘重・遠離政治</p>
+      <div class="arrow">▶ 開始遊戲</div>
+    </a>
+    <a class="game-card" href="game-04-228after.html" target="_blank">
+      <span class="badge">填充題 Fill</span>
+      <h3>重點4：二二八事件的後續處理</h3>
+      <p>道歉賠償・公布真相・紀念日・紀念碑館</p>
+      <div class="arrow">▶ 開始遊戲</div>
+    </a>
+    <a class="game-card" href="game-05-martial.html" target="_blank">
+      <span class="badge">選擇題 MCQ</span>
+      <h3>重點5：戒嚴的背景與實施</h3>
+      <p>民國38年・限制言論集會出版・禁歌禁書</p>
+      <div class="arrow">▶ 開始遊戲</div>
+    </a>
+    <a class="game-card" href="game-06-whiteterm.html" target="_blank">
+      <span class="badge">是非題 T/F</span>
+      <h3>重點6：戒嚴時期對人民的影響</h3>
+      <p>監視人民・無辜逮捕・無公平審判・白色恐怖</p>
+      <div class="arrow">▶ 開始遊戲</div>
+    </a>
+  </div>
+</div>
+
+<!-- QR Code -->
+<div class="section">
+  <div class="section-label">📱 掃碼快速進入各遊戲</div>
+  <div class="qr-row" id="qr-row"></div>
+</div>
+
+<div class="footer">
+  國小社會5下・第三單元第1課・教學駕駛艙 ｜ 製作：NotebookLM + Claude Code
+</div>
+
+<script>
+// 輪播
+const TOTAL = 11;
+let cur = 1;
+const img = document.getElementById('slide-img');
+const counter = document.getElementById('slide-counter');
+const dotsEl = document.getElementById('dots');
+
+// 建立 dots
+for(let i=1;i<=TOTAL;i++){
+  const d=document.createElement('div');
+  d.className='dot'+(i===1?' active':'');
+  d.onclick=(()=>{const n=i;return()=>goSlide(n);})();
+  dotsEl.appendChild(d);
+}
+
+function goSlide(n){
+  cur=Math.max(1,Math.min(TOTAL,n));
+  img.src='slides/slide_'+String(cur).padStart(2,'0')+'.jpg';
+  counter.textContent=cur+' / '+TOTAL;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur-1));
+}
+function prevSlide(){goSlide(cur-1);}
+function nextSlide(){goSlide(cur+1);}
+
+// 鍵盤控制
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')nextSlide();
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')prevSlide();
+});
+
+// QR Codes
+const games=[
+  {name:'重點1：戰後接收與治理',file:'game-01-postwar.html'},
+  {name:'重點2：二二八起因',file:'game-02-228cause.html'},
+  {name:'重點3：二二八經過',file:'game-03-228event.html'},
+  {name:'重點4：後續處理',file:'game-04-228after.html'},
+  {name:'重點5：戒嚴實施',file:'game-05-martial.html'},
+  {name:'重點6：戒嚴影響',file:'game-06-whiteterm.html'},
+];
+const qrRow=document.getElementById('qr-row');
+const base=window.location.href.replace('index.html','');
+games.forEach(g=>{
+  const url=base+g.file;
+  const div=document.createElement('div');
+  div.className='qr-item';
+  div.innerHTML=`<img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(url)}" width="100" height="100"><p>${g.name}</p>`;
+  qrRow.appendChild(div);
+});
+</script>
+</body>
+</html>
