@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3-2 臺灣為什麼能走向民主社會 — 教學駕駛艙</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;}
+
+/* Header */
+.header{background:var(--dim);padding:24px 20px 20px;text-align:center;border-bottom:2px solid #2a4a2c;}
+.tag{display:inline-block;background:#2a4a2c;color:var(--G);font-size:.75rem;padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+.header h1{color:var(--Y);font-size:1.6rem;line-height:1.4;margin-bottom:6px;}
+.header p{color:var(--faint);font-size:.85rem;}
+
+.container{max-width:900px;margin:0 auto;padding:28px 16px;}
+
+/* Section titles */
+.section-title{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.section-title h2{color:var(--Y);font-size:1.05rem;}
+.section-title .line{flex:1;height:1px;background:#2a4a2c;}
+
+/* ── 1. 簡報輪播 ── */
+.slideshow{background:var(--board);border-radius:12px;overflow:hidden;margin-bottom:36px;}
+.slide-img-wrap{position:relative;background:#000;display:flex;align-items:center;justify-content:center;}
+#slide-img{width:100%;max-height:520px;object-fit:contain;display:block;}
+.slide-controls{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--dim);}
+.slide-btn{background:none;border:1px solid var(--faint);color:var(--chalk);border-radius:6px;padding:6px 16px;cursor:pointer;font-size:.9rem;transition:all .2s;}
+.slide-btn:hover{border-color:var(--Y);color:var(--Y);}
+#slide-counter{color:var(--faint);font-size:.85rem;}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:10px 16px;background:var(--board);}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--faint);cursor:pointer;transition:background .2s;}
+.dot.active{background:var(--Y);}
+
+/* ── 2/3. 媒體卡片 ── */
+.media-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:36px;}
+@media(max-width:600px){.media-grid{grid-template-columns:1fr;}}
+.media-card{background:var(--board);border-radius:12px;overflow:hidden;}
+.media-card-body{padding:14px 18px;}
+.media-title{color:var(--Y);font-weight:700;margin-bottom:4px;font-size:.95rem;}
+.media-sub{color:var(--faint);font-size:.78rem;margin-bottom:10px;}
+.media-player{width:100%;display:block;}
+video.media-player{max-height:240px;background:#000;}
+.open-btn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:7px 16px;background:var(--B);color:#0a1a2a;border-radius:6px;text-decoration:none;font-size:.82rem;font-weight:700;}
+
+/* ── 4. 資訊圖表 ── */
+.infographic-wrap{background:var(--board);border-radius:12px;overflow:hidden;margin-bottom:36px;}
+.infographic-link{display:block;cursor:zoom-in;position:relative;}
+.infographic-link img{width:100%;display:block;transition:opacity .2s;}
+.infographic-link:hover img{opacity:.9;}
+.infographic-link::after{content:'🔍 點擊放大';position:absolute;bottom:10px;right:12px;background:rgba(0,0,0,.65);color:var(--Y);font-size:.75rem;padding:4px 10px;border-radius:4px;}
+.infographic-footer{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.orig-link{color:var(--B);font-size:.8rem;text-decoration:none;}
+.orig-link:hover{text-decoration:underline;}
+
+/* Lightbox */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:96vw;max-height:96vh;object-fit:contain;border-radius:8px;}
+.lb-close{position:fixed;top:14px;right:18px;color:#fff;font-size:2.2rem;cursor:pointer;line-height:1;}
+
+/* ── 5. 評量遊戲 ── */
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:36px;}
+.game-card{background:var(--board);border-radius:10px;padding:18px;text-decoration:none;transition:all .2s;display:block;border:2px solid transparent;}
+.game-card:hover{border-color:var(--Y);transform:translateY(-2px);}
+.game-type{font-size:.72rem;color:var(--B);margin-bottom:6px;}
+.game-title{color:var(--chalk);font-size:.92rem;font-weight:700;line-height:1.5;margin-bottom:8px;}
+.game-arrow{color:var(--Y);font-size:.8rem;}
+
+/* ── 6. QR Code ── */
+.qr-section{background:var(--board);border-radius:12px;padding:20px;margin-bottom:36px;}
+.qr-row{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;}
+.qr-item{text-align:center;width:110px;}
+.qr-item img{border-radius:8px;border:2px solid var(--dim);}
+.qr-item p{color:var(--faint);font-size:.7rem;margin-top:6px;line-height:1.4;}
+
+/* Footer */
+.footer{background:var(--dim);padding:20px;text-align:center;color:var(--faint);font-size:.8rem;border-top:1px solid #2a4a2c;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="tag">國小五年級 · 社會 · 第3單元</div>
+  <h1>3-2 臺灣為什麼能走向民主社會？</h1>
+  <p>戒嚴 · 美麗島事件 · 解嚴 · 野百合學運 · 總統直選 · 公民參與</p>
+</div>
+
+<div class="container">
+
+  <!-- ① 簡報輪播 -->
+  <div class="section-title"><h2>🖼️ 教學簡報</h2><div class="line"></div><span style="color:var(--faint);font-size:.8rem">左右鍵切換</span></div>
+  <div class="slideshow">
+    <div class="slide-img-wrap">
+      <img id="slide-img" src="slides/slide_01.jpg" alt="投影片">
+    </div>
+    <div class="dots" id="dots"></div>
+    <div class="slide-controls">
+      <button class="slide-btn" onclick="goSlide(cur-1)">◀ 上一張</button>
+      <span id="slide-counter">1 / 11</span>
+      <button class="slide-btn" onclick="goSlide(cur+1)">下一張 ▶</button>
+    </div>
+  </div>
+
+  <!-- ② 影片 & ③ 語音 -->
+  <div class="section-title"><h2>🎬🔊 教學影片 &amp; 複習語音</h2><div class="line"></div></div>
+  <div class="media-grid">
+    <!-- 影片 -->
+    <div class="media-card">
+      <div class="media-card-body">
+        <div class="media-title">🎬 3-2 時光機：臺灣民主化之路</div>
+        <div class="media-sub">若無法播放，請點下方按鈕在 NotebookLM 開啟</div>
+      </div>
+      <video class="media-player" controls preload="metadata"
+        src="https://lh3.googleusercontent.com/notebooklm/AKXwDQE2ikmANUbyBh0XGl2oHd6fHlHeq05sg5Co7CkvadUi40hr_IE_-dRiG4MXYWbrXNV1ivNUt0twh2ccoVJHt1rb8C7pE0RiYgCGeoXn1mZaEqrCL2QBuBYGBCSG320wfzp7-CKzGXgBoFVofUwhsOM2DI-iQpk=m22-dv">
+        您的瀏覽器不支援影片播放。
+      </video>
+      <div class="media-card-body">
+        <a class="open-btn" href="https://notebooklm.google.com/notebook/0db8fbab-3745-4c52-a5c4-0ba4407d53fa/artifact/43192389-7104-4d77-acf1-94d62ab21223" target="_blank">🔗 在 NotebookLM 開啟影片</a>
+      </div>
+    </div>
+    <!-- 語音 -->
+    <div class="media-card">
+      <div class="media-card-body">
+        <div class="media-title">🔊 3-2 戒嚴到總統直選</div>
+        <div class="media-sub">若無法播放，請點下方按鈕在 NotebookLM 開啟</div>
+        <audio class="media-player" controls preload="metadata"
+          src="https://lh3.googleusercontent.com/notebooklm/AKXwDQHE78_6oCvRX1y3gGQqmQ0Ulz6eVzxKdOQaDpptUZW1ITAuiqg28ZybDbUfr5Cmw-LXK44UKBm4bQR8osi7cSt0vkFH5Ab9rzm256D0RxR3U12ZYFzOE-GvGs-pt9naxUM0sgNssYnVXk7cENtUoI3y6li_uNk=m140-dv">
+        </audio>
+        <a class="open-btn" href="https://notebooklm.google.com/notebook/0db8fbab-3745-4c52-a5c4-0ba4407d53fa/artifact/1bbd432f-4705-4841-9db3-5027469fad69" target="_blank">🔗 在 NotebookLM 開啟語音</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ 資訊圖表 -->
+  <div class="section-title"><h2>📊 資訊圖表</h2><div class="line"></div></div>
+  <div class="infographic-wrap" style="margin-bottom:36px;">
+    <a class="infographic-link" onclick="openLightbox()" href="javascript:void(0)">
+      <img id="info-img" src="slides/infographic.jpg"
+        onerror="this.src='https://lh3.googleusercontent.com/notebooklm/AKXwDQEjtc8q6geyQb8LBk_jILt2MzxqCAY0pGqJdkDX-oIgq5n-ftW9sJQV8jClDIOIphFQY-go-S23ywjsybt30rc8hXY_SFMp0bOWil7cBka7Fg9M02FCTWOn35Xx44ju8I7bDPaZQvYsjximBEJBK0Mdy-3hLfg=w2752-d-h1536-mp2'"
+        alt="臺灣民主轉型之路資訊圖表">
+    </a>
+    <div class="infographic-footer">
+      <span style="color:var(--faint);font-size:.8rem;">點擊圖片可放大檢視</span>
+      <a class="orig-link" href="https://lh3.googleusercontent.com/notebooklm/AKXwDQEjtc8q6geyQb8LBk_jILt2MzxqCAY0pGqJdkDX-oIgq5n-ftW9sJQV8jClDIOIphFQY-go-S23ywjsybt30rc8hXY_SFMp0bOWil7cBka7Fg9M02FCTWOn35Xx44ju8I7bDPaZQvYsjximBEJBK0Mdy-3hLfg=w2752-d-h1536-mp2" target="_blank">🖼️ 查看原圖（高解析度）</a>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="lb-close" onclick="closeLightbox()">✕</span>
+    <img id="lb-img" src="" alt="資訊圖表放大">
+  </div>
+
+  <!-- ⑤ 評量遊戲 -->
+  <div class="section-title"><h2>🎮 形成性評量遊戲</h2><div class="line"></div></div>
+  <div class="games-grid">
+    <a class="game-card" href="game-01-local-autonomy.html" target="_blank">
+      <div class="game-type">選擇題 · 5題</div>
+      <div class="game-title">重點1：戒嚴時期的地方自治</div>
+      <div class="game-arrow">▶ 開始作答</div>
+    </a>
+    <a class="game-card" href="game-02-meilidao.html" target="_blank">
+      <div class="game-type">填充題 · 5題</div>
+      <div class="game-title">重點2：美麗島事件</div>
+      <div class="game-arrow">▶ 開始作答</div>
+    </a>
+    <a class="game-card" href="game-03-martial-law-end.html" target="_blank">
+      <div class="game-type">配對題 · 5組</div>
+      <div class="game-title">重點3：解嚴</div>
+      <div class="game-arrow">▶ 開始作答</div>
+    </a>
+    <a class="game-card" href="game-04-wild-lily.html" target="_blank">
+      <div class="game-type">是非題 · 5題</div>
+      <div class="game-title">重點4：野百合學運</div>
+      <div class="game-arrow">▶ 開始作答</div>
+    </a>
+    <a class="game-card" href="game-05-direct-election.html" target="_blank">
+      <div class="game-type">選擇題 · 5題</div>
+      <div class="game-title">重點5：總統直選與公民投票</div>
+      <div class="game-arrow">▶ 開始作答</div>
+    </a>
+    <a class="game-card" href="game-06-democracy-participation.html" target="_blank">
+      <div class="game-type">選擇題 · 5題</div>
+      <div class="game-title">重點6：共同參與民主社會</div>
+      <div class="game-arrow">▶ 開始作答</div>
+    </a>
+  </div>
+
+  <!-- ⑥ QR Code -->
+  <div class="section-title"><h2>📱 掃碼遊戲</h2><div class="line"></div></div>
+  <div class="qr-section">
+    <div class="qr-row" id="qr-row"></div>
+  </div>
+
+</div>
+
+<div class="footer">
+  3-2 臺灣為什麼能走向民主社會 · 國小五年級社會 · 114學年度
+</div>
+
+<script>
+// ── 簡報輪播 ──
+const TOTAL = 11;
+let cur = 1;
+const dotsEl = document.getElementById('dots');
+for(let i=1;i<=TOTAL;i++){
+  const d=document.createElement('div');
+  d.className='dot'+(i===1?' active':'');
+  d.onclick=(()=>{const n=i;return()=>goSlide(n);})();
+  dotsEl.appendChild(d);
+}
+function goSlide(n){
+  cur=Math.max(1,Math.min(TOTAL,n));
+  document.getElementById('slide-img').src='slides/slide_'+String(cur).padStart(2,'0')+'.jpg';
+  document.getElementById('slide-counter').textContent=cur+' / '+TOTAL;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur-1));
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')goSlide(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')goSlide(cur-1);
+});
+
+// ── 資訊圖表 Lightbox ──
+function openLightbox(){
+  document.getElementById('lb-img').src=document.getElementById('info-img').src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+
+// ── QR Code 動態產生 ──
+const games=[
+  {name:'重點1：地方自治',file:'game-01-local-autonomy.html'},
+  {name:'重點2：美麗島事件',file:'game-02-meilidao.html'},
+  {name:'重點3：解嚴',file:'game-03-martial-law-end.html'},
+  {name:'重點4：野百合學運',file:'game-04-wild-lily.html'},
+  {name:'重點5：總統直選',file:'game-05-direct-election.html'},
+  {name:'重點6：民主參與',file:'game-06-democracy-participation.html'},
+];
+const qrRow=document.getElementById('qr-row');
+const base=window.location.href.replace(/index\.html.*$/,'').replace(/\?.*$/,'');
+games.forEach(g=>{
+  const url=base+g.file;
+  const div=document.createElement('div');
+  div.className='qr-item';
+  div.innerHTML='<img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(url)+'" width="100" height="100"><p>'+g.name+'</p>';
+  qrRow.appendChild(div);
+});
+</script>
+</body>
+</html>
