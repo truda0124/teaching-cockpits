@@ -13,6 +13,11 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',Arial,sans-serif;min-height:100vh;}
 
+/* 返回按鈕 */
+.back-bar{background:var(--dim);padding:10px 20px;display:flex;align-items:center;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--faint);color:var(--faint);border-radius:6px;padding:6px 14px;font-size:.82rem;text-decoration:none;transition:all .2s;}
+.back-btn:hover{border-color:var(--Y);color:var(--Y);}
+
 /* header */
 .header{background:var(--dim);border-bottom:2px solid #2d4a2f;padding:20px 24px;text-align:center;}
 .header-tag{display:inline-block;background:var(--Y);color:#162b18;border-radius:4px;padding:2px 10px;font-size:.78rem;font-weight:700;margin-bottom:8px;}
@@ -34,21 +39,31 @@ body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',Arial,sa
 .dot{width:8px;height:8px;border-radius:50%;background:var(--faint);cursor:pointer;transition:all .2s;}
 .dot.active{background:var(--Y);transform:scale(1.3);}
 
-/* video */
-.video-wrap{background:var(--board);border-radius:12px;overflow:hidden;}
-.video-wrap video{width:100%;display:block;max-height:480px;}
-
-/* audio */
-.audio-wrap{background:var(--board);border-radius:12px;padding:20px 24px;display:flex;align-items:center;gap:16px;}
-.audio-icon{font-size:2.5rem;}
-.audio-info{flex:1;}
-.audio-info strong{display:block;color:var(--Y);margin-bottom:4px;}
-.audio-info p{color:var(--faint);font-size:.82rem;margin-bottom:10px;}
-.audio-wrap audio{width:100%;}
+/* media card (video / audio) */
+.media-card{background:var(--board);border-radius:12px;overflow:hidden;}
+.media-card-body{padding:16px 20px;}
+.media-title{color:var(--Y);font-weight:700;margin-bottom:4px;}
+.media-sub{color:var(--faint);font-size:.8rem;margin-bottom:12px;}
+.media-player{width:100%;display:block;border-radius:0;}
+video.media-player{max-height:460px;background:#000;}
+.open-btn{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:8px 18px;background:var(--B);color:#0a1a2a;border-radius:6px;text-decoration:none;font-size:.85rem;font-weight:700;transition:opacity .2s;}
+.open-btn:hover{opacity:.85;}
 
 /* infographic */
-.infographic-wrap{background:var(--board);border-radius:12px;overflow:hidden;text-align:center;}
-.infographic-wrap img{width:100%;display:block;}
+.infographic-card{background:var(--board);border-radius:12px;overflow:hidden;}
+.infographic-link{display:block;cursor:zoom-in;position:relative;}
+.infographic-link img{width:100%;display:block;transition:opacity .2s;}
+.infographic-link:hover img{opacity:.9;}
+.infographic-link::after{content:'🔍 點擊放大';position:absolute;bottom:10px;right:12px;background:rgba(0,0,0,.6);color:var(--Y);font-size:.75rem;padding:4px 10px;border-radius:4px;}
+.infographic-footer{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.orig-link{color:var(--B);font-size:.8rem;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+.orig-link:hover{text-decoration:underline;}
+
+/* lightbox */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:8px;}
+.lb-close{position:fixed;top:16px;right:20px;color:#fff;font-size:2rem;cursor:pointer;line-height:1;}
 
 /* games */
 .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
@@ -59,7 +74,7 @@ body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',Arial,sa
 .game-card p{color:var(--faint);font-size:.82rem;line-height:1.5;}
 .game-card .arrow{margin-top:12px;color:var(--G);font-size:.85rem;font-weight:700;}
 
-/* qr section */
+/* qr */
 .qr-row{display:flex;flex-wrap:wrap;gap:12px;}
 .qr-item{background:var(--board);border-radius:10px;padding:12px;text-align:center;flex:1;min-width:120px;}
 .qr-item img{border-radius:4px;margin-bottom:6px;}
@@ -67,9 +82,18 @@ body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',Arial,sa
 
 /* footer */
 .footer{text-align:center;padding:24px;color:var(--faint);font-size:.78rem;border-top:1px solid #2d4a2f;}
+.footer a{color:var(--B);text-decoration:none;}
+.footer a:hover{text-decoration:underline;}
 </style>
 </head>
 <body>
+
+<!-- 返回社會科首頁 -->
+<div class="back-bar">
+  <a class="back-btn" href="https://truda0124.github.io/teaching-cockpits/" target="_blank">
+    ← 返回社會科教學駕駛艙首頁
+  </a>
+</div>
 
 <div class="header">
   <div class="header-tag">國小社會 5 下・第三單元</div>
@@ -94,25 +118,36 @@ body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',Arial,sa
 <!-- ② 教學影片 -->
 <div class="section">
   <div class="section-label">🎬 教學影片</div>
-  <div class="video-wrap">
-    <video controls preload="metadata"
+  <div class="media-card">
+    <div class="media-card-body">
+      <div class="media-title">3-1_二戰後臺灣歷史全圖解</div>
+      <div class="media-sub">NotebookLM AI 生成教學影片・若無法播放請點下方按鈕</div>
+    </div>
+    <video class="media-player" controls preload="metadata"
       src="https://lh3.googleusercontent.com/notebooklm/AKXwDQH4B5BLMfEokLjb5544KWlSRY9IqcgjkT_qzXL7zsOqO7emFKmpP0QinV9YLTXqZypmzY8GkyagBWuaJZzNM8IRTWCYLlQkJMgJQN2YRsu95SK3pi76tk2pXmY5psE_elxLoF7-9-MxUw=m22-dv">
       您的瀏覽器不支援影片播放。
     </video>
+    <div class="media-card-body">
+      <a class="open-btn" href="https://notebooklm.google.com/notebook/0db8fbab-3745-4c52-a5c4-0ba4407d53fa/artifact/872a4948-e1d0-452c-a258-26678f742483" target="_blank">
+        🔗 在 NotebookLM 開啟影片
+      </a>
+    </div>
   </div>
 </div>
 
 <!-- ③ 複習語音 -->
 <div class="section">
   <div class="section-label">🔊 複習語音</div>
-  <div class="audio-wrap">
-    <div class="audio-icon">🎙️</div>
-    <div class="audio-info">
-      <strong>3-1 二二八與戒嚴必考重點</strong>
-      <p>AI 老師整理核心重點・適合考前複習聆聽</p>
-      <audio controls preload="metadata"
+  <div class="media-card">
+    <div class="media-card-body">
+      <div class="media-title">3-1_二二八與戒嚴必考重點</div>
+      <div class="media-sub">AI 老師整理核心重點・適合考前複習聆聽・若無法播放請點下方按鈕</div>
+      <audio class="media-player" controls preload="metadata"
         src="https://lh3.googleusercontent.com/notebooklm/AKXwDQFp_aSX4wuQR74kwL2MHe_zp-Rm1ClPlR4JE-YwV7BTd3gkVtQlT1-BL6wTa_TWVK18wGvccVVHWKRRjxyL96Aqj9VsS6ErjvX6yoCnFituNmhNLY5nQJ7vy1xri5qRo6GjBXk9Lp9qNfMob4nylnMpVyBr5X0=m140-dv">
       </audio>
+      <a class="open-btn" href="https://notebooklm.google.com/notebook/0db8fbab-3745-4c52-a5c4-0ba4407d53fa/artifact/a490eefd-ba74-4538-a7f5-6cb9e47a89f3" target="_blank">
+        🔗 在 NotebookLM 開啟語音
+      </a>
     </div>
   </div>
 </div>
@@ -120,11 +155,25 @@ body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',Arial,sa
 <!-- ④ 資訊圖表 -->
 <div class="section">
   <div class="section-label">📊 資訊圖表</div>
-  <div class="infographic-wrap">
-    <img src="slides/infographic.jpg"
-      onerror="this.src='https://lh3.googleusercontent.com/notebooklm/AKXwDQGWz-_vZDAghXpbx5h3Pn26nX3vgsOMZAX0Bfq1dUGYwcwAhMW4MsTwnqIrXs-T8rnXYztD8YxkmeJlvru5K_HwD_Nw02cjyTJZFHFOlGYtSSF-dGffafenSInCb3eDPdy8fL8hBW_JrVjf9hLfi64h7bUl52M=w2752-d-h1536-mp2'"
-      alt="臺灣民主轉型歷史回顧資訊圖表">
+  <div class="infographic-card">
+    <a class="infographic-link" onclick="openLightbox()" href="javascript:void(0)">
+      <img id="info-img" src="slides/infographic.jpg"
+        onerror="this.src='https://lh3.googleusercontent.com/notebooklm/AKXwDQGWz-_vZDAghXpbx5h3Pn26nX3vgsOMZAX0Bfq1dUGYwcwAhMW4MsTwnqIrXs-T8rnXYztD8YxkmeJlvru5K_HwD_Nw02cjyTJZFHFOlGYtSSF-dGffafenSInCb3eDPdy8fL8hBW_JrVjf9hLfi64h7bUl52M=w2752-d-h1536-mp2'"
+        alt="臺灣民主轉型歷史回顧資訊圖表">
+    </a>
+    <div class="infographic-footer">
+      <span style="color:var(--faint);font-size:.8rem;">點擊圖片可放大檢視</span>
+      <a class="orig-link"
+        href="https://lh3.googleusercontent.com/notebooklm/AKXwDQGWz-_vZDAghXpbx5h3Pn26nX3vgsOMZAX0Bfq1dUGYwcwAhMW4MsTwnqIrXs-T8rnXYztD8YxkmeJlvru5K_HwD_Nw02cjyTJZFHFOlGYtSSF-dGffafenSInCb3eDPdy8fL8hBW_JrVjf9hLfi64h7bUl52M=w2752-d-h1536-mp2"
+        target="_blank">🖼️ 查看原圖（高解析度）</a>
+    </div>
   </div>
+</div>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lb-close" onclick="closeLightbox()">✕</span>
+  <img id="lb-img" src="" alt="資訊圖表放大">
 </div>
 
 <!-- ⑤ 評量遊戲 -->
@@ -177,7 +226,8 @@ body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',Arial,sa
 </div>
 
 <div class="footer">
-  國小社會5下・第三單元第1課・教學駕駛艙 ｜ 製作：NotebookLM + Claude Code
+  國小社會5下・第三單元第1課・教學駕駛艙 ｜ 製作：NotebookLM + Claude Code<br>
+  <a href="https://truda0124.github.io/teaching-cockpits/" target="_blank">← 返回社會科教學駕駛艙首頁</a>
 </div>
 
 <script>
@@ -188,14 +238,12 @@ const img = document.getElementById('slide-img');
 const counter = document.getElementById('slide-counter');
 const dotsEl = document.getElementById('dots');
 
-// 建立 dots
 for(let i=1;i<=TOTAL;i++){
   const d=document.createElement('div');
   d.className='dot'+(i===1?' active':'');
   d.onclick=(()=>{const n=i;return()=>goSlide(n);})();
   dotsEl.appendChild(d);
 }
-
 function goSlide(n){
   cur=Math.max(1,Math.min(TOTAL,n));
   img.src='slides/slide_'+String(cur).padStart(2,'0')+'.jpg';
@@ -204,12 +252,23 @@ function goSlide(n){
 }
 function prevSlide(){goSlide(cur-1);}
 function nextSlide(){goSlide(cur+1);}
-
-// 鍵盤控制
 document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight'||e.key==='ArrowDown')nextSlide();
   if(e.key==='ArrowLeft'||e.key==='ArrowUp')prevSlide();
 });
+
+// Lightbox
+function openLightbox(){
+  const src = document.getElementById('info-img').src;
+  document.getElementById('lb-img').src = src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
 
 // QR Codes
 const games=[
@@ -221,12 +280,12 @@ const games=[
   {name:'重點6：戒嚴影響',file:'game-06-whiteterm.html'},
 ];
 const qrRow=document.getElementById('qr-row');
-const base=window.location.href.replace('index.html','');
+const base=window.location.href.replace(/index\.html.*$/,'');
 games.forEach(g=>{
   const url=base+g.file;
   const div=document.createElement('div');
   div.className='qr-item';
-  div.innerHTML=`<img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(url)}" width="100" height="100"><p>${g.name}</p>`;
+  div.innerHTML='<img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(url)+'" width="100" height="100"><p>'+g.name+'</p>';
   qrRow.appendChild(div);
 });
 </script>
