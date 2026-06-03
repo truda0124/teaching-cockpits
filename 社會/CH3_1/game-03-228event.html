@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重點3：二二八事件的經過與影響</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;}
+h1{color:var(--Y);font-size:1.4rem;text-align:center;margin-bottom:4px;}
+.subtitle{color:var(--faint);font-size:.85rem;margin-bottom:20px;text-align:center;}
+.progress{width:100%;max-width:580px;background:var(--dim);border-radius:8px;height:8px;margin-bottom:16px;}
+.progress-bar{height:8px;border-radius:8px;background:var(--G);transition:width .4s;}
+.card{background:var(--board);border-radius:12px;padding:24px;max-width:580px;width:100%;}
+.qnum{color:var(--faint);font-size:.8rem;margin-bottom:8px;}
+.question{font-size:1.05rem;line-height:1.6;margin-bottom:16px;}
+.match-area{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.col-title{color:var(--Y);font-size:.8rem;text-align:center;margin-bottom:4px;}
+.items{display:flex;flex-direction:column;gap:8px;}
+.item{background:var(--dim);border:2px solid transparent;border-radius:8px;padding:10px 12px;cursor:pointer;font-size:.9rem;transition:all .2s;user-select:none;}
+.item.selected{border-color:var(--Y);background:#2a3a1a;}
+.item.matched{border-color:var(--G);background:#1a3d1a;cursor:default;}
+.item.wrong-flash{border-color:var(--R);background:#3d1a1a;}
+.feedback{margin-top:14px;padding:10px;border-radius:8px;font-size:.85rem;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:#1a3d1a;color:var(--G);}
+.feedback.no{background:#3d1a1a;color:var(--R);}
+.score-box{text-align:center;padding:24px;display:none;}
+.score-box.show{display:block;}
+.score-num{font-size:3rem;color:var(--Y);font-weight:700;}
+.qr-area{margin-top:24px;text-align:center;}
+.qr-area img{border:4px solid var(--board);border-radius:8px;}
+.qr-area p{color:var(--faint);font-size:.75rem;margin-top:6px;}
+.tag{display:inline-block;background:var(--dim);color:var(--B);border-radius:4px;padding:2px 8px;font-size:.75rem;margin-bottom:10px;}
+.hint{color:var(--faint);font-size:.8rem;margin-bottom:12px;}
+</style>
+</head>
+<body>
+<h1>📜 重點3：二二八事件的經過與影響</h1>
+<p class="subtitle">國小社會5下・第三單元第1課 形成性評量</p>
+<div class="progress"><div class="progress-bar" id="pbar" style="width:0%"></div></div>
+<div class="card" id="card">
+  <div class="tag">配對題 Match</div>
+  <div class="qnum" id="qnum">第 1 組／共 4 組</div>
+  <div class="hint">💡 點選左欄一項，再點選右欄對應的項目</div>
+  <div class="match-area">
+    <div><div class="col-title">人物／事件</div><div class="items" id="left"></div></div>
+    <div><div class="col-title">說明／結果</div><div class="items" id="right"></div></div>
+  </div>
+  <div class="feedback" id="feedback"></div>
+</div>
+<div class="score-box" id="scorebox">
+  <div style="font-size:1.2rem;margin-bottom:8px;">🎉 全部配對完成！</div>
+  <div class="score-num" id="scorenum"></div>
+  <div style="color:var(--faint);margin-bottom:16px;">分（滿分 100 分）</div>
+  <button onclick="restart()" style="padding:10px 28px;background:var(--Y);color:#162b18;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;">🔄 重新挑戰</button>
+</div>
+<div class="qr-area">
+  <img id="qr-img" src="" alt="QR Code" width="120" height="120">
+  <p>掃描 QR Code 分享此遊戲</p>
+</div>
+
+<script>
+document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data='+encodeURIComponent(window.location.href);
+
+const pairs=[
+  {l:'查緝私菸處理失當',r:'二二八事件的導火線'},
+  {l:'行政長官陳儀',r:'向中央請求派兵來臺鎮壓'},
+  {l:'地方人士組成委員會',r:'維持秩序並提出改革訴求'},
+  {l:'事件後的社會影響',r:'許多臺灣人選擇遠離政治'},
+];
+
+let score=0,matched=0,selL=null,selR=null,attempts=0;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function render(){
+  document.getElementById('pbar').style.width=`${(matched/pairs.length)*100}%`;
+  document.getElementById('qnum').textContent=`已配對 ${matched}／${pairs.length} 組`;
+  const left=document.getElementById('left');
+  const right=document.getElementById('right');
+  left.innerHTML='';right.innerHTML='';
+  const ls=shuffle([...pairs.map((p,i)=>({text:p.l,id:i}))]);
+  const rs=shuffle([...pairs.map((p,i)=>({text:p.r,id:i}))]);
+  ls.forEach(item=>{
+    const d=document.createElement('div');
+    d.className='item';d.textContent=item.text;d.dataset.id=item.id;d.dataset.side='l';
+    d.onclick=()=>select(d);left.appendChild(d);
+  });
+  rs.forEach(item=>{
+    const d=document.createElement('div');
+    d.className='item';d.textContent=item.text;d.dataset.id=item.id;d.dataset.side='r';
+    d.onclick=()=>select(d);right.appendChild(d);
+  });
+}
+
+function select(el){
+  if(el.classList.contains('matched'))return;
+  const side=el.dataset.side;
+  if(side==='l'){
+    if(selL){selL.classList.remove('selected');}
+    selL=el;el.classList.add('selected');
+  } else {
+    if(selR){selR.classList.remove('selected');}
+    selR=el;el.classList.add('selected');
+  }
+  if(selL&&selR){
+    attempts++;
+    const fb=document.getElementById('feedback');
+    if(selL.dataset.id===selR.dataset.id){
+      selL.classList.remove('selected');selL.classList.add('matched');selL.onclick=null;
+      selR.classList.remove('selected');selR.classList.add('matched');selR.onclick=null;
+      score++;matched++;
+      fb.className='feedback show ok';fb.textContent='✅ 配對正確！';
+      selL=null;selR=null;
+      document.getElementById('pbar').style.width=`${(matched/pairs.length)*100}%`;
+      document.getElementById('qnum').textContent=`已配對 ${matched}／${pairs.length} 組`;
+      if(matched===pairs.length){
+        setTimeout(()=>{
+          document.getElementById('card').style.display='none';
+          document.getElementById('scorebox').className='score-box show';
+          document.getElementById('scorenum').textContent=Math.round(score/attempts*100);
+        },600);
+      }
+    } else {
+      fb.className='feedback show no';fb.textContent='❌ 配對錯誤，請再試一次！';
+      const tmpL=selL,tmpR=selR;
+      setTimeout(()=>{tmpL.classList.remove('selected','wrong-flash');tmpR.classList.remove('selected','wrong-flash');},600);
+      selL.classList.add('wrong-flash');selR.classList.add('wrong-flash');
+      selL=null;selR=null;
+    }
+  }
+}
+
+function restart(){score=0;matched=0;attempts=0;selL=null;selR=null;document.getElementById('card').style.display='';document.getElementById('scorebox').className='score-box';document.getElementById('feedback').className='feedback';render();}
+render();
+</script>
+</body>
+</html>
