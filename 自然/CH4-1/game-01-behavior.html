@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>重點1：動物行為與環境刺激</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;padding:20px;}
+h1{color:var(--Y);text-align:center;font-size:1.3rem;margin-bottom:4px;}
+.subtitle{color:var(--faint);text-align:center;font-size:.85rem;margin-bottom:20px;}
+.card{background:var(--board);border-radius:12px;padding:20px;max-width:560px;margin:0 auto 16px;}
+.q-num{color:var(--G);font-size:.8rem;margin-bottom:8px;}
+.q-text{font-size:1rem;line-height:1.6;margin-bottom:14px;}
+.options{display:flex;flex-direction:column;gap:8px;}
+.opt{background:var(--dim);border:1.5px solid #3a5a3c;border-radius:8px;padding:10px 14px;cursor:pointer;font-size:.95rem;transition:all .2s;text-align:left;}
+.opt:hover{border-color:var(--Y);color:var(--Y);}
+.opt.correct{border-color:var(--G);background:#1a4020;color:var(--G);}
+.opt.wrong{border-color:var(--R);background:#3a1010;color:var(--R);}
+.feedback{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:.9rem;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:#1a4020;color:var(--G);}
+.feedback.ng{background:#3a1010;color:var(--R);}
+.score-bar{text-align:center;color:var(--Y);margin-bottom:16px;font-size:1rem;}
+.btn{display:block;margin:20px auto 0;padding:10px 28px;background:var(--B);color:#0a1a2a;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;}
+.btn:hover{opacity:.85;}
+.qr-wrap{text-align:center;margin-top:24px;}
+.qr-wrap p{color:var(--faint);font-size:.8rem;margin-top:6px;}
+.progress{height:6px;background:var(--dim);border-radius:3px;margin-bottom:20px;max-width:560px;margin-left:auto;margin-right:auto;}
+.progress-fill{height:100%;background:var(--G);border-radius:3px;transition:width .4s;}
+</style>
+</head>
+<body>
+<h1>🔬 重點1：動物行為與環境刺激</h1>
+<p class="subtitle">五年級自然 L4-1 動物偵查員｜選擇題</p>
+<div class="score-bar">得分：<span id="score">0</span> / <span id="total">5</span></div>
+<div class="progress"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div id="quiz-area"></div>
+<button class="btn" id="restart-btn" style="display:none" onclick="restart()">🔄 重新挑戰</button>
+<div class="qr-wrap">
+  <img id="qr-img" src="" width="100" height="100" alt="QR Code">
+  <p>掃描進入此遊戲</p>
+</div>
+<script>
+const qs=[
+  {q:"動物對環境刺激產生反應的目的，下列哪項敘述最完整？",opts:["只為了覓食","緊急應變、逃避敵害、覓食、求偶，使個體得以生存","只為了繁殖後代","只為了遷徙"],ans:1,exp:"動物接受刺激並產生反應，目的包含緊急應變、逃避敵害、覓食、求偶等，都是為了讓個體得以生存。"},
+  {q:"哺乳動物的嗅覺受器位在哪裡？",opts:["觸角","皮膚","鼻腔內部","眼睛"],ans:2,exp:"哺乳動物接收氣味的嗅覺受器位於鼻腔內部。"},
+  {q:"昆蟲（如雄蛾）的嗅覺受器位在哪裡？",opts:["鼻腔","觸角","腳","翅膀"],ans:1,exp:"昆蟲的嗅覺受器位於觸角上，雄蛾能用觸角感受雌蛾釋放的特殊氣味。"},
+  {q:"雄蛾如何找到雌蛾完成交配？",opts:["靠視覺尋找","循著雌蛾釋放的特殊氣味，用觸角感受","聽到雌蛾的叫聲","靠皮膚感受溫度"],ans:1,exp:"雄蛾觸角上的嗅覺受器可接受雌蛾釋放的特殊氣味，並循著氣味找尋雌蛾。"},
+  {q:"下列哪一項不屬於動物因環境刺激而產生的行為反應？",opts:["下雨後草叢出現蝸牛","夏季熊蟬鳴叫吸引雌蟬","螞蟻循氣味搬運食物","岩石因風吹而移動"],ans:3,exp:"岩石移動是物理現象，不是生物的行為反應。動物行為才是對環境刺激的回應。"}
+];
+let cur=0,score=0,answered=[];
+function render(){
+  if(cur>=qs.length){showResult();return;}
+  const q=qs[cur];
+  const pct=Math.round(cur/qs.length*100);
+  document.getElementById('prog').style.width=pct+'%';
+  let html=`<div class="card"><div class="q-num">第 ${cur+1} 題 / 共 ${qs.length} 題</div>
+  <div class="q-text">${q.q}</div><div class="options">`;
+  q.opts.forEach((o,i)=>{ html+=`<button class="opt" onclick="choose(${i})">${String.fromCharCode(65+i)}. ${o}</button>`; });
+  html+=`</div><div class="feedback" id="fb"></div></div>`;
+  document.getElementById('quiz-area').innerHTML=html;
+}
+function choose(i){
+  const q=qs[cur];
+  const opts=document.querySelectorAll('.opt');
+  opts.forEach(o=>o.onclick=null);
+  const fb=document.getElementById('fb');
+  if(i===q.ans){
+    opts[i].classList.add('correct');
+    fb.className='feedback show ok';
+    fb.textContent='✅ 答對了！'+q.exp;
+    score++;document.getElementById('score').textContent=score;
+  } else {
+    opts[i].classList.add('wrong');
+    opts[q.ans].classList.add('correct');
+    fb.className='feedback show ng';
+    fb.textContent='❌ 答錯了！正確答案是「'+q.opts[q.ans]+'」。'+q.exp;
+  }
+  setTimeout(()=>{cur++;render();},2200);
+}
+function showResult(){
+  document.getElementById('prog').style.width='100%';
+  document.getElementById('quiz-area').innerHTML=`<div class="card" style="text-align:center">
+  <div style="font-size:2rem;margin-bottom:12px">${score>=4?'🏆':'📚'}</div>
+  <div style="color:var(--Y);font-size:1.3rem;font-weight:700">得分：${score} / ${qs.length}</div>
+  <div style="color:var(--faint);margin-top:8px">${score===5?'滿分！超厲害！':score>=3?'不錯！再複習一下吧':'繼續加油！'}</div>
+  </div>`;
+  document.getElementById('restart-btn').style.display='block';
+}
+function restart(){cur=0;score=0;document.getElementById('score').textContent=0;document.getElementById('restart-btn').style.display='none';render();}
+render();
+document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(window.location.href);
+</script>
+</body>
+</html>
