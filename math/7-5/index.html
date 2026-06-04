@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教學駕駛艙｜五年級數學：面積單位換算</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Segoe UI',sans-serif;min-height:100vh;}
+
+/* 返回列 */
+.back-bar{background:var(--dim);padding:10px 20px;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--faint);color:var(--faint);border-radius:6px;padding:6px 14px;font-size:.82rem;text-decoration:none;transition:all .2s;}
+.back-btn:hover{border-color:var(--Y);color:var(--Y);}
+
+/* 頂部標題 */
+.hero{background:var(--board);padding:28px 20px 24px;text-align:center;border-bottom:2px solid #2a4a2c;}
+.tag{display:inline-block;background:var(--G);color:#0a1a0a;border-radius:20px;padding:3px 12px;font-size:.75rem;font-weight:700;margin-bottom:12px;}
+.hero h1{color:var(--Y);font-size:1.5rem;margin-bottom:8px;}
+.hero p{color:var(--faint);font-size:.9rem;}
+
+/* 區塊通用 */
+.section{padding:20px;}
+.section-title{color:var(--Y);font-size:1rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+
+/* 換算表 */
+.conv-table{background:var(--board);border-radius:12px;overflow:hidden;margin-bottom:20px;}
+.conv-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:12px 20px;border-bottom:1px solid #2a4a2c;gap:10px;}
+.conv-row:last-child{border-bottom:none;}
+.conv-from{color:var(--chalk);font-size:.95rem;}
+.conv-eq{color:var(--faint);font-size:.85rem;text-align:center;}
+.conv-to{color:var(--G);font-size:.95rem;font-weight:700;text-align:right;}
+.conv-header{background:var(--dim);padding:10px 20px;}
+.conv-header span{color:var(--faint);font-size:.8rem;}
+
+/* 遊戲卡片 */
+.games-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.game-card{background:var(--board);border-radius:12px;padding:16px;text-decoration:none;color:var(--chalk);border:2px solid #2a4a2c;transition:all .2s;display:block;}
+.game-card:hover{border-color:var(--Y);transform:translateY(-2px);}
+.game-icon{font-size:1.8rem;margin-bottom:8px;}
+.game-num{color:var(--faint);font-size:.75rem;margin-bottom:4px;}
+.game-title{color:var(--Y);font-size:.9rem;font-weight:700;margin-bottom:6px;line-height:1.4;}
+.game-type{display:inline-block;background:var(--dim);color:var(--B);border-radius:4px;padding:2px 8px;font-size:.72rem;}
+
+/* QR Code 區 */
+.qr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.qr-item{background:var(--board);border-radius:10px;padding:12px;text-align:center;}
+.qr-item img{border-radius:6px;margin-bottom:6px;}
+.qr-item p{color:var(--faint);font-size:.72rem;line-height:1.4;}
+
+/* footer */
+.footer{background:var(--dim);padding:20px;text-align:center;}
+.footer a{color:var(--faint);font-size:.82rem;text-decoration:none;}
+.footer a:hover{color:var(--Y);}
+.footer p{color:var(--faint);font-size:.75rem;margin-top:8px;}
+
+@media(max-width:480px){
+  .games-grid{grid-template-columns:1fr;}
+  .qr-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- 返回首頁列 -->
+<div class="back-bar">
+  <a class="back-btn" href="https://truda0124.github.io/teaching-cockpits/" target="_blank">
+    ← 返回教學駕駛艙首頁
+  </a>
+</div>
+
+<!-- 標題區 -->
+<div class="hero">
+  <div class="tag">國小五年級 · 數學</div>
+  <h1>📐 面積單位換算</h1>
+  <p>平方公里 · 公頃 · 公畝 · 平方公尺</p>
+</div>
+
+<!-- 換算表 -->
+<div class="section">
+  <div class="section-title">📊 換算對照表</div>
+  <div class="conv-table">
+    <div class="conv-header"><span>單位換算速查</span></div>
+    <div class="conv-row">
+      <span class="conv-from">1 平方公里</span>
+      <span class="conv-eq">=</span>
+      <span class="conv-to">1,000,000 m²</span>
+    </div>
+    <div class="conv-row">
+      <span class="conv-from">1 平方公里</span>
+      <span class="conv-eq">=</span>
+      <span class="conv-to">100 公頃</span>
+    </div>
+    <div class="conv-row">
+      <span class="conv-from">1 公頃</span>
+      <span class="conv-eq">=</span>
+      <span class="conv-to">10,000 m²</span>
+    </div>
+    <div class="conv-row">
+      <span class="conv-from">1 公頃</span>
+      <span class="conv-eq">=</span>
+      <span class="conv-to">100 公畝</span>
+    </div>
+    <div class="conv-row">
+      <span class="conv-from">1 公畝</span>
+      <span class="conv-eq">=</span>
+      <span class="conv-to">100 m²</span>
+    </div>
+  </div>
+</div>
+
+<!-- 遊戲列表 -->
+<div class="section">
+  <div class="section-title">🎮 互動評量遊戲（共6款）</div>
+  <div class="games-grid">
+    <a class="game-card" href="game-01-unit-order.html" target="_blank">
+      <div class="game-icon">🏆</div>
+      <div class="game-num">重點 1</div>
+      <div class="game-title">面積單位大小排序</div>
+      <span class="game-type">選擇題</span>
+    </a>
+    <a class="game-card" href="game-02-hectare.html" target="_blank">
+      <div class="game-icon">🌾</div>
+      <div class="game-num">重點 2</div>
+      <div class="game-title">1公頃＝幾平方公尺？</div>
+      <span class="game-type">填充題</span>
+    </a>
+    <a class="game-card" href="game-03-are.html" target="_blank">
+      <div class="game-icon">🌱</div>
+      <div class="game-num">重點 3</div>
+      <div class="game-title">1公畝＝幾平方公尺？</div>
+      <span class="game-type">選擇題</span>
+    </a>
+    <a class="game-card" href="game-04-sqkm.html" target="_blank">
+      <div class="game-icon">🌍</div>
+      <div class="game-num">重點 4</div>
+      <div class="game-title">1平方公里＝幾平方公尺？</div>
+      <span class="game-type">選擇題</span>
+    </a>
+    <a class="game-card" href="game-05-big-to-small.html" target="_blank">
+      <div class="game-icon">⬇️</div>
+      <div class="game-num">重點 5</div>
+      <div class="game-title">大單位換算小單位</div>
+      <span class="game-type">填充題</span>
+    </a>
+    <a class="game-card" href="game-06-small-to-big.html" target="_blank">
+      <div class="game-icon">⬆️</div>
+      <div class="game-num">重點 6</div>
+      <div class="game-title">小單位換算大單位</div>
+      <span class="game-type">選擇題</span>
+    </a>
+  </div>
+</div>
+
+<!-- QR Code 區 -->
+<div class="section">
+  <div class="section-title">📱 掃碼直接玩</div>
+  <div class="qr-grid" id="qr-row"></div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <a href="https://truda0124.github.io/teaching-cockpits/" target="_blank">← 返回教學駕駛艙首頁</a>
+  <p>五年級數學｜面積單位換算｜6款互動遊戲</p>
+</div>
+
+<script>
+const games = [
+  {name:'重點1：排序',file:'game-01-unit-order.html'},
+  {name:'重點2：公頃',file:'game-02-hectare.html'},
+  {name:'重點3：公畝',file:'game-03-are.html'},
+  {name:'重點4：平方公里',file:'game-04-sqkm.html'},
+  {name:'重點5：大換小',file:'game-05-big-to-small.html'},
+  {name:'重點6：小換大',file:'game-06-small-to-big.html'},
+];
+const qrRow = document.getElementById('qr-row');
+const base = window.location.href.replace(/index\.html.*$/, '').replace(/\/$/, '') + '/';
+games.forEach(g => {
+  const url = base + g.file;
+  const div = document.createElement('div');
+  div.className = 'qr-item';
+  div.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(url)}" width="100" height="100" alt="QR"><p>${g.name}</p>`;
+  qrRow.appendChild(div);
+});
+</script>
+</body>
+</html>
