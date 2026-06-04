@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重點3：動物的覓食方式</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;}
+h1{color:var(--Y);font-size:1.3rem;text-align:center;margin-bottom:6px;}
+.subtitle{color:var(--faint);font-size:.85rem;margin-bottom:20px;text-align:center;}
+.score-bar{display:flex;gap:16px;margin-bottom:18px;font-size:.9rem;}
+.score-bar span{color:var(--faint);}
+.score-bar b{color:var(--Y);}
+.card{background:var(--board);border-radius:14px;padding:24px;max-width:560px;width:100%;margin-bottom:16px;}
+.question{font-size:1.05rem;line-height:1.6;margin-bottom:18px;}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.animal-col,.method-col{display:flex;flex-direction:column;gap:8px;}
+.label{color:var(--Y);font-size:.8rem;margin-bottom:4px;font-weight:700;}
+.item-btn{background:var(--dim);border:2px solid #2e4a30;color:var(--chalk);border-radius:8px;padding:10px 12px;font-size:.88rem;cursor:pointer;text-align:center;transition:all .2s;}
+.item-btn.selected{border-color:var(--Y);color:var(--Y);background:#1a2e1a;}
+.item-btn.matched-ok{border-color:var(--G);background:#0d2e15;color:var(--G);cursor:default;}
+.item-btn.matched-ng{border-color:var(--R);background:#2e0d0d;color:var(--R);}
+.feedback{margin-top:14px;padding:12px;border-radius:8px;font-size:.9rem;line-height:1.5;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:#0d2e15;border:1px solid var(--G);color:var(--G);}
+.feedback.ng{background:#2e0d0d;border:1px solid var(--R);color:var(--R);}
+.result{background:var(--board);border-radius:14px;padding:30px;text-align:center;max-width:560px;width:100%;display:none;}
+.result.show{display:block;}
+.result h2{color:var(--Y);font-size:1.4rem;margin-bottom:12px;}
+.result p{color:var(--faint);margin-bottom:20px;}
+.replay-btn{padding:12px 32px;background:var(--G);color:#0a1a0a;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;}
+.qr-area{margin-top:28px;text-align:center;}
+.qr-area p{color:var(--faint);font-size:.75rem;margin-top:6px;}
+.score-bar2{text-align:center;color:var(--faint);font-size:.85rem;margin-bottom:12px;}
+</style>
+</head>
+<body>
+<h1>🦁 重點3：動物覓食與身體構造配對</h1>
+<p class="subtitle">將動物和牠的覓食方式配對起來！</p>
+<div class="score-bar"><span>得分：</span><b id="score">0</b><span> / </span><b id="total-q">5</b></div>
+<div class="card" id="q-card">
+  <div class="score-bar2" id="progress-text">請先點選左側動物，再點選右側覓食方式</div>
+  <div class="match-grid">
+    <div class="animal-col">
+      <div class="label">🐾 動物</div>
+      <button class="item-btn" id="a0" onclick="selectAnimal(0)">長頸鹿</button>
+      <button class="item-btn" id="a1" onclick="selectAnimal(1)">大象</button>
+      <button class="item-btn" id="a2" onclick="selectAnimal(2)">大冠鷲</button>
+      <button class="item-btn" id="a3" onclick="selectAnimal(3)">柑橘鳳蝶</button>
+      <button class="item-btn" id="a4" onclick="selectAnimal(4)">大食蟻獸</button>
+    </div>
+    <div class="method-col">
+      <div class="label">🍽️ 覓食方式</div>
+      <button class="item-btn" id="m0" onclick="selectMethod(0)">用口器吸食花蜜</button>
+      <button class="item-btn" id="m1" onclick="selectMethod(1)">用爪子挖蟻丘、長舌捕食螞蟻</button>
+      <button class="item-btn" id="m2" onclick="selectMethod(2)">用強而有力的腳爪抓取獵物</button>
+      <button class="item-btn" id="m3" onclick="selectMethod(3)">用長鼻子抓取食物放進口中</button>
+      <button class="item-btn" id="m4" onclick="selectMethod(4)">用長脖子和細長舌頭取食高處枝葉</button>
+    </div>
+  </div>
+  <div class="feedback" id="feedback"></div>
+</div>
+<div class="result" id="result">
+  <h2 id="result-title"></h2>
+  <p id="result-msg"></p>
+  <button class="replay-btn" onclick="startGame()">🔄 再玩一次</button>
+</div>
+<div class="qr-area">
+  <img id="qr-img" width="100" height="100" alt="QR Code">
+  <p>掃描開啟此遊戲</p>
+</div>
+<script>
+// ans[i] = which method index animal i maps to
+const ANSWERS=[4,3,2,0,1];
+const ANIMAL_NAMES=['長頸鹿','大象','大冠鷲','柑橘鳳蝶','大食蟻獸'];
+const METHOD_NAMES=['用口器吸食花蜜','用爪子挖蟻丘、長舌捕食螞蟻','用強而有力的腳爪抓取獵物','用長鼻子抓取食物放進口中','用長脖子和細長舌頭取食高處枝葉'];
+let selA=-1,matched=[],score=0;
+function startGame(){selA=-1;matched=[];score=0;document.getElementById('result').classList.remove('show');document.getElementById('q-card').style.display='block';document.getElementById('score').textContent=0;updateUI();}
+function updateUI(){
+  for(let i=0;i<5;i++){
+    const ab=document.getElementById('a'+i),mb=document.getElementById('m'+ANSWERS[i]);
+    if(matched.includes(i)){ab.className='item-btn matched-ok';ab.disabled=true;mb.className='item-btn matched-ok';mb.disabled=true;}
+    else{ab.className='item-btn'+(selA===i?' selected':'');ab.disabled=false;mb.className='item-btn';mb.disabled=false;}
+  }
+  document.getElementById('progress-text').textContent='已配對：'+matched.length+' / 5';
+}
+function selectAnimal(i){if(matched.includes(i))return;selA=i;updateUI();}
+function selectMethod(mi){
+  if(selA<0)return;
+  const fb=document.getElementById('feedback');
+  if(ANSWERS[selA]===mi){
+    score++;matched.push(selA);document.getElementById('score').textContent=score;
+    fb.className='feedback ok show';fb.textContent='✅ 正確！'+ANIMAL_NAMES[selA]+'→'+METHOD_NAMES[mi];
+    selA=-1;updateUI();
+    if(matched.length===5)setTimeout(showResult,800);
+  } else {
+    fb.className='feedback ng show';fb.textContent='❌ 不對！'+ANIMAL_NAMES[selA]+'的覓食方式是「'+METHOD_NAMES[ANSWERS[selA]]+'」，再想想吧！';
+    document.getElementById('a'+selA).classList.add('matched-ng');
+    setTimeout(()=>{document.getElementById('a'+selA).classList.remove('matched-ng');selA=-1;updateUI();fb.className='feedback';},1200);
+  }
+}
+function showResult(){
+  document.getElementById('q-card').style.display='none';
+  document.getElementById('result').classList.add('show');
+  document.getElementById('result-title').textContent='得分：'+score+' / 5';
+  document.getElementById('result-msg').textContent=score===5?'全部配對正確！你對動物覓食方式瞭若指掌！':score>=3?'配對得不錯！再複習幾種動物就完美了！':'再多複習一下各種動物的覓食構造吧！';
+}
+startGame();
+document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(window.location.href);
+</script>
+</body>
+</html>
