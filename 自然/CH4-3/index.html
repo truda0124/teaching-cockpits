@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4-3 動物的生命延續 — 教學駕駛艙</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;}
+
+/* 返回列 */
+.back-bar{background:var(--dim);padding:10px 20px;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--faint);color:var(--faint);border-radius:6px;padding:6px 14px;font-size:.82rem;text-decoration:none;transition:all .2s;}
+.back-btn:hover{border-color:var(--Y);color:var(--Y);}
+
+/* 標頭 */
+.hero{background:linear-gradient(135deg,#0e2210,#1d3a1f);padding:32px 20px 24px;text-align:center;border-bottom:1px solid #2a4a2c;}
+.hero-tag{display:inline-block;background:var(--G);color:#0a1a0a;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+.hero h1{font-size:1.6rem;color:var(--Y);margin-bottom:6px;line-height:1.3;}
+.hero p{color:var(--faint);font-size:.9rem;}
+
+/* 主體 */
+main{max-width:860px;margin:0 auto;padding:24px 16px;}
+.section-title{color:var(--Y);font-size:1rem;font-weight:700;margin:28px 0 12px;display:flex;align-items:center;gap:8px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--faint);opacity:.3;}
+
+/* 簡報輪播 */
+.slide-wrap{background:var(--board);border-radius:14px;overflow:hidden;}
+.slide-img-box{position:relative;background:#000;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;}
+.slide-img-box img{width:100%;height:100%;object-fit:contain;display:block;}
+.slide-nav{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--dim);}
+.slide-btn{background:none;border:1px solid var(--faint);color:var(--chalk);border-radius:6px;padding:6px 14px;cursor:pointer;font-size:.9rem;transition:all .2s;}
+.slide-btn:hover{border-color:var(--Y);color:var(--Y);}
+.slide-counter{color:var(--faint);font-size:.85rem;}
+.dots{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;padding:8px 12px 12px;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--faint);cursor:pointer;transition:background .2s;}
+.dot.active{background:var(--Y);}
+
+/* media-card */
+.media-card{background:var(--board);border-radius:12px;overflow:hidden;margin-bottom:12px;}
+.media-card-body{padding:14px 18px;}
+.media-title{color:var(--Y);font-weight:700;margin-bottom:3px;}
+.media-sub{color:var(--faint);font-size:.8rem;margin-bottom:10px;}
+.media-player{width:100%;display:block;}
+video.media-player{max-height:460px;background:#000;}
+.open-btn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:8px 18px;background:var(--B);color:#0a1a2a;border-radius:6px;text-decoration:none;font-size:.85rem;font-weight:700;}
+.open-btn:hover{opacity:.85;}
+
+/* 資訊圖表 */
+.infographic-card{background:var(--board);border-radius:12px;overflow:hidden;}
+.infographic-link{display:block;cursor:zoom-in;position:relative;}
+.infographic-link img{width:100%;display:block;transition:opacity .2s;}
+.infographic-link:hover img{opacity:.9;}
+.infographic-link::after{content:'🔍 點擊放大';position:absolute;bottom:10px;right:12px;background:rgba(0,0,0,.6);color:var(--Y);font-size:.75rem;padding:4px 10px;border-radius:4px;}
+.infographic-footer{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.orig-link{color:var(--B);font-size:.8rem;text-decoration:none;}
+.orig-link:hover{text-decoration:underline;}
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:8px;}
+.lb-close{position:fixed;top:16px;right:20px;color:#fff;font-size:2rem;cursor:pointer;z-index:10000;}
+
+/* 遊戲卡片 */
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+.game-card{background:var(--board);border:1px solid #2a4a2c;border-radius:12px;padding:16px;text-decoration:none;color:var(--chalk);transition:all .25s;display:flex;flex-direction:column;gap:8px;}
+.game-card:hover{border-color:var(--Y);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.4);}
+.game-num{color:var(--faint);font-size:.75rem;}
+.game-title{color:var(--Y);font-weight:700;font-size:.95rem;line-height:1.4;}
+.game-type{color:var(--G);font-size:.78rem;}
+.game-arrow{color:var(--faint);font-size:.8rem;margin-top:auto;}
+
+/* QR Code */
+.qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;}
+.qr-item{background:var(--board);border-radius:10px;padding:12px;text-align:center;}
+.qr-item img{border-radius:6px;border:2px solid var(--faint);}
+.qr-item p{color:var(--faint);font-size:.72rem;margin-top:6px;line-height:1.3;}
+
+/* footer */
+.footer{background:var(--dim);text-align:center;padding:20px;margin-top:40px;color:var(--faint);font-size:.8rem;}
+.footer a{color:var(--B);text-decoration:none;}
+.footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="back-bar">
+  <a class="back-btn" href="https://truda0124.github.io/teaching-cockpits/" target="_blank">← 返回自然教學駕駛艙首頁</a>
+</div>
+
+<div class="hero">
+  <div class="hero-tag">國小五年級 · 自然</div>
+  <h1>4-3 動物的生命延續</h1>
+  <p>求偶行為 · 卵生與胎生 · 育幼行為 · 代代相傳</p>
+</div>
+
+<main>
+
+  <!-- 簡報輪播 -->
+  <div class="section-title">🖼️ 簡報輪播</div>
+  <div class="slide-wrap">
+    <div class="slide-img-box">
+      <img id="slide-img" src="slides/slide_01.jpg" alt="投影片" onerror="this.style.display='none';document.getElementById('slide-err').style.display='block'">
+      <div id="slide-err" style="display:none;color:var(--faint);font-size:.9rem;text-align:center;padding:40px;">簡報圖片載入中，請稍候…</div>
+    </div>
+    <div class="slide-nav">
+      <button class="slide-btn" onclick="goSlide(cur-1)">&#8592; 上一頁</button>
+      <span class="slide-counter" id="slide-counter">1 / 10</span>
+      <button class="slide-btn" onclick="goSlide(cur+1)">下一頁 &#8594;</button>
+    </div>
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <!-- 教學影片 -->
+  <div class="section-title">🎬 教學影片</div>
+  <div class="media-card">
+    <div class="media-card-body">
+      <div class="media-title">4-3_動物界的終極生存遊戲</div>
+      <div class="media-sub">若無法播放，請點下方按鈕在 NotebookLM 開啟</div>
+    </div>
+    <video class="media-player" controls preload="metadata"
+      src="https://lh3.googleusercontent.com/notebooklm/AKXwDQHMitoQFJawJKd-s8QejzMbbXF2T0W4LgPYeaKqM5tLL4h6ykTcynfEJ1C9ttkQfUix8YmRcmERJ289O62RbEezheI5pJjG32q4zBQPsf5kCkQle3qM35XhrNIOvfQW6Cxp4Swyx_w0gZJB1ZfNwAnNPno-0gU=m22-dv">
+      您的瀏覽器不支援影片播放。
+    </video>
+    <div class="media-card-body">
+      <a class="open-btn" href="https://notebooklm.google.com/notebook/6e0ef45f-bc4c-4b1c-80b6-973d4caeb2dc/artifact/6a13a2e6-11cf-4c01-b5e6-5c81ac5e8145" target="_blank">🔗 在 NotebookLM 開啟影片</a>
+    </div>
+  </div>
+
+  <!-- 複習語音 -->
+  <div class="section-title">🔊 複習語音</div>
+  <div class="media-card">
+    <div class="media-card-body">
+      <div class="media-title">4-3_動物求偶與育兒的生存算計</div>
+      <div class="media-sub">若無法播放，請點下方按鈕在 NotebookLM 開啟</div>
+      <audio class="media-player" controls preload="metadata"
+        src="https://lh3.googleusercontent.com/notebooklm/AKXwDQHo9nglfKof9GYmMiLZYl3MbBeF4lUMQTDOSiRyusF82XC7_JASerb0nzFvZ0ClWd4ULVfBTQhNZ6nJF3mMr3GDOX1fRWhzHufQM5Jb2FG5sa0tMiNeZIh5bTi7PjBZvGHz1ExpUSisB8I_wyEQ2Becsm43L2I=m140-dv">
+      </audio>
+      <a class="open-btn" href="https://notebooklm.google.com/notebook/6e0ef45f-bc4c-4b1c-80b6-973d4caeb2dc/artifact/2bb65c8c-d467-4a63-93a7-6a4d8014d899" target="_blank">🔗 在 NotebookLM 開啟語音</a>
+    </div>
+  </div>
+
+  <!-- 資訊圖表 -->
+  <div class="section-title">📊 資訊圖表</div>
+  <div class="infographic-card">
+    <a class="infographic-link" onclick="openLightbox()" href="javascript:void(0)">
+      <img id="info-img" src="slides/infographic.jpg"
+        onerror="this.src='https://lh3.googleusercontent.com/notebooklm/AKXwDQF0FPO_b50Kc1jJUga3pnHS0nEZyfTsTjGffEc6jacgCAx6TqAioQCD9hvH3e1E3bthe5VMKqyWXvDdhDLFo6VD9esNFX8ulfjzzG1KJNTtg3U3Ji00Ul_jHCwHOtW1SN8QGX95mkY75iygWINkFBMWKYIBLDE=w2752-d-h1536-mp2'"
+        alt="資訊圖表">
+    </a>
+    <div class="infographic-footer">
+      <span style="color:var(--faint);font-size:.8rem;">點擊圖片可放大檢視</span>
+      <a class="orig-link" href="https://lh3.googleusercontent.com/notebooklm/AKXwDQF0FPO_b50Kc1jJUga3pnHS0nEZyfTsTjGffEc6jacgCAx6TqAioQCD9hvH3e1E3bthe5VMKqyWXvDdhDLFo6VD9esNFX8ulfjzzG1KJNTtg3U3Ji00Ul_jHCwHOtW1SN8QGX95mkY75iygWINkFBMWKYIBLDE=w2752-d-h1536-mp2" target="_blank">🖼️ 查看原圖（高解析度）</a>
+    </div>
+  </div>
+
+  <!-- 評量遊戲 -->
+  <div class="section-title">🎮 形成性評量遊戲</div>
+  <div class="games-grid">
+    <a class="game-card" href="game-01-courtship.html" target="_blank">
+      <div class="game-num">遊戲 01</div>
+      <div class="game-title">動物的求偶行為</div>
+      <div class="game-type">選擇題 · 6 題</div>
+      <div class="game-arrow">▶ 開始挑戰 →</div>
+    </a>
+    <a class="game-card" href="game-02-oviparous.html" target="_blank">
+      <div class="game-num">遊戲 02</div>
+      <div class="game-title">卵生的特徵</div>
+      <div class="game-type">是非題 · 6 題</div>
+      <div class="game-arrow">▶ 開始挑戰 →</div>
+    </a>
+    <a class="game-card" href="game-03-viviparous.html" target="_blank">
+      <div class="game-num">遊戲 03</div>
+      <div class="game-title">胎生的特徵</div>
+      <div class="game-type">填充題 · 5 題</div>
+      <div class="game-arrow">▶ 開始挑戰 →</div>
+    </a>
+    <a class="game-card" href="game-04-compare.html" target="_blank">
+      <div class="game-num">遊戲 04</div>
+      <div class="game-title">卵生 vs 胎生比較</div>
+      <div class="game-type">配對題 · 8 組</div>
+      <div class="game-arrow">▶ 開始挑戰 →</div>
+    </a>
+    <a class="game-card" href="game-05-parenting.html" target="_blank">
+      <div class="game-num">遊戲 05</div>
+      <div class="game-title">動物的育幼行為</div>
+      <div class="game-type">選擇題 · 6 題</div>
+      <div class="game-arrow">▶ 開始挑戰 →</div>
+    </a>
+    <a class="game-card" href="game-06-heredity.html" target="_blank">
+      <div class="game-num">遊戲 06</div>
+      <div class="game-title">代代相傳（遺傳與變異）</div>
+      <div class="game-type">是非題 · 6 題</div>
+      <div class="game-arrow">▶ 開始挑戰 →</div>
+    </a>
+  </div>
+
+  <!-- QR Code -->
+  <div class="section-title">📱 掃碼進入遊戲</div>
+  <div class="qr-grid" id="qr-row"></div>
+
+</main>
+
+<div class="footer">
+  <p>國小五年級自然 · 4-3 動物的生命延續 · 教學駕駛艙</p>
+  <p style="margin-top:8px;"><a href="https://truda0124.github.io/teaching-cockpits/" target="_blank">← 返回自然教學駕駛艙首頁</a></p>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lb-close" onclick="closeLightbox()">✕</span>
+  <img id="lb-img" src="" alt="資訊圖表放大">
+</div>
+
+<script>
+// 簡報輪播
+const TOTAL = 10;
+let cur = 1;
+
+function buildDots(){
+  const d = document.getElementById('dots');
+  d.innerHTML = '';
+  for(let i=1;i<=TOTAL;i++){
+    const s = document.createElement('span');
+    s.className = 'dot' + (i===1?' active':'');
+    s.onclick = (()=>{const n=i;return()=>goSlide(n);})();
+    d.appendChild(s);
+  }
+}
+
+function goSlide(n){
+  cur = Math.max(1, Math.min(TOTAL, n));
+  document.getElementById('slide-img').src = 'slides/slide_' + String(cur).padStart(2,'0') + '.jpg';
+  document.getElementById('slide-img').style.display = 'block';
+  document.getElementById('slide-err').style.display = 'none';
+  document.getElementById('slide-counter').textContent = cur + ' / ' + TOTAL;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur-1));
+}
+
+buildDots();
+
+document.addEventListener('keydown', e => {
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') goSlide(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp') goSlide(cur-1);
+});
+
+// Lightbox
+function openLightbox(){
+  document.getElementById('lb-img').src = document.getElementById('info-img').src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeLightbox(); });
+
+// QR Code 動態產生
+const games = [
+  {name:'遊戲01\n求偶行為', file:'game-01-courtship.html'},
+  {name:'遊戲02\n卵生特徵', file:'game-02-oviparous.html'},
+  {name:'遊戲03\n胎生特徵', file:'game-03-viviparous.html'},
+  {name:'遊戲04\n卵生vs胎生', file:'game-04-compare.html'},
+  {name:'遊戲05\n育幼行為', file:'game-05-parenting.html'},
+  {name:'遊戲06\n代代相傳', file:'game-06-heredity.html'},
+];
+const qrRow = document.getElementById('qr-row');
+const base = window.location.href.replace(/index\.html.*$/, '').replace(/\/$/, '') + '/';
+games.forEach(g => {
+  const url = base + g.file;
+  const div = document.createElement('div');
+  div.className = 'qr-item';
+  div.innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=' + encodeURIComponent(url) + '" width="110" height="110" alt="QR"><p>' + g.name.replace('\n','<br>') + '</p>';
+  qrRow.appendChild(div);
+});
+</script>
+</body>
+</html>
