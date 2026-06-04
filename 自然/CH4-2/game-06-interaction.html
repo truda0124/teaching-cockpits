@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重點6：生物間的交互作用</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;}
+h1{color:var(--Y);font-size:1.3rem;text-align:center;margin-bottom:6px;}
+.subtitle{color:var(--faint);font-size:.85rem;margin-bottom:20px;text-align:center;}
+.score-bar{display:flex;gap:16px;margin-bottom:18px;font-size:.9rem;}
+.score-bar span{color:var(--faint);}
+.score-bar b{color:var(--Y);}
+.card{background:var(--board);border-radius:14px;padding:24px;max-width:560px;width:100%;margin-bottom:16px;}
+.question{font-size:1.05rem;line-height:1.6;margin-bottom:18px;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.opt-btn{background:var(--dim);border:2px solid #2e4a30;color:var(--chalk);border-radius:8px;padding:12px 16px;font-size:.95rem;cursor:pointer;text-align:left;transition:all .2s;}
+.opt-btn:hover:not(:disabled){border-color:var(--Y);color:var(--Y);}
+.opt-btn.correct{border-color:var(--G);background:#0d2e15;color:var(--G);}
+.opt-btn.wrong{border-color:var(--R);background:#2e0d0d;color:var(--R);}
+.feedback{margin-top:14px;padding:12px;border-radius:8px;font-size:.9rem;line-height:1.5;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:#0d2e15;border:1px solid var(--G);color:var(--G);}
+.feedback.ng{background:#2e0d0d;border:1px solid var(--R);color:var(--R);}
+.next-btn{margin-top:14px;padding:10px 28px;background:var(--Y);color:#1a1000;border:none;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer;display:none;}
+.next-btn.show{display:inline-block;}
+.result{background:var(--board);border-radius:14px;padding:30px;text-align:center;max-width:560px;width:100%;display:none;}
+.result.show{display:block;}
+.result h2{color:var(--Y);font-size:1.4rem;margin-bottom:12px;}
+.result p{color:var(--faint);margin-bottom:20px;}
+.replay-btn{padding:12px 32px;background:var(--G);color:#0a1a0a;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;}
+.qr-area{margin-top:28px;text-align:center;}
+.qr-area p{color:var(--faint);font-size:.75rem;margin-top:6px;}
+.progress{width:100%;max-width:560px;height:6px;background:var(--dim);border-radius:3px;margin-bottom:16px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--Y);border-radius:3px;transition:width .3s;}
+</style>
+</head>
+<body>
+<h1>🌊 重點6：生物間的交互作用</h1>
+<p class="subtitle">掠食、競爭、共生、寄生——分清楚了嗎？</p>
+<div class="score-bar"><span>得分：</span><b id="score">0</b><span> / </span><b id="total-q">0</b></div>
+<div class="progress"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div class="card" id="q-card">
+  <div class="question" id="q-text"></div>
+  <div class="options" id="opts"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="next-btn" onclick="nextQ()">下一題 →</button>
+</div>
+<div class="result" id="result">
+  <h2 id="result-title"></h2>
+  <p id="result-msg"></p>
+  <button class="replay-btn" onclick="startGame()">🔄 再玩一次</button>
+</div>
+<div class="qr-area">
+  <img id="qr-img" width="100" height="100" alt="QR Code">
+  <p>掃描開啟此遊戲</p>
+</div>
+<script>
+const QS=[
+  {q:"海葵用有毒的觸手保護寄居蟹，寄居蟹載著海葵移動增加海葵食物來源。這是什麼關係？",opts:["掠食","競爭","共生","寄生"],ans:2,exp:"這是共生關係（互利）——兩者都獲益：海葵保護寄居蟹，寄居蟹幫助海葵獲得更多食物。"},
+  {q:"棘冠海星以珊瑚為食，大量啃食珊瑚蟲。這是什麼關係？",opts:["掠食","競爭","共生","寄生"],ans:0,exp:"掠食是指一種生物捕捉另一種生物以作為食物，棘冠海星吃珊瑚蟲即為掠食關係。"},
+  {q:"珊瑚與海綿、藻類競爭棲地空間。這是什麼關係？",opts:["掠食","競爭","共生","寄生"],ans:1,exp:"競爭是不同物種（或同種）為爭奪食物、居所、交配權等資源而相互對抗的關係。"},
+  {q:"藤壺附著在海龜身上獲取食物，藤壺數量增加後造成海龜受傷。這是什麼關係？",opts:["掠食","競爭","共生","寄生"],ans:3,exp:"這是寄生關係——寄生物（藤壺）受益，而寄主（海龜）受害。"},
+  {q:"「寄生」關係中，誰受益、誰受害？",opts:["寄主受益、寄生物受害","兩者都受益","寄生物受益、寄主受害","兩者都受害"],ans:2,exp:"寄生是寄生物寄居在寄主體內或體表，藉以得到食物或保護；這段關係中，寄主受害、寄生物受益。"},
+  {q:"榕樹與榕果小蜂彼此缺一不可，這是哪種共生型態？",opts:["非義務互利共生","義務性互利共生","競爭共生","片利共生"],ans:1,exp:"義務性互利共生指兩種生物必須彼此才能生存，關係永久且有義務性，如榕樹與榕果小蜂。"},
+  {q:"下列哪個例子屬於「競爭」關係？",opts:["獅子捕食羚羊","海葵與寄居蟹互利","同一片草地上的斑馬和牛羚爭奪水草","藤壺附著在海龜身上"],ans:2,exp:"同一棲地上的不同物種爭奪食物、水源等資源，屬於競爭關係。"}
+];
+let cur=0,score=0,answered=false;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+let order=[];
+function startGame(){cur=0;score=0;answered=false;order=shuffle([...Array(QS.length).keys()]);document.getElementById('result').classList.remove('show');document.getElementById('q-card').style.display='block';showQ();}
+function showQ(){
+  const d=QS[order[cur]];
+  document.getElementById('q-text').textContent=(cur+1)+'. '+d.q;
+  document.getElementById('total-q').textContent=QS.length;
+  document.getElementById('score').textContent=score;
+  document.getElementById('prog').style.width=(cur/QS.length*100)+'%';
+  const opts=document.getElementById('opts');opts.innerHTML='';
+  d.opts.forEach((o,i)=>{
+    const b=document.createElement('button');b.className='opt-btn';b.textContent=o;
+    b.onclick=()=>pick(i,d.ans,d.exp);opts.appendChild(b);
+  });
+  document.getElementById('feedback').className='feedback';document.getElementById('feedback').textContent='';
+  document.getElementById('next-btn').className='next-btn';answered=false;
+}
+function pick(i,ans,exp){
+  if(answered)return;answered=true;
+  const btns=document.querySelectorAll('.opt-btn');
+  btns[ans].classList.add('correct');
+  const fb=document.getElementById('feedback');
+  if(i===ans){score++;fb.className='feedback ok show';fb.textContent='✅ 答對了！'+exp;}
+  else{btns[i].classList.add('wrong');fb.className='feedback ng show';fb.textContent='❌ 答錯了！正確答案是「'+QS[order[cur]].opts[ans]+'」。'+exp;}
+  btns.forEach(b=>b.disabled=true);
+  document.getElementById('next-btn').className='next-btn show';
+}
+function nextQ(){cur++;if(cur>=QS.length){showResult();}else{showQ();}}
+function showResult(){
+  document.getElementById('q-card').style.display='none';
+  const r=document.getElementById('result');r.classList.add('show');
+  const pct=Math.round(score/QS.length*100);
+  document.getElementById('result-title').textContent='得分：'+score+' / '+QS.length+' ('+pct+'%)';
+  document.getElementById('result-msg').textContent=pct>=80?'生物交互作用全部掌握，超厲害！':pct>=60?'不錯喔！再想想掠食/競爭/共生/寄生的定義！':'繼續加油！記住：共生兩者都好；寄生寄主受害；掠食一方被吃！';
+}
+startGame();
+document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(window.location.href);
+</script>
+</body>
+</html>
