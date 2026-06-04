@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>重點4：社會性動物與分工</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;padding:20px;}
+h1{color:var(--Y);text-align:center;font-size:1.3rem;margin-bottom:4px;}
+.subtitle{color:var(--faint);text-align:center;font-size:.85rem;margin-bottom:20px;}
+.score-bar{text-align:center;color:var(--Y);margin-bottom:16px;}
+.progress{height:6px;background:var(--dim);border-radius:3px;margin-bottom:20px;max-width:560px;margin-left:auto;margin-right:auto;}
+.progress-fill{height:100%;background:var(--G);border-radius:3px;transition:width .4s;}
+.card{background:var(--board);border-radius:12px;padding:20px;max-width:560px;margin:0 auto 16px;}
+.q-num{color:var(--G);font-size:.8rem;margin-bottom:8px;}
+.q-text{font-size:1rem;line-height:1.6;margin-bottom:14px;}
+.opts{display:flex;flex-direction:column;gap:8px;}
+.opt{background:var(--dim);border:1.5px solid #3a5a3c;border-radius:8px;padding:10px 14px;cursor:pointer;font-size:.95rem;transition:all .2s;text-align:left;}
+.opt:hover{border-color:var(--Y);color:var(--Y);}
+.opt.correct{border-color:var(--G);background:#1a4020;color:var(--G);}
+.opt.wrong{border-color:var(--R);background:#3a1010;color:var(--R);}
+.feedback{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:.9rem;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:#1a4020;color:var(--G);}
+.feedback.ng{background:#3a1010;color:var(--R);}
+.btn{display:block;margin:20px auto 0;padding:10px 28px;background:var(--B);color:#0a1a2a;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;}
+.qr-wrap{text-align:center;margin-top:24px;}
+.qr-wrap p{color:var(--faint);font-size:.8rem;margin-top:6px;}
+</style>
+</head>
+<body>
+<h1>🐜 重點4：社會性動物與分工</h1>
+<p class="subtitle">五年級自然 L4-1 動物偵查員｜選擇題</p>
+<div class="score-bar">得分：<span id="score">0</span> / <span id="total">6</span></div>
+<div class="progress"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div id="quiz-area"></div>
+<button class="btn" id="restart-btn" style="display:none" onclick="restart()">🔄 重新挑戰</button>
+<div class="qr-wrap">
+  <img id="qr-img" src="" width="100" height="100" alt="QR Code">
+  <p>掃描進入此遊戲</p>
+</div>
+<script>
+const qs=[
+  {q:"螞蟻群體中，體型最大、主要負責產卵的是？",opts:["工蟻","兵蟻","雄蟻","蟻后"],ans:3,exp:"蟻后體型最大，主要工作是產卵。"},
+  {q:"螞蟻群體中，負責護卵、育幼、覓食等大部分工作的是？",opts:["蟻后","雄蟻","工蟻","兵蟻"],ans:2,exp:"工蟻數量最多，負責護卵、育幼、覓食、貯存食物、清潔蟻巢及照顧蟻后等工作。"},
+  {q:"螞蟻主要靠哪個器官傳遞訊息和辨別氣味？",opts:["眼睛","翅膀","觸角","腳"],ans:2,exp:"螞蟻視覺和聽覺不靈敏，主要靠觸角（嗅覺器官）傳遞訊息和辨別氣味。"},
+  {q:"蜂群中，負責採集食物、照顧幼蟲及蜂后的是？",opts:["蜂后","雄蜂","工蜂","兵蜂"],ans:2,exp:"工蜂負責採集食物、照顧幼蟲及蜂后等工作。"},
+  {q:"下列哪一種動物不屬於社會性動物？",opts:["螞蟻","蜜蜂","臺灣獼猴","青蛙"],ans:3,exp:"青蛙不是社會性動物。螞蟻、蜜蜂、臺灣獼猴都有群體生活和分工合作的社會行為。"},
+  {q:"蜂群中，雄蜂的唯一功用是什麼？",opts:["採集花蜜","保衛蜂巢","與蜂后交配","照顧幼蟲"],ans:2,exp:"雄蜂唯一的功用就是與蜂后交配，交配後不久就死亡。"}
+];
+let cur=0,score=0;
+document.getElementById('total').textContent=qs.length;
+function render(){
+  if(cur>=qs.length){showResult();return;}
+  const q=qs[cur];
+  document.getElementById('prog').style.width=Math.round(cur/qs.length*100)+'%';
+  const shuffled=[...q.opts.map((o,i)=>({o,i}))].sort(()=>Math.random()-.5);
+  let html=`<div class="card"><div class="q-num">第 ${cur+1} 題 / 共 ${qs.length} 題</div>
+  <div class="q-text">${q.q}</div><div class="opts">`;
+  shuffled.forEach(({o,i})=>{ html+=`<button class="opt" data-idx="${i}" onclick="choose(${i})">${String.fromCharCode(65+shuffled.indexOf(shuffled.find(s=>s.i===i)))}. ${o}</button>`; });
+  html+=`</div><div class="feedback" id="fb"></div></div>`;
+  document.getElementById('quiz-area').innerHTML=html;
+}
+function choose(i){
+  const q=qs[cur];
+  document.querySelectorAll('.opt').forEach(o=>o.onclick=null);
+  const fb=document.getElementById('fb');
+  document.querySelectorAll('.opt').forEach(o=>{
+    const idx=parseInt(o.dataset.idx);
+    if(idx===q.ans) o.classList.add('correct');
+    else if(idx===i) o.classList.add('wrong');
+  });
+  if(i===q.ans){
+    fb.className='feedback show ok';fb.textContent='✅ 答對了！'+q.exp;
+    score++;document.getElementById('score').textContent=score;
+  } else {
+    fb.className='feedback show ng';fb.textContent='❌ 答錯了！正確答案是「'+q.opts[q.ans]+'」。'+q.exp;
+  }
+  setTimeout(()=>{cur++;render();},2200);
+}
+function showResult(){
+  document.getElementById('prog').style.width='100%';
+  document.getElementById('quiz-area').innerHTML=`<div class="card" style="text-align:center">
+  <div style="font-size:2rem;margin-bottom:12px">${score>=5?'🏆':'📚'}</div>
+  <div style="color:var(--Y);font-size:1.3rem;font-weight:700">得分：${score} / ${qs.length}</div>
+  <div style="color:var(--faint);margin-top:8px">${score===qs.length?'滿分！超厲害！':score>=4?'不錯！再複習一下吧':'繼續加油！'}</div>
+  </div>`;
+  document.getElementById('restart-btn').style.display='block';
+}
+function restart(){cur=0;score=0;document.getElementById('score').textContent=0;document.getElementById('restart-btn').style.display='none';render();}
+render();
+document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(window.location.href);
+</script>
+</body>
+</html>
