@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>五年級自然 L4-1 動物偵查員｜教學駕駛艙</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;line-height:1.6;}
+
+/* 返回列 */
+.back-bar{background:var(--dim);padding:10px 20px;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--faint);color:var(--faint);border-radius:6px;padding:6px 14px;font-size:.82rem;text-decoration:none;transition:all .2s;}
+.back-btn:hover{border-color:var(--Y);color:var(--Y);}
+
+/* 標頭 */
+.header{background:var(--board);padding:28px 20px 20px;text-align:center;border-bottom:2px solid var(--dim);}
+.subject-tag{display:inline-block;background:var(--G);color:#0a2010;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:12px;margin-bottom:10px;letter-spacing:.05em;}
+.header h1{color:var(--Y);font-size:1.6rem;margin-bottom:6px;}
+.header p{color:var(--faint);font-size:.9rem;}
+
+/* 主容器 */
+.container{max-width:860px;margin:0 auto;padding:24px 16px;}
+.section-title{color:var(--Y);font-size:1rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+
+/* 簡報輪播 */
+.slides-card{background:var(--board);border-radius:12px;overflow:hidden;margin-bottom:28px;}
+.slide-viewer{position:relative;background:#000;aspect-ratio:16/9;}
+.slide-viewer img{width:100%;height:100%;object-fit:contain;display:block;}
+.slide-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);border:none;color:#fff;font-size:1.4rem;padding:10px 14px;cursor:pointer;border-radius:6px;transition:background .2s;}
+.slide-nav:hover{background:rgba(245,208,80,.8);color:#000;}
+.slide-prev{left:8px;}
+.slide-next{right:8px;}
+.slide-footer{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.slide-counter{color:var(--faint);font-size:.85rem;}
+.dots{display:flex;gap:5px;flex-wrap:wrap;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--faint);cursor:pointer;transition:background .2s;}
+.dot.active{background:var(--Y);}
+
+/* 媒體卡片 */
+.media-card{background:var(--board);border-radius:12px;overflow:hidden;margin-bottom:20px;}
+.media-card-body{padding:16px 20px;}
+.media-title{color:var(--Y);font-weight:700;margin-bottom:4px;}
+.media-sub{color:var(--faint);font-size:.8rem;margin-bottom:12px;}
+.media-player{width:100%;display:block;}
+video.media-player{max-height:460px;background:#000;}
+.open-btn{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:8px 18px;background:var(--B);color:#0a1a2a;border-radius:6px;text-decoration:none;font-size:.85rem;font-weight:700;}
+.open-btn:hover{opacity:.85;}
+
+/* 資訊圖表 */
+.infographic-card{background:var(--board);border-radius:12px;overflow:hidden;margin-bottom:28px;}
+.infographic-link{display:block;cursor:zoom-in;position:relative;}
+.infographic-link img{width:100%;display:block;transition:opacity .2s;}
+.infographic-link:hover img{opacity:.9;}
+.infographic-link::after{content:'🔍 點擊放大';position:absolute;bottom:10px;right:12px;background:rgba(0,0,0,.6);color:var(--Y);font-size:.75rem;padding:4px 10px;border-radius:4px;}
+.infographic-footer{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.orig-link{color:var(--B);font-size:.8rem;text-decoration:none;}
+.orig-link:hover{text-decoration:underline;}
+
+/* Lightbox */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:8px;}
+.lb-close{position:fixed;top:16px;right:20px;color:#fff;font-size:2rem;cursor:pointer;z-index:10000;}
+
+/* 遊戲卡片 */
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin-bottom:28px;}
+.game-card{background:var(--board);border-radius:10px;padding:16px;text-decoration:none;color:var(--chalk);border:1.5px solid transparent;transition:all .2s;display:flex;flex-direction:column;gap:6px;}
+.game-card:hover{border-color:var(--Y);transform:translateY(-2px);}
+.game-type{font-size:.72rem;color:var(--faint);background:var(--dim);padding:2px 8px;border-radius:10px;display:inline-block;width:fit-content;}
+.game-name{color:var(--Y);font-weight:700;font-size:.95rem;}
+.game-desc{color:var(--faint);font-size:.82rem;}
+.play-badge{color:var(--G);font-size:.8rem;margin-top:4px;}
+
+/* QR Code區 */
+.qr-section{background:var(--board);border-radius:12px;padding:20px;margin-bottom:28px;}
+.qr-row{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:12px;}
+.qr-item{text-align:center;width:110px;}
+.qr-item img{border-radius:6px;background:#fff;padding:3px;}
+.qr-item p{color:var(--faint);font-size:.72rem;margin-top:6px;line-height:1.3;}
+
+/* Footer */
+.footer{background:var(--dim);padding:20px;text-align:center;color:var(--faint);font-size:.85rem;}
+.footer a{color:var(--B);text-decoration:none;}
+.footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<!-- 返回首頁 -->
+<div class="back-bar">
+  <a class="back-btn" href="https://truda0124.github.io/teaching-cockpits/" target="_blank">← 返回自然科教學駕駛艙首頁</a>
+</div>
+
+<!-- 標頭 -->
+<div class="header">
+  <div class="subject-tag">國小五年級 · 自然科</div>
+  <h1>🔍 4-1 動物偵查員</h1>
+  <p>揭祕動物的世界｜族群·食物鏈·社會行為·訊息傳遞</p>
+</div>
+
+<div class="container">
+
+  <!-- ① 簡報輪播 -->
+  <div class="section-title">🖼️ 教學簡報</div>
+  <div class="slides-card">
+    <div class="slide-viewer">
+      <img id="slide-img" src="slides/slide_01.jpg" alt="投影片" onerror="this.src='slides/slide_01.jpg'">
+      <button class="slide-nav slide-prev" onclick="goSlide(cur-1)">‹</button>
+      <button class="slide-nav slide-next" onclick="goSlide(cur+1)">›</button>
+    </div>
+    <div class="slide-footer">
+      <span class="slide-counter" id="slide-counter">1 / 1</span>
+      <div class="dots" id="dots"></div>
+    </div>
+  </div>
+
+  <!-- ② 教學影片 -->
+  <div class="section-title">🎬 教學影片</div>
+  <div class="media-card">
+    <div class="media-card-body">
+      <div class="media-title">4-1 五年級自然科終極指南：化身動物大偵探</div>
+      <div class="media-sub">若無法播放，請點下方按鈕在 NotebookLM 開啟</div>
+    </div>
+    <video class="media-player" controls preload="metadata"
+      src="https://lh3.googleusercontent.com/notebooklm/AKXwDQFGhxVnYdoEltCuL-xoIaGvkXuqn7DrPtJGVpiSC1f3_u1bN99ClNKncSZ7zFpzOzs5tghNBEahmOcHf_ixMELXjAjcmy17wEyWB1xKsBnXujwGCxvJGtbqq8wAnEgzIc8yn_HZYgbuR595KDpcztxoJwnDQw=m22-dv">
+      您的瀏覽器不支援影片播放。
+    </video>
+    <div class="media-card-body">
+      <a class="open-btn" href="https://notebooklm.google.com/notebook/6e0ef45f-bc4c-4b1c-80b6-973d4caeb2dc/artifact/c2fc6d9e-df86-4fb4-88cb-bf0355608344" target="_blank">🔗 在 NotebookLM 開啟影片</a>
+    </div>
+  </div>
+
+  <!-- ③ 複習語音 -->
+  <div class="section-title">🔊 複習語音</div>
+  <div class="media-card">
+    <div class="media-card-body">
+      <div class="media-title">4-1 校園草叢生存戰</div>
+      <div class="media-sub">若無法播放，請點下方按鈕在 NotebookLM 開啟</div>
+      <audio class="media-player" controls preload="metadata" src="slides/audio.m4a"></audio>
+      <a class="open-btn" href="https://notebooklm.google.com/notebook/6e0ef45f-bc4c-4b1c-80b6-973d4caeb2dc/artifact/a1593d30-2c11-4721-9f98-b292482ba36b" target="_blank">🔗 在 NotebookLM 開啟語音</a>
+    </div>
+  </div>
+
+  <!-- ④ 資訊圖表 -->
+  <div class="section-title">📊 資訊圖表</div>
+  <div class="infographic-card">
+    <a class="infographic-link" onclick="openLightbox()" href="javascript:void(0)">
+      <img id="info-img" src="slides/infographic.jpg"
+        onerror="this.src='https://lh3.googleusercontent.com/notebooklm/AKXwDQEiO9f2UdESpyF_bJMg39VX0q_SuVipPDBkNpPf0083wWdjAf0YCBTH_05JZqxbFhaGrZdzEZZpOAgVxsmKELGDvQuYa29X6xggQcH6Dt7emCcVW9QWNu7KhyFBKHhvZtRMWYP9t73_9LC1Rscpz4zoQjtkwk8=w2752-d-h1536-mp2'"
+        alt="生態層級與食物金字塔資訊圖表">
+    </a>
+    <div class="infographic-footer">
+      <span style="color:var(--faint);font-size:.8rem;">點擊圖片可放大檢視</span>
+      <a class="orig-link" href="https://lh3.googleusercontent.com/notebooklm/AKXwDQEiO9f2UdESpyF_bJMg39VX0q_SuVipPDBkNpPf0083wWdjAf0YCBTH_05JZqxbFhaGrZdzEZZpOAgVxsmKELGDvQuYa29X6xggQcH6Dt7emCcVW9QWNu7KhyFBKHhvZtRMWYP9t73_9LC1Rscpz4zoQjtkwk8=w2752-d-h1536-mp2" target="_blank">🖼️ 查看原圖（高解析度）</a>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="lb-close" onclick="closeLightbox()">✕</span>
+    <img id="lb-img" src="" alt="資訊圖表放大">
+  </div>
+
+  <!-- ⑤ 評量遊戲 -->
+  <div class="section-title">🎮 形成性評量遊戲</div>
+  <div class="games-grid">
+    <a class="game-card" href="game-01-behavior.html" target="_blank">
+      <span class="game-type">選擇題</span>
+      <div class="game-name">重點1：動物行為與環境刺激</div>
+      <div class="game-desc">覓食、逃避、求偶行為，嗅覺受器位置</div>
+      <div class="play-badge">▶ 開始作答（5題）</div>
+    </a>
+    <a class="game-card" href="game-02-population.html" target="_blank">
+      <span class="game-type">填充題</span>
+      <div class="game-name">重點2：族群與群集</div>
+      <div class="game-desc">個體、族群、群集的定義與差異</div>
+      <div class="play-badge">▶ 開始作答（5題）</div>
+    </a>
+    <a class="game-card" href="game-03-foodchain.html" target="_blank">
+      <span class="game-type">配對題</span>
+      <div class="game-name">重點3：食物鏈</div>
+      <div class="game-desc">生產者、消費者層級，食物鏈箭頭方向</div>
+      <div class="play-badge">▶ 開始作答（5題）</div>
+    </a>
+    <a class="game-card" href="game-04-social.html" target="_blank">
+      <span class="game-type">選擇題</span>
+      <div class="game-name">重點4：社會性動物與分工</div>
+      <div class="game-desc">螞蟻、蜜蜂各成員的工作職責</div>
+      <div class="play-badge">▶ 開始作答（6題）</div>
+    </a>
+    <a class="game-card" href="game-05-communication.html" target="_blank">
+      <span class="game-type">是非題</span>
+      <div class="game-name">重點5：動物訊息傳遞方式</div>
+      <div class="game-desc">費洛蒙、舞蹈、聲音、理毛等傳訊方式</div>
+      <div class="play-badge">▶ 開始作答（6題）</div>
+    </a>
+  </div>
+
+  <!-- ⑥ QR Code 掃碼區 -->
+  <div class="section-title">📱 QR Code 掃碼</div>
+  <div class="qr-section">
+    <p style="color:var(--faint);font-size:.85rem;margin-bottom:4px;">掃描下方 QR Code，手機直接進入各遊戲</p>
+    <div class="qr-row" id="qr-row"></div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>五年級自然 4-1 動物偵查員｜教學駕駛艙</p>
+  <p style="margin-top:8px;"><a href="https://truda0124.github.io/teaching-cockpits/" target="_blank">← 返回自然科教學駕駛艙首頁</a></p>
+</div>
+
+<script>
+// 簡報輪播
+const TOTAL = 11;
+let cur = 1;
+function buildDots(){
+  const dots=document.getElementById('dots');
+  dots.innerHTML='';
+  for(let i=1;i<=TOTAL;i++){
+    const d=document.createElement('span');
+    d.className='dot'+(i===1?' active':'');
+    d.onclick=(()=>{const n=i;return()=>goSlide(n);})();
+    dots.appendChild(d);
+  }
+}
+function goSlide(n){
+  cur=Math.max(1,Math.min(TOTAL,n));
+  document.getElementById('slide-img').src='slides/slide_'+String(cur).padStart(2,'0')+'.jpg';
+  document.getElementById('slide-counter').textContent=cur+' / '+TOTAL;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur-1));
+}
+buildDots();
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') goSlide(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp') goSlide(cur-1);
+});
+
+// Lightbox
+function openLightbox(){
+  document.getElementById('lb-img').src=document.getElementById('info-img').src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+
+// QR Code 動態產生
+const games=[
+  {name:'重點1：行為刺激',file:'game-01-behavior.html'},
+  {name:'重點2：族群群集',file:'game-02-population.html'},
+  {name:'重點3：食物鏈',file:'game-03-foodchain.html'},
+  {name:'重點4：社會分工',file:'game-04-social.html'},
+  {name:'重點5：訊息傳遞',file:'game-05-communication.html'},
+];
+const qrRow=document.getElementById('qr-row');
+const base=window.location.href.replace(/index\.html.*$/,'');
+games.forEach(g=>{
+  const url=base+g.file;
+  const div=document.createElement('div');
+  div.className='qr-item';
+  div.innerHTML='<img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(url)+'" width="100" height="100"><p>'+g.name+'</p>';
+  qrRow.appendChild(div);
+});
+</script>
+</body>
+</html>
