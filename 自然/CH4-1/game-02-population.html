@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>重點2：族群與群集</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;padding:20px;}
+h1{color:var(--Y);text-align:center;font-size:1.3rem;margin-bottom:4px;}
+.subtitle{color:var(--faint);text-align:center;font-size:.85rem;margin-bottom:20px;}
+.score-bar{text-align:center;color:var(--Y);margin-bottom:16px;}
+.progress{height:6px;background:var(--dim);border-radius:3px;margin-bottom:20px;max-width:560px;margin-left:auto;margin-right:auto;}
+.progress-fill{height:100%;background:var(--G);border-radius:3px;transition:width .4s;}
+.card{background:var(--board);border-radius:12px;padding:20px;max-width:560px;margin:0 auto 16px;}
+.q-num{color:var(--G);font-size:.8rem;margin-bottom:8px;}
+.q-text{font-size:1rem;line-height:1.6;margin-bottom:16px;}
+.blank-area{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.blank{display:inline-block;min-width:80px;border-bottom:2px solid var(--Y);padding:4px 8px;font-size:1rem;color:var(--Y);text-align:center;}
+.choices{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{background:var(--dim);border:1.5px solid #3a5a3c;border-radius:20px;padding:6px 14px;cursor:pointer;font-size:.9rem;transition:all .2s;}
+.chip:hover{border-color:var(--Y);color:var(--Y);}
+.chip.used{opacity:.3;pointer-events:none;}
+.feedback{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:.9rem;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:#1a4020;color:var(--G);}
+.feedback.ng{background:#3a1010;color:var(--R);}
+.btn{display:block;margin:20px auto 0;padding:10px 28px;background:var(--B);color:#0a1a2a;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;}
+.qr-wrap{text-align:center;margin-top:24px;}
+.qr-wrap p{color:var(--faint);font-size:.8rem;margin-top:6px;}
+</style>
+</head>
+<body>
+<h1>🦀 重點2：族群與群集</h1>
+<p class="subtitle">五年級自然 L4-1 動物偵查員｜填充題</p>
+<div class="score-bar">得分：<span id="score">0</span> / <span id="total">5</span></div>
+<div class="progress"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div id="quiz-area"></div>
+<button class="btn" id="restart-btn" style="display:none" onclick="restart()">🔄 重新挑戰</button>
+<div class="qr-wrap">
+  <img id="qr-img" src="" width="100" height="100" alt="QR Code">
+  <p>掃描進入此遊戲</p>
+</div>
+<script>
+const qs=[
+  {before:"同時間生活在同一區域內，",blank:"同種",after:"生物個體所組成的群體，稱為族群。",choices:["同種","不同種","所有種類","最大型"],ans:"同種",exp:"族群 = 同時、同地、同種生物個體的集合。"},
+  {before:"個體間彼此互相幫助，藉此提高",blank:"生存",after:"的機會。",choices:["覓食","生存","繁殖","遷徙"],ans:"生存",exp:"族群中個體互助，目的是提高生存機會。"},
+  {before:"同時間生活在同一區域內，不同種生物族群的集合，稱為",blank:"群集",after:"。",choices:["族群","群集","食物鏈","生態系"],ans:"群集",exp:"群集 = 同時、同地、多種生物族群的集合。"},
+  {before:"溼地中的招潮蟹個體集合起來，稱為招潮蟹",blank:"族群",after:"。",choices:["個體","族群","群集","物種"],ans:"族群",exp:"同種生物（招潮蟹）在同一地點、同一時間的集合就是「族群」。"},
+  {before:"將吃與被吃的關係以箭頭連結，稱為",blank:"食物鏈",after:"。",choices:["食物網","食物鏈","生命週期","族群"],ans:"食物鏈",exp:"食物鏈是用箭頭表示生物間吃與被吃的關係，箭頭方向代表能量流動方向。"}
+];
+let cur=0,score=0;
+function render(){
+  if(cur>=qs.length){showResult();return;}
+  const q=qs[cur];
+  document.getElementById('prog').style.width=Math.round(cur/qs.length*100)+'%';
+  const shuffled=[...q.choices].sort(()=>Math.random()-.5);
+  let html=`<div class="card"><div class="q-num">第 ${cur+1} 題 / 共 ${qs.length} 題</div>
+  <div class="q-text">請選出正確答案填入空格：</div>
+  <div class="blank-area">${q.before}<span class="blank" id="blank">＿＿</span>${q.after}</div>
+  <div class="choices" id="choices">`;
+  shuffled.forEach(c=>{ html+=`<button class="chip" onclick="choose('${c}')">${c}</button>`; });
+  html+=`</div><div class="feedback" id="fb"></div></div>`;
+  document.getElementById('quiz-area').innerHTML=html;
+}
+function choose(val){
+  const q=qs[cur];
+  document.getElementById('blank').textContent=val;
+  document.querySelectorAll('.chip').forEach(c=>{c.classList.add('used');c.onclick=null;});
+  const fb=document.getElementById('fb');
+  if(val===q.ans){
+    document.getElementById('blank').style.color='var(--G)';
+    fb.className='feedback show ok';fb.textContent='✅ 答對了！'+q.exp;
+    score++;document.getElementById('score').textContent=score;
+  } else {
+    document.getElementById('blank').style.color='var(--R)';
+    fb.className='feedback show ng';fb.textContent='❌ 答錯了！正確答案是「'+q.ans+'」。'+q.exp;
+  }
+  setTimeout(()=>{cur++;render();},2200);
+}
+function showResult(){
+  document.getElementById('prog').style.width='100%';
+  document.getElementById('quiz-area').innerHTML=`<div class="card" style="text-align:center">
+  <div style="font-size:2rem;margin-bottom:12px">${score>=4?'🏆':'📚'}</div>
+  <div style="color:var(--Y);font-size:1.3rem;font-weight:700">得分：${score} / ${qs.length}</div>
+  <div style="color:var(--faint);margin-top:8px">${score===5?'滿分！超厲害！':score>=3?'不錯！再複習一下吧':'繼續加油！'}</div>
+  </div>`;
+  document.getElementById('restart-btn').style.display='block';
+}
+function restart(){cur=0;score=0;document.getElementById('score').textContent=0;document.getElementById('restart-btn').style.display='none';render();}
+render();
+document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(window.location.href);
+</script>
+</body>
+</html>
