@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重點4：卵生vs胎生比較 — 配對題</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;}
+h1{color:var(--Y);font-size:1.3rem;text-align:center;margin-bottom:4px;}
+.subtitle{color:var(--faint);font-size:.8rem;margin-bottom:16px;text-align:center;}
+.card{background:var(--board);border-radius:14px;padding:22px;max-width:540px;width:100%;margin-bottom:16px;}
+.instr{color:var(--faint);font-size:.85rem;margin-bottom:16px;text-align:center;}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.col-label{color:var(--Y);font-weight:700;font-size:.85rem;text-align:center;padding:6px;background:var(--dim);border-radius:6px;}
+.item{background:var(--dim);border:2px solid transparent;border-radius:8px;padding:10px 12px;cursor:pointer;font-size:.9rem;text-align:center;transition:all .2s;min-height:48px;display:flex;align-items:center;justify-content:center;}
+.item:hover{border-color:var(--B);}
+.item.selected{border-color:var(--Y);background:#1a2e10;}
+.item.matched-ok{border-color:var(--G);background:#1a3a22;cursor:default;}
+.item.matched-ng{border-color:var(--R);background:#3a1a1a;}
+.score-bar{display:flex;justify-content:space-between;align-items:center;max-width:540px;width:100%;padding:8px 0;}
+.score{color:var(--Y);font-weight:700;}
+.feedback{margin-top:14px;padding:12px;border-radius:8px;font-size:.9rem;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:#1a3a22;border-left:4px solid var(--G);}
+.feedback.ng{background:#3a1a1a;border-left:4px solid var(--R);}
+.btn{background:var(--Y);color:#0a1a0a;border:none;border-radius:8px;padding:10px 24px;font-size:.95rem;font-weight:700;cursor:pointer;margin-top:14px;}
+.result-card{background:var(--board);border-radius:14px;padding:28px;max-width:540px;width:100%;text-align:center;display:none;}
+.result-card.show{display:block;}
+.result-score{font-size:2.5rem;color:var(--Y);font-weight:900;margin:12px 0;}
+.qr-wrap{margin-top:24px;}
+.qr-wrap img{border-radius:8px;border:3px solid var(--faint);}
+.qr-wrap p{color:var(--faint);font-size:.75rem;margin-top:6px;}
+</style>
+</head>
+<body>
+<h1>⚖️ 重點4：卵生 vs 胎生比較</h1>
+<p class="subtitle">配對題 · 點選左欄特徵，再點右欄對應動物</p>
+
+<div class="score-bar">
+  <span style="color:var(--faint);font-size:.85rem;">配對對了幾組？</span>
+  <span class="score">得分：<span id="score">0</span> / 8</span>
+</div>
+
+<div class="card">
+  <p class="instr">先點「特徵/說明」，再點對應的「動物或答案」完成配對</p>
+  <div class="match-grid">
+    <div class="col-label">特徵 / 說明</div>
+    <div class="col-label">動物 / 答案</div>
+
+    <div class="item" id="L1" data-id="1" data-side="L" onclick="pick(this)">受精卵產於體外發育</div>
+    <div class="item" id="R1" data-id="1" data-side="R" onclick="pick(this)">雞、烏龜、蛙、魚</div>
+
+    <div class="item" id="L2" data-id="2" data-side="L" onclick="pick(this)">胚胎在母體子宮內發育</div>
+    <div class="item" id="R2" data-id="2" data-side="R" onclick="pick(this)">人、狗、海豚、袋鼠</div>
+
+    <div class="item" id="L3" data-id="3" data-side="L" onclick="pick(this)">養分由「卵」提供</div>
+    <div class="item" id="R3" data-id="3" data-side="R" onclick="pick(this)">卵生動物</div>
+
+    <div class="item" id="L4" data-id="4" data-side="L" onclick="pick(this)">養分由「母體臍帶胎盤」提供</div>
+    <div class="item" id="R4" data-id="4" data-side="R" onclick="pick(this)">胎生動物</div>
+
+    <div class="item" id="L5" data-id="5" data-side="L" onclick="pick(this)">新生個體有「肚臍」</div>
+    <div class="item" id="R5" data-id="5" data-side="R" onclick="pick(this)">胎生的獨有特徵</div>
+
+    <div class="item" id="L6" data-id="6" data-side="L" onclick="pick(this)">受精卵發育場所在體外</div>
+    <div class="item" id="R6" data-id="6" data-side="R" onclick="pick(this)">卵生（如鳥類、昆蟲）</div>
+
+    <div class="item" id="L7" data-id="7" data-side="L" onclick="pick(this)">母體分泌乳汁哺育幼兒</div>
+    <div class="item" id="R7" data-id="7" data-side="R" onclick="pick(this)">大多數哺乳類（胎生）</div>
+
+    <div class="item" id="L8" data-id="8" data-side="L" onclick="pick(this)">硬殼保護胚胎（體內受精後產出）</div>
+    <div class="item" id="R8" data-id="8" data-side="R" onclick="pick(this)">鳥類和爬蟲類（卵生）</div>
+  </div>
+  <div class="feedback" id="feedback"></div>
+</div>
+
+<div class="result-card" id="result">
+  <div style="font-size:2rem;">🏆</div>
+  <div style="color:var(--Y);font-size:1.2rem;font-weight:700;margin-top:8px;">遊戲結束！</div>
+  <div class="result-score" id="final-score"></div>
+  <div id="result-msg" style="color:var(--faint);margin-bottom:16px;"></div>
+  <button class="btn" onclick="restart()">🔄 重新挑戰</button>
+  <div class="qr-wrap">
+    <img id="qr-img" width="120" height="120" alt="QR Code">
+    <p>掃描分享給同學</p>
+  </div>
+</div>
+
+<script>
+let sel=null, score=0, matched=new Set();
+
+function pick(el){
+  if(el.classList.contains('matched-ok'))return;
+  if(matched.has(el.dataset.id+el.dataset.side))return;
+
+  if(!sel){
+    if(sel)sel.classList.remove('selected');
+    sel=el;el.classList.add('selected');
+  } else {
+    if(sel===el){sel.classList.remove('selected');sel=null;return;}
+    if(sel.dataset.side===el.dataset.side){
+      sel.classList.remove('selected');sel=el;el.classList.add('selected');return;
+    }
+    // check match
+    const fb=document.getElementById('feedback');
+    if(sel.dataset.id===el.dataset.id){
+      sel.classList.remove('selected');
+      sel.classList.add('matched-ok');el.classList.add('matched-ok');
+      score++;document.getElementById('score').textContent=score+' / 8';
+      fb.className='feedback ok show';fb.innerHTML='✅ 配對正確！';
+      if(score===8){setTimeout(showResult,800);}
+    } else {
+      sel.classList.remove('selected');
+      sel.classList.add('matched-ng');el.classList.add('matched-ng');
+      fb.className='feedback ng show';fb.innerHTML='❌ 配對錯誤，請重試！';
+      setTimeout(()=>{sel.classList.remove('matched-ng');el.classList.remove('matched-ng');},800);
+    }
+    sel=null;
+  }
+}
+
+function showResult(){
+  document.getElementById('result').classList.add('show');
+  document.getElementById('final-score').textContent=score+' / 8 分';
+  const pct=score/8*100;
+  document.getElementById('result-msg').textContent=pct===100?'🎉 全部配對成功！你真厲害！':pct>=75?'👍 差一點就全對了！':'💪 多複習卵生與胎生的差異！';
+}
+
+function restart(){score=0;sel=null;document.getElementById('score').textContent='0 / 8';document.getElementById('result').classList.remove('show');document.querySelectorAll('.item').forEach(i=>{i.className='item';});document.getElementById('feedback').className='feedback';}
+
+document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=120x120&data='+encodeURIComponent(window.location.href);
+</script>
+</body>
+</html>
