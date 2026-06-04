@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重點6：小單位換算大單位</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Segoe UI',sans-serif;min-height:100vh;padding:20px;}
+.container{max-width:560px;margin:0 auto;}
+h1{color:var(--Y);font-size:1.3rem;text-align:center;margin-bottom:6px;}
+.subtitle{color:var(--faint);font-size:.85rem;text-align:center;margin-bottom:20px;}
+.score-bar{background:var(--dim);border-radius:8px;padding:10px 16px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;}
+.score{color:var(--Y);font-weight:700;font-size:1.1rem;}
+.cheat-sheet{background:var(--dim);border-radius:10px;padding:12px 16px;margin-bottom:18px;}
+.cheat-sheet h3{color:var(--Y);font-size:.85rem;margin-bottom:8px;}
+.cheat-row{display:flex;justify-content:space-between;font-size:.88rem;padding:3px 0;border-bottom:1px solid #2a3a2a;}
+.cheat-row:last-child{border-bottom:none;}
+.cheat-row span:first-child{color:var(--faint);}
+.cheat-row span:last-child{color:var(--B);font-weight:700;}
+.question-card{background:var(--board);border-radius:14px;padding:24px;margin-bottom:16px;}
+.q-text{font-size:1.05rem;margin-bottom:20px;line-height:1.7;}
+.q-text .key{color:var(--B);font-weight:700;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.opt-btn{background:var(--dim);border:2px solid #3a5a3c;color:var(--chalk);border-radius:10px;padding:12px 16px;font-size:1rem;cursor:pointer;text-align:left;transition:all .2s;}
+.opt-btn:hover:not(:disabled){border-color:var(--B);color:var(--B);}
+.opt-btn.correct{border-color:var(--G);background:#1a4a20;color:var(--G);}
+.opt-btn.wrong{border-color:var(--R);background:#4a1a1a;color:var(--R);}
+.feedback{background:var(--dim);border-radius:10px;padding:14px;margin-top:14px;display:none;font-size:.9rem;line-height:1.6;}
+.feedback.show{display:block;}
+.feedback.ok{border-left:4px solid var(--G);}
+.feedback.ng{border-left:4px solid var(--R);}
+.next-btn{display:none;width:100%;margin-top:14px;padding:12px;background:var(--Y);color:#1a1a00;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;}
+.next-btn.show{display:block;}
+.result-card{background:var(--board);border-radius:14px;padding:30px;text-align:center;display:none;}
+.result-card.show{display:block;}
+.result-score{font-size:2.5rem;color:var(--Y);font-weight:700;margin:16px 0;}
+.result-msg{color:var(--faint);margin-bottom:20px;}
+.replay-btn{background:var(--G);color:#0a1a0a;border:none;border-radius:10px;padding:12px 28px;font-size:1rem;font-weight:700;cursor:pointer;}
+.qr-section{text-align:center;margin-top:24px;padding:16px;background:var(--dim);border-radius:10px;}
+.qr-section p{color:var(--faint);font-size:.8rem;margin-top:8px;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>⬆️ 重點6：小單位換算大單位</h1>
+  <p class="subtitle">把小單位換算成大單位，這是進階挑戰！</p>
+
+  <div class="cheat-sheet">
+    <h3>📋 換算表（可參考）</h3>
+    <div class="cheat-row"><span>10,000 m²</span><span>= 1 公頃</span></div>
+    <div class="cheat-row"><span>100 m²</span><span>= 1 公畝</span></div>
+    <div class="cheat-row"><span>1,000,000 m²</span><span>= 1 平方公里</span></div>
+    <div class="cheat-row"><span>100 公畝</span><span>= 1 公頃</span></div>
+    <div class="cheat-row"><span>100 公頃</span><span>= 1 平方公里</span></div>
+  </div>
+
+  <div class="score-bar">
+    <span class="score">得分：<span id="score">0</span></span>
+    <span class="progress" id="progress">第 1 / 6 題</span>
+  </div>
+
+  <div id="quiz-area">
+    <div class="question-card">
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn" id="next-btn" onclick="nextQ()">下一題 ➜</button>
+    </div>
+  </div>
+
+  <div class="result-card" id="result-card">
+    <div style="font-size:2rem;">🎉</div>
+    <div class="result-score"><span id="final-score">0</span> / 6</div>
+    <div class="result-msg" id="result-msg"></div>
+    <button class="replay-btn" onclick="restart()">🔄 再玩一次</button>
+  </div>
+
+  <div class="qr-section">
+    <img id="qr-img" src="" width="100" height="100" alt="QR Code">
+    <p>掃描 QR Code 在手機上玩</p>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {q:'50,000 m² ＝ ？ <span class="key">公頃</span>',opts:['5公頃','500公頃','50公頃','0.5公頃'],ans:0,exp:'50,000 m² ÷ 10,000 = 5公頃。換算大單位要「除以」換算率。'},
+  {q:'300 m² ＝ ？ <span class="key">公畝</span>',opts:['30公畝','0.3公畝','3公畝','300公畝'],ans:2,exp:'300 m² ÷ 100 = 3公畝。'},
+  {q:'200,000 m² ＝ ？ <span class="key">公頃</span>',opts:['2公頃','2,000公頃','200公頃','20公頃'],ans:3,exp:'200,000 m² ÷ 10,000 = 20公頃。'},
+  {q:'500 公畝 ＝ ？ <span class="key">公頃</span>',opts:['5,000公頃','50公頃','500公頃','5公頃'],ans:3,exp:'500公畝 ÷ 100 = 5公頃。1公頃=100公畝，所以要除以100。'},
+  {q:'2,000,000 m² ＝ ？ <span class="key">平方公里</span>',opts:['20平方公里','0.2平方公里','200平方公里','2平方公里'],ans:3,exp:'2,000,000 m² ÷ 1,000,000 = 2平方公里。'},
+  {q:'下面哪個換算<span class="key">正確</span>？',opts:['20,000 m² = 20公頃','20,000 m² = 2公頃','20,000 m² = 200公頃','20,000 m² = 0.2公頃'],ans:1,exp:'20,000 m² ÷ 10,000 = 2公頃。注意：是除以10,000，不是除以1,000或100！'},
+];
+
+let cur=0,score=0,answered=false;
+
+function render(){
+  const q=questions[cur];
+  document.getElementById('q-text').innerHTML=q.q;
+  document.getElementById('progress').textContent=`第 ${cur+1} / ${questions.length} 題`;
+  const ops=document.getElementById('options');
+  ops.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='opt-btn';b.textContent=o;
+    b.onclick=()=>check(i);
+    ops.appendChild(b);
+  });
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('next-btn').className='next-btn';
+  answered=false;
+}
+
+function check(i){
+  if(answered)return;
+  answered=true;
+  const q=questions[cur];
+  const btns=document.querySelectorAll('.opt-btn');
+  btns[i].classList.add(i===q.ans?'correct':'wrong');
+  btns[q.ans].classList.add('correct');
+  btns.forEach(b=>b.disabled=true);
+  const fb=document.getElementById('feedback');
+  if(i===q.ans){score++;fb.className='feedback show ok';fb.innerHTML='✅ 答對了！'+q.exp;}
+  else{fb.className='feedback show ng';fb.innerHTML='❌ 答錯了！'+q.exp;}
+  document.getElementById('score').textContent=score;
+  document.getElementById('next-btn').className='next-btn show';
+}
+
+function nextQ(){
+  cur++;
+  if(cur>=questions.length){showResult();return;}
+  render();
+}
+
+function showResult(){
+  document.getElementById('quiz-area').style.display='none';
+  const r=document.getElementById('result-card');
+  r.className='result-card show';
+  document.getElementById('final-score').textContent=score;
+  const msgs=['再加油！多練習幾次吧！','有點進步，繼續努力！','不錯喔！','很棒！快要全對了！','優秀！幾乎全對！','🏆 太厲害了！全部答對！'];
+  document.getElementById('result-msg').textContent=msgs[score]||msgs[5];
+}
+
+function restart(){
+  cur=0;score=0;answered=false;
+  document.getElementById('quiz-area').style.display='block';
+  document.getElementById('result-card').className='result-card';
+  document.getElementById('score').textContent='0';
+  render();
+}
+
+render();
+document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(window.location.href);
+</script>
+</body>
+</html>
