@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重點2：無骨骼動物的運動</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;}
+h1{color:var(--Y);font-size:1.3rem;text-align:center;margin-bottom:6px;}
+.subtitle{color:var(--faint);font-size:.85rem;margin-bottom:20px;text-align:center;}
+.score-bar{display:flex;gap:16px;margin-bottom:18px;font-size:.9rem;}
+.score-bar span{color:var(--faint);}
+.score-bar b{color:var(--Y);}
+.card{background:var(--board);border-radius:14px;padding:24px;max-width:560px;width:100%;margin-bottom:16px;}
+.question{font-size:1.05rem;line-height:1.6;margin-bottom:18px;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.opt-btn{background:var(--dim);border:2px solid #2e4a30;color:var(--chalk);border-radius:8px;padding:12px 16px;font-size:.95rem;cursor:pointer;text-align:left;transition:all .2s;}
+.opt-btn:hover:not(:disabled){border-color:var(--Y);color:var(--Y);}
+.opt-btn.correct{border-color:var(--G);background:#0d2e15;color:var(--G);}
+.opt-btn.wrong{border-color:var(--R);background:#2e0d0d;color:var(--R);}
+.feedback{margin-top:14px;padding:12px;border-radius:8px;font-size:.9rem;line-height:1.5;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:#0d2e15;border:1px solid var(--G);color:var(--G);}
+.feedback.ng{background:#2e0d0d;border:1px solid var(--R);color:var(--R);}
+.next-btn{margin-top:14px;padding:10px 28px;background:var(--Y);color:#1a1000;border:none;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer;display:none;}
+.next-btn.show{display:inline-block;}
+.result{background:var(--board);border-radius:14px;padding:30px;text-align:center;max-width:560px;width:100%;display:none;}
+.result.show{display:block;}
+.result h2{color:var(--Y);font-size:1.4rem;margin-bottom:12px;}
+.result p{color:var(--faint);margin-bottom:20px;}
+.replay-btn{padding:12px 32px;background:var(--G);color:#0a1a0a;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;}
+.qr-area{margin-top:28px;text-align:center;}
+.qr-area p{color:var(--faint);font-size:.75rem;margin-top:6px;}
+.progress{width:100%;max-width:560px;height:6px;background:var(--dim);border-radius:3px;margin-bottom:16px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--Y);border-radius:3px;transition:width .3s;}
+</style>
+</head>
+<body>
+<h1>🐌 重點2：無骨骼動物的運動方式</h1>
+<p class="subtitle">蝸牛、蜆、蚯蚓、水母怎麼移動？</p>
+<div class="score-bar"><span>得分：</span><b id="score">0</b><span> / </span><b id="total-q">0</b></div>
+<div class="progress"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div class="card" id="q-card">
+  <div class="question" id="q-text"></div>
+  <div class="options" id="opts"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="next-btn" onclick="nextQ()">下一題 →</button>
+</div>
+<div class="result" id="result">
+  <h2 id="result-title"></h2>
+  <p id="result-msg"></p>
+  <button class="replay-btn" onclick="startGame()">🔄 再玩一次</button>
+</div>
+<div class="qr-area">
+  <img id="qr-img" width="100" height="100" alt="QR Code">
+  <p>掃描開啟此遊戲</p>
+</div>
+<script>
+const QS=[
+  {q:"蝸牛靠什麼部位的肌肉收縮與放鬆來前進？",opts:["腹足","斧足","觸角","外殼"],ans:0,exp:"蝸牛利用腹足的肌肉收縮與放鬆來前進，腹足分泌的黏液可以幫助爬行。"},
+  {q:"蜆是靠哪種足來帶動身體鑽入沙中？",opts:["腹足","斧足","步足","觸足"],ans:1,exp:"蜆利用斧足的一伸一縮來帶動身體，慢慢的把整個身體鑽入沙中。"},
+  {q:"蚯蚓靠什麼使身體蠕動前進？",opts:["只靠縱肌","只靠環肌","縱肌與環肌的收縮、舒張","翅膀拍動"],ans:2,exp:"蚯蚓靠著縱肌與環肌的收縮、舒張，使身體蠕動前進，沒有骨骼也能移動。"},
+  {q:"水母是用什麼方式前進的？",opts:["靠腳爬行","體內噴水反射前進","用觸手划水","靠水流漂移"],ans:1,exp:"水母在運動時，利用體內噴水反射前進，就好像一頂圓傘在水中迅速漂游。"},
+  {q:"蝸牛和蜆的共同點是什麼？",opts:["都靠翅膀飛行","都靠收縮有肌肉的足推動身體","都靠吐絲移動","都靠骨骼運動"],ans:1,exp:"蝸牛和蜆都是靠收縮有肌肉的足，來推動身體前進，雖然足的名稱不同（腹足/斧足）。"},
+  {q:"下列哪種動物沒有骨骼？",opts:["雞","魚","蚯蚓","鱷魚"],ans:2,exp:"蚯蚓沒有骨骼，靠縱肌與環肌的收縮舒張來移動身體；而雞、魚、鱷魚都是有骨骼的脊椎動物。"}
+];
+let cur=0,score=0,answered=false;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+let order=[];
+function startGame(){cur=0;score=0;answered=false;order=shuffle([...Array(QS.length).keys()]);document.getElementById('result').classList.remove('show');document.getElementById('q-card').style.display='block';showQ();}
+function showQ(){
+  const d=QS[order[cur]];
+  document.getElementById('q-text').textContent=(cur+1)+'. '+d.q;
+  document.getElementById('total-q').textContent=QS.length;
+  document.getElementById('score').textContent=score;
+  document.getElementById('prog').style.width=(cur/QS.length*100)+'%';
+  const opts=document.getElementById('opts');opts.innerHTML='';
+  d.opts.forEach((o,i)=>{
+    const b=document.createElement('button');b.className='opt-btn';b.textContent=o;
+    b.onclick=()=>pick(i,d.ans,d.exp);opts.appendChild(b);
+  });
+  document.getElementById('feedback').className='feedback';document.getElementById('feedback').textContent='';
+  document.getElementById('next-btn').className='next-btn';answered=false;
+}
+function pick(i,ans,exp){
+  if(answered)return;answered=true;
+  const btns=document.querySelectorAll('.opt-btn');
+  btns[ans].classList.add('correct');
+  const fb=document.getElementById('feedback');
+  if(i===ans){score++;fb.className='feedback ok show';fb.textContent='✅ 答對了！'+exp;}
+  else{btns[i].classList.add('wrong');fb.className='feedback ng show';fb.textContent='❌ 答錯了！正確答案是「'+QS[order[cur]].opts[ans]+'」。'+exp;}
+  btns.forEach(b=>b.disabled=true);
+  document.getElementById('next-btn').className='next-btn show';
+}
+function nextQ(){cur++;if(cur>=QS.length){showResult();}else{showQ();}}
+function showResult(){
+  document.getElementById('q-card').style.display='none';
+  const r=document.getElementById('result');r.classList.add('show');
+  const pct=Math.round(score/QS.length*100);
+  document.getElementById('result-title').textContent='得分：'+score+' / '+QS.length+' ('+pct+'%)';
+  document.getElementById('result-msg').textContent=pct>=80?'棒極了！無骨骼動物難不倒你！':pct>=60?'不錯！再複習各種動物的運動方式吧！':'繼續努力！腹足、斧足、縱肌環肌要記清楚哦！';
+}
+startGame();
+document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(window.location.href);
+</script>
+</body>
+</html>
