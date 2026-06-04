@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>重點5：動物訊息傳遞方式</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;padding:20px;}
+h1{color:var(--Y);text-align:center;font-size:1.3rem;margin-bottom:4px;}
+.subtitle{color:var(--faint);text-align:center;font-size:.85rem;margin-bottom:20px;}
+.score-bar{text-align:center;color:var(--Y);margin-bottom:16px;}
+.progress{height:6px;background:var(--dim);border-radius:3px;margin-bottom:20px;max-width:560px;margin-left:auto;margin-right:auto;}
+.progress-fill{height:100%;background:var(--G);border-radius:3px;transition:width .4s;}
+.card{background:var(--board);border-radius:12px;padding:20px;max-width:560px;margin:0 auto 16px;}
+.q-num{color:var(--G);font-size:.8rem;margin-bottom:8px;}
+.q-text{font-size:1rem;line-height:1.6;margin-bottom:16px;}
+.tf-btns{display:flex;gap:12px;justify-content:center;}
+.tf-btn{flex:1;max-width:120px;padding:14px;border:2px solid #3a5a3c;border-radius:10px;background:var(--dim);font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .2s;color:var(--chalk);}
+.tf-btn:hover{transform:scale(1.05);}
+.tf-btn.T:hover{border-color:var(--G);}
+.tf-btn.F:hover{border-color:var(--R);}
+.tf-btn.correct{border-color:var(--G);background:#1a4020;color:var(--G);}
+.tf-btn.wrong{border-color:var(--R);background:#3a1010;color:var(--R);}
+.feedback{margin-top:14px;padding:10px 14px;border-radius:8px;font-size:.9rem;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:#1a4020;color:var(--G);}
+.feedback.ng{background:#3a1010;color:var(--R);}
+.btn{display:block;margin:20px auto 0;padding:10px 28px;background:var(--B);color:#0a1a2a;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;}
+.qr-wrap{text-align:center;margin-top:24px;}
+.qr-wrap p{color:var(--faint);font-size:.8rem;margin-top:6px;}
+</style>
+</head>
+<body>
+<h1>📡 重點5：動物訊息傳遞方式</h1>
+<p class="subtitle">五年級自然 L4-1 動物偵查員｜是非題</p>
+<div class="score-bar">得分：<span id="score">0</span> / <span id="total">6</span></div>
+<div class="progress"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div id="quiz-area"></div>
+<button class="btn" id="restart-btn" style="display:none" onclick="restart()">🔄 重新挑戰</button>
+<div class="qr-wrap">
+  <img id="qr-img" src="" width="100" height="100" alt="QR Code">
+  <p>掃描進入此遊戲</p>
+</div>
+<script>
+const qs=[
+  {q:"螞蟻會分泌「蹤跡費洛蒙」，標記行進路線，讓同伴跟隨找到食物。",ans:true,exp:"正確！螞蟻利用分泌的蹤跡費洛蒙（氣味）標記路線，讓同伴循著氣味搬運食物。"},
+  {q:"蜜蜂在蜜源較遠時，會跳「圓舞」來通知同伴距離和方向。",ans:false,exp:"錯誤！蜜源在附近時跳「圓舞」；蜜源較遠時才跳「8字搖臀舞」來通知距離和方向。"},
+  {q:"海豚利用不同的聲音來交換訊息。",ans:true,exp:"正確！海豚會用不同的聲音來和同伴交換訊息。"},
+  {q:"臺灣獼猴最常見的社會行為是彼此發出叫聲。",ans:false,exp:"錯誤！臺灣獼猴最常見的社會行為是成員之間的相互「理毛」。"},
+  {q:"螞蟻的蹤跡費洛蒙可以長時間保存，所以螞蟻不需要邊走邊分泌。",ans:false,exp:"錯誤！蹤跡費洛蒙的保存時間不長，因此搬運食物的螞蟻會邊走邊分泌費洛蒙。"},
+  {q:"動物傳遞訊息可以靠視覺、聽覺、嗅覺等多種感官方式。",ans:true,exp:"正確！動物會用彼此所能看見、聽見、感覺或嗅出的信號來傳達訊息。"}
+];
+let cur=0,score=0;
+document.getElementById('total').textContent=qs.length;
+function render(){
+  if(cur>=qs.length){showResult();return;}
+  const q=qs[cur];
+  document.getElementById('prog').style.width=Math.round(cur/qs.length*100)+'%';
+  document.getElementById('quiz-area').innerHTML=`<div class="card">
+  <div class="q-num">第 ${cur+1} 題 / 共 ${qs.length} 題</div>
+  <div class="q-text">${q.q}</div>
+  <div class="tf-btns">
+    <button class="tf-btn T" onclick="choose(true)">⭕ 是</button>
+    <button class="tf-btn F" onclick="choose(false)">❌ 非</button>
+  </div>
+  <div class="feedback" id="fb"></div>
+  </div>`;
+}
+function choose(val){
+  const q=qs[cur];
+  document.querySelectorAll('.tf-btn').forEach(b=>b.onclick=null);
+  const fb=document.getElementById('fb');
+  const tBtn=document.querySelector('.tf-btn.T');
+  const fBtn=document.querySelector('.tf-btn.F');
+  if(val===q.ans){
+    (val?tBtn:fBtn).classList.add('correct');
+    fb.className='feedback show ok';fb.textContent='✅ 答對了！'+q.exp;
+    score++;document.getElementById('score').textContent=score;
+  } else {
+    (val?tBtn:fBtn).classList.add('wrong');
+    (q.ans?tBtn:fBtn).classList.add('correct');
+    fb.className='feedback show ng';fb.textContent='❌ 答錯了！'+q.exp;
+  }
+  setTimeout(()=>{cur++;render();},2200);
+}
+function showResult(){
+  document.getElementById('prog').style.width='100%';
+  document.getElementById('quiz-area').innerHTML=`<div class="card" style="text-align:center">
+  <div style="font-size:2rem;margin-bottom:12px">${score>=5?'🏆':'📚'}</div>
+  <div style="color:var(--Y);font-size:1.3rem;font-weight:700">得分：${score} / ${qs.length}</div>
+  <div style="color:var(--faint);margin-top:8px">${score===qs.length?'滿分！超厲害！':score>=4?'不錯！再複習一下吧':'繼續加油！'}</div>
+  </div>`;
+  document.getElementById('restart-btn').style.display='block';
+}
+function restart(){cur=0;score=0;document.getElementById('score').textContent=0;document.getElementById('restart-btn').style.display='none';render();}
+render();
+document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(window.location.href);
+</script>
+</body>
+</html>
