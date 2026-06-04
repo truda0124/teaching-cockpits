@@ -1,223 +1,448 @@
 ﻿<!DOCTYPE html>
 
 
+
+
+
 <html lang="zh-TW">
+
+
+
 
 
 <head>
 
 
+
+
+
 <meta charset="UTF-8">
+
+
+
 
 
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 
+
+
+
 <title>教學駕駛艙集合 · Teaching Cockpits</title>
+
+
+
 
 
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
 
+
+
+
 <style>
+
+
+
 
 
 :root{
 
 
+
+
+
   --bg:#162b18;--board:#1d3a1f;--board2:#254a28;--dim:#0e1e10;
+
+
+
 
 
   --chalk:#f0ece2;--faint:#9aaa9c;
 
 
+
+
+
   --Y:#f5d050;--O:#e87040;--B:#5bb3e0;--G:#5dcc78;--P:#b388ff;
 
 
+
+
+
 }
+
+
+
 
 
 *{box-sizing:border-box;margin:0;padding:0}
 
 
+
+
+
 html,body{min-height:100%;font-family:'Noto Sans TC',sans-serif;
+
+
+
 
 
   background:var(--bg);color:var(--chalk)}
 
 
+
+
+
 header{background:var(--dim);border-bottom:2px solid #2e4e30;
+
+
+
 
 
   padding:28px 40px 24px;text-align:center}
 
 
+
+
+
 .site-title{font-family:'Caveat',cursive;font-size:2.4rem;color:var(--Y);
+
+
+
 
 
   text-shadow:0 0 20px rgba(245,208,80,.3);margin-bottom:6px}
 
 
+
+
+
 .site-sub{font-size:.85rem;color:var(--faint);letter-spacing:.05em}
+
+
+
 
 
 .container{max-width:960px;margin:0 auto;padding:32px 20px}
 
 
+
+
+
 .section-label{font-family:'Caveat',cursive;font-size:1.4rem;color:var(--faint);
+
+
+
 
 
   margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #2e4e30;
 
 
+
+
+
   display:flex;align-items:center;gap:8px}
+
+
+
 
 
 /* 第一排 2欄，第二排 3欄 */
 
 
+
+
+
 .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px;}
+
+
+
 
 
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px;}
 
 
+
+
+
 @media(max-width:680px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+
+
+
 
 
 @media(min-width:681px) and (max-width:860px){.grid-3{grid-template-columns:repeat(2,1fr);}}
 
 
+
+
+
 .cockpit-card{background:var(--board);border:1px solid #3a5c3d;border-radius:10px;
+
+
+
 
 
   padding:20px;display:flex;flex-direction:column;gap:10px;
 
 
+
+
+
   transition:border-color .2s,transform .15s,box-shadow .2s;text-decoration:none;color:inherit}
+
+
+
 
 
 .cockpit-card:hover{border-color:var(--Y);transform:translateY(-2px);
 
 
+
+
+
   box-shadow:0 8px 24px rgba(0,0,0,.4)}
+
+
+
 
 
 .card-tag{font-size:.68rem;background:#1a3320;border:1px solid #3a5c3d;
 
 
+
+
+
   border-radius:12px;padding:2px 10px;color:var(--faint);display:inline-block;
+
+
+
 
 
   width:fit-content}
 
 
+
+
+
 /* 標題：明顯粗黑字體 */
+
+
+
 
 
 .card-title{
 
 
+
+
+
   font-family:'Noto Sans TC',sans-serif;
+
+
+
 
 
   font-weight:900;
 
 
+
+
+
   font-size:1.05rem;
+
+
+
 
 
   color:var(--Y);
 
 
+
+
+
   line-height:1.55;
+
+
+
 
 
   letter-spacing:.02em;
 
 
+
+
+
 }
+
+
+
 
 
 .card-title .unit{
 
 
+
+
+
   display:block;
+
+
+
 
 
   font-size:.72rem;
 
 
+
+
+
   font-weight:500;
+
+
+
 
 
   color:var(--faint);
 
 
+
+
+
   margin-bottom:4px;
+
+
+
 
 
   letter-spacing:.04em;
 
 
+
+
+
 }
+
+
+
 
 
 .card-desc{font-size:.8rem;color:var(--faint);line-height:1.6}
 
 
+
+
+
 .card-badge{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+
+
+
 
 
 .badge{font-size:.65rem;background:#254a28;border-radius:10px;
 
 
+
+
+
   padding:2px 8px;color:var(--chalk)}
+
+
+
 
 
 .card-footer{font-size:.72rem;color:var(--B);margin-top:auto;
 
 
+
+
+
   display:flex;align-items:center;gap:4px}
+
+
+
 
 
 footer{background:var(--dim);border-top:1px solid #2e4e30;
 
 
+
+
+
   text-align:center;padding:20px;font-size:.75rem;color:var(--faint)}
+
+
+
 
 
 footer a{color:var(--B);text-decoration:none}
 
 
+
+
+
 ::-webkit-scrollbar{width:4px}
+
+
+
 
 
 ::-webkit-scrollbar-track{background:var(--dim)}
 
 
+
+
+
 ::-webkit-scrollbar-thumb{background:#3a5c3d;border-radius:2px}
+
+
+
 
 
 </style>
 
 
+
+
+
 </head>
+
+
+
 
 
 <body>
 
 
+
+
+
 <header>
+
+
+
 
 
   <div class="site-title">🎓 教學駕駛艙集合</div>
 
 
+
+
+
   <div class="site-sub">Teaching Cockpits · 互動式單頁教學網頁 · GitHub Pages</div>
 
 
+
+
+
 </header>
+
+
+
+
+
+
 
 
 
@@ -229,7 +454,16 @@ footer a{color:var(--B);text-decoration:none}
 
 
 
+
+
+
+
+
+
   <!-- 社會科 -->
+
+
+
 
 
   <div class="section-label">📚 社會科</div>
@@ -238,7 +472,16 @@ footer a{color:var(--B);text-decoration:none}
 
 
 
+
+
+
+
+
+
   <!-- 第一排：CH3_1  CH3_2 -->
+
+
+
 
 
   <div class="grid-2">
@@ -247,52 +490,109 @@ footer a{color:var(--B);text-decoration:none}
 
 
 
+
+
+
+
+
+
     <a class="cockpit-card" href="./社會/CH3_1/index.html">
+
+
+
 
 
       <span class="card-tag">國小五年級 · 社會</span>
 
 
+
+
+
       <div class="card-title">
+
+
+
 
 
         <span class="unit">走向民主的中華民國 · CH3-1</span>
 
 
+
+
+
         中華民國政府為何在臺灣實施戒嚴？
 
 
+
+
+
       </div>
+
+
+
 
 
       <div class="card-desc">戰後接收與治理、二二八事件始末、戒嚴時期的嚴密控制與白色恐怖</div>
 
 
+
+
+
       <div class="card-badge">
+
+
+
 
 
         <span class="badge">🖼 簡報輪播</span>
 
 
+
+
+
         <span class="badge">🎬 影片</span>
+
+
+
 
 
         <span class="badge">🔊 語音</span>
 
 
+
+
+
         <span class="badge">📊 圖表</span>
+
+
+
 
 
         <span class="badge">✏️ 6 款遊戲</span>
 
 
+
+
+
       </div>
+
+
+
 
 
       <div class="card-footer">▶ 開啟教學駕駛艙</div>
 
 
+
+
+
     </a>
+
+
+
+
+
+
 
 
 
@@ -301,46 +601,91 @@ footer a{color:var(--B);text-decoration:none}
     <a class="cockpit-card" href="./社會/CH3_2/index.html">
 
 
+
+
+
       <span class="card-tag">國小五年級 · 社會</span>
+
+
+
 
 
       <div class="card-title">
 
 
+
+
+
         <span class="unit">走向民主的中華民國 · CH3-2</span>
+
+
+
 
 
         臺灣為什麼能走向民主社會？
 
 
+
+
+
       </div>
+
+
+
 
 
       <div class="card-desc">戒嚴時期地方自治、美麗島事件、解嚴、野百合學運、首次總統直選、公民參與民主社會</div>
 
 
+
+
+
       <div class="card-badge">
+
+
+
 
 
         <span class="badge">🖼 簡報輪播</span>
 
 
+
+
+
         <span class="badge">🎬 影片</span>
+
+
+
 
 
         <span class="badge">🔊 語音</span>
 
 
+
+
+
         <span class="badge">📊 圖表</span>
+
+
+
 
 
         <span class="badge">✏️ 6 款遊戲</span>
 
 
+
+
+
       </div>
 
 
+
+
+
       <div class="card-footer">▶ 開啟教學駕駛艙</div>
+
+
+
 
 
     </a>
@@ -349,7 +694,19 @@ footer a{color:var(--B);text-decoration:none}
 
 
 
+
+
+
+
+
+
   </div>
+
+
+
+
+
+
 
 
 
@@ -358,7 +715,16 @@ footer a{color:var(--B);text-decoration:none}
   <!-- 第二排：CH4_1  CH4_2  CH4_3 -->
 
 
+
+
+
   <div class="grid-3">
+
+
+
+
+
+
 
 
 
@@ -367,49 +733,100 @@ footer a{color:var(--B);text-decoration:none}
     <a class="cockpit-card" href="./社會/CH4_1/教學駕駛艙_CH4_1.html">
 
 
+
+
+
       <span class="card-tag">國小五年級 · 社會</span>
+
+
+
 
 
       <div class="card-title">
 
 
+
+
+
         <span class="unit">從臺灣探索世界文化 · CH4-1</span>
+
+
+
 
 
         走進博物館
 
 
+
+
+
       </div>
+
+
+
 
 
       <div class="card-desc">博物館的功能與文化意義、臺灣與世界各地的博物館特色</div>
 
 
+
+
+
       <div class="card-badge">
+
+
+
 
 
         <span class="badge">🖼 簡報輪播</span>
 
 
+
+
+
         <span class="badge">🎬 影片</span>
+
+
+
 
 
         <span class="badge">🔊 語音</span>
 
 
+
+
+
         <span class="badge">📊 圖表</span>
+
+
+
 
 
         <span class="badge">✏️ 評量</span>
 
 
+
+
+
       </div>
+
+
+
 
 
       <div class="card-footer">▶ 開啟教學駕駛艙</div>
 
 
+
+
+
     </a>
+
+
+
+
+
+
 
 
 
@@ -418,49 +835,100 @@ footer a{color:var(--B);text-decoration:none}
     <a class="cockpit-card" href="./社會/CH4_2/index.html">
 
 
+
+
+
       <span class="card-tag">國小五年級 · 社會</span>
+
+
+
 
 
       <div class="card-title">
 
 
+
+
+
         <span class="unit">從臺灣探索世界文化 · CH4-2</span>
+
+
+
 
 
         各族群生活方式如何形成文化？
 
 
+
+
+
       </div>
+
+
+
 
 
       <div class="card-desc">曆法的發展、布農族三大祭典與木刻畫曆、農民曆知識、漢人農業社會作息、現代標準時間的引進、多元族群文化保障</div>
 
 
+
+
+
       <div class="card-badge">
+
+
+
 
 
         <span class="badge">🔵 選擇題</span>
 
 
+
+
+
         <span class="badge">🔴 配對題</span>
+
+
+
 
 
         <span class="badge">🟢 是非題</span>
 
 
+
+
+
         <span class="badge">🟠 填充題</span>
+
+
+
 
 
         <span class="badge">✏️ 6 款遊戲</span>
 
 
+
+
+
       </div>
+
+
+
 
 
       <div class="card-footer">▶ 開啟教學駕駛艙</div>
 
 
+
+
+
     </a>
+
+
+
+
+
+
 
 
 
@@ -469,49 +937,100 @@ footer a{color:var(--B);text-decoration:none}
     <a class="cockpit-card" href="./社會/CH4_3/index.html">
 
 
+
+
+
       <span class="card-tag">國小五年級 · 社會</span>
+
+
+
 
 
       <div class="card-title">
 
 
+
+
+
         <span class="unit">從臺灣探索世界文化 · CH4-3</span>
+
+
+
 
 
         世界宗教如何在臺灣傳播發展？
 
 
+
+
+
       </div>
+
+
+
 
 
       <div class="card-desc">信仰起源、基督宗教、伊斯蘭教、佛教與道教、臺灣民間信仰、媽祖信仰與大甲遶境文化</div>
 
 
+
+
+
       <div class="card-badge">
+
+
+
 
 
         <span class="badge">🖼 簡報輪播</span>
 
 
+
+
+
         <span class="badge">🎬 影片</span>
+
+
+
 
 
         <span class="badge">🔊 語音</span>
 
 
+
+
+
         <span class="badge">📊 圖表</span>
+
+
+
 
 
         <span class="badge">✏️ 6 款遊戲</span>
 
 
+
+
+
       </div>
+
+
+
 
 
       <div class="card-footer">▶ 開啟教學駕駛艙</div>
 
 
+
+
+
     </a>
+
+
+
+
+
+
 
 
 
@@ -523,10 +1042,25 @@ footer a{color:var(--B);text-decoration:none}
 
 
 
+
+
+
+
+
+
   <!-- 自然科 -->
 
 
+
+
+
   <div class="section-label">🔬 自然科</div>
+
+
+
+
+
+
 
 
 
@@ -538,49 +1072,100 @@ footer a{color:var(--B);text-decoration:none}
 
 
 
+
+
+
+
+
+
     <a class="cockpit-card" href="./自然/CH4-1/index.html">
+
+
+
 
 
       <span class="card-tag">國小五年級 · 自然</span>
 
 
+
+
+
       <div class="card-title">
+
+
+
 
 
         <span class="unit">揭祕動物的世界 · L4-1</span>
 
 
+
+
+
         動物偵查員
 
 
+
+
+
       </div>
+
+
+
 
 
       <div class="card-desc">族群與群集、食物鏈、社會性動物分工、訊息傳遞方式</div>
 
 
+
+
+
       <div class="card-badge">
+
+
+
 
 
         <span class="badge">🖼 簡報輪播</span>
 
 
+
+
+
         <span class="badge">🎬 影片</span>
+
+
+
 
 
         <span class="badge">🔊 語音</span>
 
 
+
+
+
         <span class="badge">📊 圖表</span>
+
+
+
 
 
         <span class="badge">✏️ 5 款遊戲</span>
 
 
+
+
+
       </div>
 
 
+
+
+
       <div class="card-footer">▶ 開啟教學駕駛艙</div>
+
+
+
 
 
     </a>
@@ -589,7 +1174,8 @@ footer a{color:var(--B);text-decoration:none}
 
 
 
-  </div>
+
+
 
 
 
@@ -597,22 +1183,46 @@ footer a{color:var(--B);text-decoration:none}
 
 
     <a class="cockpit-card" href="./自然/CH4-2/index.html">
+
       <span class="card-tag">國小五年級 · 自然</span>
+
       <div class="card-title">
+
         <span class="unit">動物的生存之道 · L4-2</span>
+
         動物如何生存？
+
       </div>
+
       <div class="card-desc">運動方式、覓食構造、消化系統、溫度適應、生物交互作用</div>
+
       <div class="card-badge">
+
         <span class="badge">🖼 簡報輪播</span>
+
         <span class="badge">🎬 影片</span>
+
         <span class="badge">🔊 語音</span>
+
         <span class="badge">📊 圖表</span>
+
         <span class="badge">✏️ 6 款遊戲</span>
+
       </div>
+
       <div class="card-footer">▶ 開啟教學駕駛艙</div>
+
     </a>
+
+  </div>
+
   <!-- 未來的科目區塊 -->
+
+
+
+
+
+
 
 
 
@@ -625,53 +1235,111 @@ footer a{color:var(--B);text-decoration:none}
 
 
 
+
+
+
+
+
+
+
   <!-- 數學科 -->
+
   <div class="section-label">📐 數學科</div>
+
+
 
   <div class="grid-3">
 
+
+
     <a class="cockpit-card" href="./math/7-5/index.html">
+
       <span class="card-tag">國小五年級 · 數學</span>
+
       <div class="card-title">
+
         <span class="unit">面積單位換算 · 7-5</span>
+
         平方公里、公頃、公畝、平方公尺
+
       </div>
+
       <div class="card-desc">面積單位大小排序、各單位換算關係、大換小、小換大綜合練習</div>
+
       <div class="card-badge">
+
         <span class="badge">📊 換算表</span>
+
         <span class="badge">✏️ 6 款遊戲</span>
+
         <span class="badge">📱 QR Code</span>
+
       </div>
+
       <div class="card-footer">▶ 開啟教學駕駛艙</div>
+
     </a>
+
+
 
   </div>
 
+
+
 <footer>
+
+
+
 
 
   <p>本頁面由 <strong style="color:var(--Y)">AI 教學駕駛艙系統</strong> 自動生成 ·
 
 
+
+
+
     部署於 <a href="https://pages.github.com/">GitHub Pages</a></p>
+
+
+
 
 
   <p style="margin-top:6px">
 
 
+
+
+
     <a href="https://github.com/truda0124/teaching-cockpits">📁 查看原始碼</a>
+
+
+
 
 
   </p>
 
 
+
+
+
 </footer>
+
+
+
 
 
 </body>
 
 
+
+
+
 </html>
+
+
+
+
+
 
 
 
