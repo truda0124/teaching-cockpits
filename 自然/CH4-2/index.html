@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4-2 動物的生存之道 | 教學駕駛艙</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Segoe UI',sans-serif;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+
+/* 頂部返回列 */
+.back-bar{background:var(--dim);padding:10px 20px;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--faint);color:var(--faint);border-radius:6px;padding:6px 14px;font-size:.82rem;text-decoration:none;transition:all .2s;}
+.back-btn:hover{border-color:var(--Y);color:var(--Y);}
+
+/* 標頭 */
+.header{background:linear-gradient(135deg,#0e2210,#1a4020);padding:28px 24px 20px;text-align:center;border-bottom:2px solid #2e5a30;}
+.tag{display:inline-block;background:#1a3a1c;color:var(--G);border:1px solid var(--G);border-radius:20px;padding:3px 14px;font-size:.78rem;margin-bottom:10px;}
+.header h1{color:var(--Y);font-size:1.6rem;line-height:1.3;margin-bottom:6px;}
+.header p{color:var(--faint);font-size:.88rem;}
+
+/* 主要內容區 */
+.main{max-width:900px;margin:0 auto;padding:24px 16px;}
+
+/* 區塊標題 */
+.section-title{color:var(--Y);font-size:1.05rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.section-title::after{content:'';flex:1;height:1px;background:#2e4a30;}
+
+/* 簡報輪播 */
+.slide-card{background:var(--board);border-radius:14px;overflow:hidden;margin-bottom:28px;}
+.slide-img-wrap{position:relative;background:#000;min-height:200px;display:flex;align-items:center;justify-content:center;}
+.slide-img-wrap img{width:100%;max-height:460px;object-fit:contain;display:block;}
+.slide-pending{padding:48px 24px;text-align:center;color:var(--faint);}
+.slide-pending .icon{font-size:2.5rem;margin-bottom:10px;}
+.slide-pending p{font-size:.9rem;line-height:1.6;}
+.slide-controls{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--dim);}
+.slide-btn{background:none;border:1px solid var(--faint);color:var(--faint);border-radius:6px;padding:6px 16px;cursor:pointer;font-size:.9rem;transition:all .2s;}
+.slide-btn:hover{border-color:var(--Y);color:var(--Y);}
+.slide-counter{color:var(--faint);font-size:.85rem;}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:8px 16px 12px;}
+.dot{width:8px;height:8px;border-radius:50%;background:#2e4a30;cursor:pointer;transition:background .2s;}
+.dot.active{background:var(--Y);}
+
+/* 媒體卡片 */
+.media-card{background:var(--board);border-radius:12px;overflow:hidden;margin-bottom:20px;}
+.media-card-body{padding:16px 20px;}
+.media-title{color:var(--Y);font-weight:700;margin-bottom:4px;}
+.media-sub{color:var(--faint);font-size:.8rem;margin-bottom:10px;}
+.media-player{width:100%;display:block;}
+video.media-player{max-height:460px;background:#000;}
+.open-btn{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:8px 18px;background:var(--B);color:#0a1a2a;border-radius:6px;text-decoration:none;font-size:.85rem;font-weight:700;}
+
+/* 資訊圖表 */
+.infographic-card{background:var(--board);border-radius:12px;overflow:hidden;margin-bottom:28px;}
+.infographic-link{display:block;cursor:zoom-in;position:relative;}
+.infographic-link img{width:100%;display:block;transition:opacity .2s;}
+.infographic-link:hover img{opacity:.9;}
+.infographic-link::after{content:'🔍 點擊放大';position:absolute;bottom:10px;right:12px;background:rgba(0,0,0,.6);color:var(--Y);font-size:.75rem;padding:4px 10px;border-radius:4px;}
+.infographic-footer{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.orig-link{color:var(--B);font-size:.8rem;text-decoration:none;}
+.orig-link:hover{text-decoration:underline;}
+
+/* Lightbox */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:8px;}
+.lb-close{position:fixed;top:16px;right:20px;color:#fff;font-size:2rem;cursor:pointer;}
+
+/* 遊戲卡片 */
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:28px;}
+.game-card{background:var(--board);border:2px solid #2e4a30;border-radius:12px;padding:18px;text-decoration:none;transition:all .2s;display:block;}
+.game-card:hover{border-color:var(--Y);transform:translateY(-2px);}
+.game-emoji{font-size:1.6rem;margin-bottom:8px;}
+.game-title{color:var(--chalk);font-size:.95rem;font-weight:700;margin-bottom:4px;}
+.game-desc{color:var(--faint);font-size:.78rem;}
+.game-btn{margin-top:12px;display:inline-block;padding:6px 16px;background:var(--G);color:#0a1a0a;border-radius:6px;font-size:.82rem;font-weight:700;}
+
+/* QR Code 區 */
+.qr-section{background:var(--board);border-radius:12px;padding:20px;margin-bottom:28px;}
+.qr-grid{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;}
+.qr-item{text-align:center;}
+.qr-item img{border:2px solid #2e4a30;border-radius:8px;}
+.qr-item p{color:var(--faint);font-size:.7rem;margin-top:4px;max-width:100px;}
+
+/* Footer */
+.footer{background:var(--dim);padding:20px;text-align:center;color:var(--faint);font-size:.82rem;margin-top:16px;}
+.footer a{color:var(--B);}
+</style>
+</head>
+<body>
+
+<div class="back-bar">
+  <a class="back-btn" href="https://truda0124.github.io/teaching-cockpits/" target="_blank">← 返回自然教學駕駛艙首頁</a>
+</div>
+
+<div class="header">
+  <div class="tag">國小五年級 · 自然</div>
+  <h1>4-2 動物的生存之道</h1>
+  <p>運動方式 · 覓食 · 消化系統 · 溫度適應 · 生物交互作用</p>
+</div>
+
+<div class="main">
+
+  <!-- ① 簡報輪播 -->
+  <div class="section-title">🖼️ 簡報輪播</div>
+  <div class="slide-card" id="slide-section">
+    <div class="slide-img-wrap" id="slide-wrap">
+      <img id="slide-img" src="slides/slide_01.jpg" alt="簡報" onerror="showSlidePending()">
+    </div>
+    <div class="slide-controls">
+      <button class="slide-btn" onclick="goSlide(cur-1)">◀ 上一張</button>
+      <span class="slide-counter" id="slide-counter">1 / ?</span>
+      <button class="slide-btn" onclick="goSlide(cur+1)">下一張 ▶</button>
+    </div>
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <!-- ② 教學影片 -->
+  <div class="section-title">🎬 教學影片</div>
+  <div class="media-card">
+    <div class="media-card-body">
+      <div class="media-title">4-2 動物生存大挑戰</div>
+      <div class="media-sub">若無法播放，請點下方按鈕在 NotebookLM 開啟</div>
+    </div>
+    <video class="media-player" controls preload="metadata"
+      src="https://lh3.googleusercontent.com/notebooklm/AKXwDQH7D1ffu0Fc1SHBz7vcTdA5T5_hgdTrXmSGRgbyNkuFLxjNdnL9x3BeeQ5CDe69FLJIWGbjNjp_WH7qv--VCkeluoGCJgK31hAYCK_iPDwqvU9usUTEJruGYGsCwev8PuCGvA45ycIEvcjVV8yMSYyr-rckmVk=m22-dv">
+      您的瀏覽器不支援影片播放。
+    </video>
+    <div class="media-card-body">
+      <a class="open-btn" href="https://notebooklm.google.com/notebook/6e0ef45f-bc4c-4b1c-80b6-973d4caeb2dc/artifact/303ce427-c217-486d-97e1-2843f0ed06a0" target="_blank">🔗 在 NotebookLM 開啟影片</a>
+    </div>
+  </div>
+
+  <!-- ③ 複習語音 -->
+  <div class="section-title">🔊 複習語音</div>
+  <div class="media-card">
+    <div class="media-card-body">
+      <div class="media-title">4-2 動物的生存算計</div>
+      <div class="media-sub">若無法播放，請點下方按鈕在 NotebookLM 開啟</div>
+      <audio class="media-player" controls preload="metadata"
+        src="https://lh3.googleusercontent.com/notebooklm/AKXwDQGFVSXTBiwt9TnlNF0WNlhjbJXAYYSTRTrS3PzQpQzh75SbZJ3BYqCVwBR_2HPbuUZt6wjhqEqYH3wJmxA7DmgorM4oN8WDYJ614PFomEwKn_SeoD5_2xyfrHNsQM4hZq5kDrgbEHmOtiCZm9DomzEYvUeUKLI=m140-dv">
+      </audio>
+      <a class="open-btn" href="https://notebooklm.google.com/notebook/6e0ef45f-bc4c-4b1c-80b6-973d4caeb2dc/artifact/1fb4e99d-404c-4bf4-a713-2f152a1a58f8" target="_blank">🔗 在 NotebookLM 開啟語音</a>
+    </div>
+  </div>
+
+  <!-- ④ 資訊圖表 -->
+  <div class="section-title">📊 資訊圖表</div>
+  <div class="infographic-card">
+    <a class="infographic-link" onclick="openLightbox()" href="javascript:void(0)">
+      <img id="info-img"
+        src="slides/infographic.jpg"
+        onerror="this.src='https://lh3.googleusercontent.com/notebooklm/AKXwDQHWMavTRuUNSeV87ApLWMEj0ReWPOZSWhK5bsHbqfw2iCSlsQahxZoV10ry8idyqdk_6a7gp1VjvGP_etr_vhSdx9BEczULpnM18Mg4nOWkMt9w4Pj6YOm84AnkygrBvO1F3y4oZvdbIA0RpZijG9mYfb6VgYs=w2752-d-h1536-mp2'"
+        alt="動物構造與環境適應資訊圖表">
+    </a>
+    <div class="infographic-footer">
+      <span style="color:var(--faint);font-size:.8rem;">點擊圖片可放大檢視</span>
+      <a class="orig-link" href="https://lh3.googleusercontent.com/notebooklm/AKXwDQHWMavTRuUNSeV87ApLWMEj0ReWPOZSWhK5bsHbqfw2iCSlsQahxZoV10ry8idyqdk_6a7gp1VjvGP_etr_vhSdx9BEczULpnM18Mg4nOWkMt9w4Pj6YOm84AnkygrBvO1F3y4oZvdbIA0RpZijG9mYfb6VgYs=w2752-d-h1536-mp2" target="_blank">🖼️ 查看原圖（高解析度）</a>
+    </div>
+  </div>
+
+  <!-- ⑤ 評量遊戲 -->
+  <div class="section-title">🎮 評量遊戲</div>
+  <div class="games-grid">
+    <a class="game-card" href="game-01-movement.html" target="_blank">
+      <div class="game-emoji">🦴</div>
+      <div class="game-title">重點1：有骨骼動物的運動</div>
+      <div class="game-desc">骨骼、肌肉、關節如何配合？手臂彎曲伸直的秘密！</div>
+      <div class="game-btn">開始遊戲 ▶</div>
+    </a>
+    <a class="game-card" href="game-02-no-skeleton.html" target="_blank">
+      <div class="game-emoji">🐌</div>
+      <div class="game-title">重點2：無骨骼動物的運動</div>
+      <div class="game-desc">蝸牛、蜆、蚯蚓、水母怎麼移動？</div>
+      <div class="game-btn">開始遊戲 ▶</div>
+    </a>
+    <a class="game-card" href="game-03-foraging.html" target="_blank">
+      <div class="game-emoji">🦁</div>
+      <div class="game-title">重點3：動物覓食配對</div>
+      <div class="game-desc">身體構造與覓食方式的對應關係！</div>
+      <div class="game-btn">開始遊戲 ▶</div>
+    </a>
+    <a class="game-card" href="game-04-digestion.html" target="_blank">
+      <div class="game-emoji">🫁</div>
+      <div class="game-title">重點4：人體消化系統</div>
+      <div class="game-desc">口腔→食道→胃→小腸→大腸，消化道的旅程！</div>
+      <div class="game-btn">開始遊戲 ▶</div>
+    </a>
+    <a class="game-card" href="game-05-temperature.html" target="_blank">
+      <div class="game-emoji">🌡️</div>
+      <div class="game-title">重點5：內溫 vs 外溫動物</div>
+      <div class="game-desc">哺乳類、鳥類 vs 爬蟲類、昆蟲，是非判斷！</div>
+      <div class="game-btn">開始遊戲 ▶</div>
+    </a>
+    <a class="game-card" href="game-06-interaction.html" target="_blank">
+      <div class="game-emoji">🌊</div>
+      <div class="game-title">重點6：生物交互作用</div>
+      <div class="game-desc">掠食、競爭、共生、寄生——分清楚了嗎？</div>
+      <div class="game-btn">開始遊戲 ▶</div>
+    </a>
+  </div>
+
+  <!-- ⑥ QR Code -->
+  <div class="section-title">📱 QR Code 掃碼玩遊戲</div>
+  <div class="qr-section">
+    <div class="qr-grid" id="qr-row"></div>
+  </div>
+
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lb-close" onclick="closeLightbox()">✕</span>
+  <img id="lb-img" src="" alt="資訊圖表放大">
+</div>
+
+<div class="footer">
+  <p>國小五年級 自然 4-2 動物的生存之道 | 教學駕駛艙</p>
+  <p style="margin-top:8px;"><a href="https://truda0124.github.io/teaching-cockpits/" target="_blank">← 返回自然教學駕駛艙首頁</a></p>
+</div>
+
+<script>
+// ===== 簡報輪播 =====
+let TOTAL=0,cur=1;
+function showSlidePending(){
+  document.getElementById('slide-wrap').innerHTML=
+    '<div class="slide-pending"><div class="icon">📋</div><p>簡報圖片準備中<br>請確認 slides/ 資料夾中已有 slide_01.jpg 等檔案</p></div>';
+  document.querySelector('.slide-controls').style.display='none';
+  document.getElementById('dots').style.display='none';
+}
+function initSlides(){
+  const img=new Image();
+  img.onload=()=>{
+    let n=1;
+    function tryNext(){
+      const t=new Image();
+      t.onload=()=>{n++;tryNext();};
+      t.onerror=()=>{TOTAL=n;buildDots();goSlide(1);};
+      t.src='slides/slide_'+String(n+1).padStart(2,'0')+'.jpg';
+    }
+    tryNext();
+  };
+  img.onerror=showSlidePending;
+  img.src='slides/slide_01.jpg';
+}
+function buildDots(){
+  const d=document.getElementById('dots');d.innerHTML='';
+  for(let i=1;i<=TOTAL;i++){const s=document.createElement('span');s.className='dot';s.onclick=(()=>{const x=i;return()=>goSlide(x);})();d.appendChild(s);}
+}
+function goSlide(n){
+  if(!TOTAL)return;
+  cur=Math.max(1,Math.min(TOTAL,n));
+  document.getElementById('slide-img').src='slides/slide_'+String(cur).padStart(2,'0')+'.jpg';
+  document.getElementById('slide-counter').textContent=cur+' / '+TOTAL;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur-1));
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')goSlide(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')goSlide(cur-1);
+});
+initSlides();
+
+// ===== Lightbox =====
+function openLightbox(){
+  document.getElementById('lb-img').src=document.getElementById('info-img').src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+
+// ===== QR Code =====
+const games=[
+  {name:'重點1：有骨骼動物運動',file:'game-01-movement.html'},
+  {name:'重點2：無骨骼動物運動',file:'game-02-no-skeleton.html'},
+  {name:'重點3：動物覓食配對',file:'game-03-foraging.html'},
+  {name:'重點4：人體消化系統',file:'game-04-digestion.html'},
+  {name:'重點5：內溫外溫動物',file:'game-05-temperature.html'},
+  {name:'重點6：生物交互作用',file:'game-06-interaction.html'}
+];
+const qrRow=document.getElementById('qr-row');
+const base=window.location.href.replace(/index\.html.*$/,'');
+games.forEach(g=>{
+  const url=base+g.file;
+  const div=document.createElement('div');div.className='qr-item';
+  div.innerHTML='<img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(url)+'" width="100" height="100"><p>'+g.name+'</p>';
+  qrRow.appendChild(div);
+});
+</script>
+</body>
+</html>
