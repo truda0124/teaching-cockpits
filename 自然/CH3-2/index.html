@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3-2 生活中的食物保存 | 教學駕駛艙</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Segoe UI',sans-serif;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+.back-bar{background:var(--dim);padding:10px 20px;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--faint);color:var(--faint);border-radius:6px;padding:6px 14px;font-size:.82rem;text-decoration:none;transition:all .2s;}
+.back-btn:hover{border-color:var(--Y);color:var(--Y);}
+.header{background:linear-gradient(135deg,#0e2210,#1a4020);padding:28px 24px 20px;text-align:center;border-bottom:2px solid #2e5a30;}
+.tag{display:inline-block;background:#1a3a1c;color:var(--G);border:1px solid var(--G);border-radius:20px;padding:3px 14px;font-size:.78rem;margin-bottom:10px;}
+.header h1{color:var(--Y);font-size:1.6rem;line-height:1.3;margin-bottom:6px;}
+.header p{color:var(--faint);font-size:.88rem;}
+.main{max-width:900px;margin:0 auto;padding:24px 16px;}
+.section-title{color:var(--Y);font-size:1.05rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.section-title::after{content:'';flex:1;height:1px;background:#2e4a30;}
+.slide-card{background:var(--board);border-radius:14px;overflow:hidden;margin-bottom:28px;}
+.slide-img-wrap{position:relative;background:#000;min-height:200px;display:flex;align-items:center;justify-content:center;}
+.slide-img-wrap img{width:100%;max-height:460px;object-fit:contain;display:block;}
+.slide-controls{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--dim);}
+.slide-btn{background:none;border:1px solid var(--faint);color:var(--faint);border-radius:6px;padding:6px 16px;cursor:pointer;font-size:.9rem;transition:all .2s;}
+.slide-btn:hover{border-color:var(--Y);color:var(--Y);}
+.slide-counter{color:var(--faint);font-size:.85rem;}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:8px 16px 12px;}
+.dot{width:8px;height:8px;border-radius:50%;background:#2e4a30;cursor:pointer;transition:background .2s;}
+.dot.active{background:var(--Y);}
+.media-card{background:var(--board);border-radius:12px;overflow:hidden;margin-bottom:20px;}
+.media-card-body{padding:16px 20px;}
+.media-title{color:var(--Y);font-weight:700;margin-bottom:4px;}
+.media-sub{color:var(--faint);font-size:.8rem;margin-bottom:10px;}
+.media-player{width:100%;display:block;}
+video.media-player{max-height:460px;background:#000;}
+.open-btn{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:8px 18px;background:var(--B);color:#0a1a2a;border-radius:6px;text-decoration:none;font-size:.85rem;font-weight:700;}
+.infographic-card{background:var(--board);border-radius:12px;overflow:hidden;margin-bottom:28px;}
+.infographic-link{display:block;cursor:zoom-in;position:relative;}
+.infographic-link img{width:100%;display:block;transition:opacity .2s;}
+.infographic-link:hover img{opacity:.9;}
+.infographic-link::after{content:'🔍 點擊放大';position:absolute;bottom:10px;right:12px;background:rgba(0,0,0,.6);color:var(--Y);font-size:.75rem;padding:4px 10px;border-radius:4px;}
+.infographic-footer{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.orig-link{color:var(--B);font-size:.8rem;text-decoration:none;}
+.orig-link:hover{text-decoration:underline;}
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:8px;}
+.lb-close{position:fixed;top:16px;right:20px;color:#fff;font-size:2rem;cursor:pointer;}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:28px;}
+.game-card{background:var(--board);border:2px solid #2e4a30;border-radius:12px;padding:18px;text-decoration:none;transition:all .2s;display:block;}
+.game-card:hover{border-color:var(--Y);transform:translateY(-2px);}
+.game-emoji{font-size:1.6rem;margin-bottom:8px;}
+.game-title{color:var(--chalk);font-size:.95rem;font-weight:700;margin-bottom:4px;}
+.game-desc{color:var(--faint);font-size:.78rem;}
+.game-btn{margin-top:12px;display:inline-block;padding:6px 16px;background:var(--G);color:#0a1a0a;border-radius:6px;font-size:.82rem;font-weight:700;}
+.qr-section{background:var(--board);border-radius:12px;padding:20px;margin-bottom:28px;}
+.qr-grid{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;}
+.qr-item{text-align:center;}
+.qr-item img{border:2px solid #2e4a30;border-radius:8px;}
+.qr-item p{color:var(--faint);font-size:.7rem;margin-top:4px;max-width:100px;}
+.footer{background:var(--dim);padding:20px;text-align:center;color:var(--faint);font-size:.82rem;margin-top:16px;}
+.footer a{color:var(--B);}
+</style>
+</head>
+<body>
+<div class="back-bar">
+  <a class="back-btn" href="https://truda0124.github.io/teaching-cockpits/" target="_blank">← 返回自然教學駕駛艙首頁</a>
+</div>
+<div class="header">
+  <div class="tag">國小五年級 · 自然</div>
+  <h1>3-2 生活中的食物保存</h1>
+  <p>食物腐敗 · 黴菌觀察 · 生長因素 · 微生物應用 · 保存方法</p>
+</div>
+<div class="main">
+  <div class="section-title">🖼️ 簡報輪播</div>
+  <div class="slide-card">
+    <div class="slide-img-wrap">
+      <img id="slide-img" src="slides/slide_01.jpg" alt="簡報" onerror="showSlidePending()">
+    </div>
+    <div class="slide-controls">
+      <button class="slide-btn" onclick="goSlide(cur-1)">◀ 上一張</button>
+      <span class="slide-counter" id="slide-counter">1 / 14</span>
+      <button class="slide-btn" onclick="goSlide(cur+1)">下一張 ▶</button>
+    </div>
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <div class="section-title">🎬 教學影片</div>
+  <div class="media-card">
+    <div class="media-card-body">
+      <div class="media-title">3-2 自然科學大解密：食物保鮮與黴菌</div>
+      <div class="media-sub">若無法播放，請點下方按鈕在 NotebookLM 開啟</div>
+    </div>
+    <video class="media-player" controls preload="metadata"
+      src="https://lh3.googleusercontent.com/notebooklm/AKXwDQGM3SOABQAYEmfNCGpAdAySD_F0Yr1sZmu0MDi6_aYWgpBDfmHzWlkfwLAVuD7UB3epmMXd3C0XKmtkcbCrUc_lnLoPrB6oO--GPxn7Ky-aJh1MDFGgZwErEHUFPoBsdVxaHiZ7Kk-5iZYFtui92haCD6BNDQ=m22-dv">
+      您的瀏覽器不支援影片播放。
+    </video>
+    <div class="media-card-body">
+      <a class="open-btn" href="https://notebooklm.google.com/notebook/6e0ef45f-bc4c-4b1c-80b6-973d4caeb2dc/artifact/2c6a4c75-dd35-472e-b6da-fd7e6a5dde81" target="_blank">🔗 在 NotebookLM 開啟影片</a>
+    </div>
+  </div>
+
+  <div class="section-title">🔊 複習語音</div>
+  <div class="media-card">
+    <div class="media-card-body">
+      <div class="media-title">3-2 食物保鮮攻防戰</div>
+      <div class="media-sub">若無法播放，請點下方按鈕在 NotebookLM 開啟</div>
+      <audio class="media-player" controls preload="metadata"
+        src="https://lh3.googleusercontent.com/notebooklm/AKXwDQGA6i8NRw3JL3NKWMotek1wPBguglaeJefn_IsK8F4ezal6in0Y-2xr4FUtbV9DnanQDOzOVIIgetMixG-BM33c30B4zQXw3-Oh0zQM4FOmTlq1HhKE8SVEIJQXSz9OYgjJA=m140-dv">
+      </audio>
+      <a class="open-btn" href="https://notebooklm.google.com/notebook/6e0ef45f-bc4c-4b1c-80b6-973d4caeb2dc/artifact/6e33c8b1-f1d2-42e6-a0ad-2a0952367e5d" target="_blank">🔗 在 NotebookLM 開啟語音</a>
+    </div>
+  </div>
+
+  <div class="section-title">📊 資訊圖表</div>
+  <div class="infographic-card">
+    <a class="infographic-link" onclick="openLightbox()" href="javascript:void(0)">
+      <img id="info-img" src="slides/infographic.jpg"
+        onerror="this.src='https://lh3.googleusercontent.com/notebooklm/AKXwDQF-U5QepxAqHZwIA6UKnIwJA4eKDiUAaQJo5DDXi9cgdcNKWbpYwSXleTg9IjzSj0p-EOZ-A_Ct_ufO75zGC2PCfLWmpf2DPWy27H8EmPzsAia7nK5fHBTn8wspRqRT4gITpS-zXeJsACy5eTuRxXr197PYILE=w2752-d-h1536-mp2'"
+        alt="食物保存資訊圖表">
+    </a>
+    <div class="infographic-footer">
+      <span style="color:var(--faint);font-size:.8rem;">點擊圖片可放大檢視</span>
+      <a class="orig-link" href="https://lh3.googleusercontent.com/notebooklm/AKXwDQF-U5QepxAqHZwIA6UKnIwJA4eKDiUAaQJo5DDXi9cgdcNKWbpYwSXleTg9IjzSj0p-EOZ-A_Ct_ufO75zGC2PCfLWmpf2DPWy27H8EmPzsAia7nK5fHBTn8wspRqRT4gITpS-zXeJsACy5eTuRxXr197PYILE=w2752-d-h1536-mp2" target="_blank">🖼️ 查看原圖（高解析度）</a>
+    </div>
+  </div>
+
+  <div class="section-title">🎮 評量遊戲</div>
+  <div class="games-grid">
+    <a class="game-card" href="game-01-food-spoilage.html" target="_blank">
+      <div class="game-emoji">🦠</div>
+      <div class="game-title">重點1：食物腐敗的特徵</div>
+      <div class="game-desc">長黴、臭味、外觀變化——腐敗食物不能吃！是非挑戰！</div>
+      <div class="game-btn">開始遊戲 ▶</div>
+    </a>
+    <a class="game-card" href="game-02-mold-observation.html" target="_blank">
+      <div class="game-emoji">🔭</div>
+      <div class="game-title">重點2：黴菌的觀察</div>
+      <div class="game-desc">黴菌是微生物！用放大鏡和顯微鏡觀察！</div>
+      <div class="game-btn">開始遊戲 ▶</div>
+    </a>
+    <a class="game-card" href="game-03-mold-factors.html" target="_blank">
+      <div class="game-emoji">🌡️</div>
+      <div class="game-title">重點3：影響黴菌生長的因素</div>
+      <div class="game-desc">水分、空氣、溫度──哪個最關鍵？</div>
+      <div class="game-btn">開始遊戲 ▶</div>
+    </a>
+    <a class="game-card" href="game-04-microorganism-uses.html" target="_blank">
+      <div class="game-emoji">🍞</div>
+      <div class="game-title">重點4：微生物在生活的運用</div>
+      <div class="game-desc">乳酸菌、酵母菌、米麴菌、青黴菌配對挑戰！</div>
+      <div class="game-btn">開始遊戲 ▶</div>
+    </a>
+    <a class="game-card" href="game-05-food-preservation.html" target="_blank">
+      <div class="game-emoji">🥫</div>
+      <div class="game-title">重點5：保存食物的方法與原理</div>
+      <div class="game-desc">晒乾、醃漬、真空包裝、罐頭……原理都是抑制微生物！</div>
+      <div class="game-btn">開始遊戲 ▶</div>
+    </a>
+  </div>
+
+  <div class="section-title">📱 QR Code 掃碼玩遊戲</div>
+  <div class="qr-section">
+    <div class="qr-grid" id="qr-row"></div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lb-close" onclick="closeLightbox()">✕</span>
+  <img id="lb-img" src="" alt="資訊圖表放大">
+</div>
+
+<div class="footer">
+  <p>國小五年級 自然 3-2 生活中的食物保存 | 教學駕駛艙</p>
+  <p style="margin-top:8px;"><a href="https://truda0124.github.io/teaching-cockpits/" target="_blank">← 返回自然教學駕駛艙首頁</a></p>
+</div>
+
+<script>
+let TOTAL=14, cur=1;
+function showSlidePending(){document.querySelector('.slide-img-wrap').innerHTML='<div style="padding:48px;text-align:center;color:var(--faint)"><div style="font-size:2rem;margin-bottom:10px">📋</div><p>簡報圖片載入中...</p></div>';document.querySelector('.slide-controls').style.display='none';document.getElementById('dots').style.display='none';}
+function buildDots(){const d=document.getElementById('dots');d.innerHTML='';for(let i=1;i<=TOTAL;i++){const s=document.createElement('span');s.className='dot';s.onclick=(()=>{const x=i;return()=>goSlide(x);})();d.appendChild(s);}}
+function goSlide(n){cur=Math.max(1,Math.min(TOTAL,n));document.getElementById('slide-img').src='slides/slide_'+String(cur).padStart(2,'0')+'.jpg';document.getElementById('slide-counter').textContent=cur+' / '+TOTAL;document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur-1));}
+buildDots();goSlide(1);
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowDown')goSlide(cur+1);if(e.key==='ArrowLeft'||e.key==='ArrowUp')goSlide(cur-1);});
+function openLightbox(){document.getElementById('lb-img').src=document.getElementById('info-img').src;document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden';}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+const games=[
+  {name:'重點1：食物腐敗',file:'game-01-food-spoilage.html'},
+  {name:'重點2：黴菌觀察',file:'game-02-mold-observation.html'},
+  {name:'重點3：黴菌生長因素',file:'game-03-mold-factors.html'},
+  {name:'重點4：微生物運用',file:'game-04-microorganism-uses.html'},
+  {name:'重點5：食物保存',file:'game-05-food-preservation.html'}
+];
+const qrRow=document.getElementById('qr-row');
+const base=window.location.href.replace(/index\.html.*$/,'');
+games.forEach(g=>{const url=base+g.file;const div=document.createElement('div');div.className='qr-item';div.innerHTML='<img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(url)+'" width="100" height="100"><p>'+g.name+'</p>';qrRow.appendChild(div);});
+</script>
+</body>
+</html>
