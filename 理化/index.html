@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>國中理化 教學駕駛艙首頁</title>
+<style>
+:root{--bg:#0e1e10;--board:#1d3a1f;--dim:#162b18;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;}
+.back-bar{background:var(--dim);padding:10px 20px;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--faint);color:var(--faint);border-radius:6px;padding:6px 14px;font-size:.82rem;text-decoration:none;transition:all .2s;}
+.back-btn:hover{border-color:var(--Y);color:var(--Y);}
+.header{background:var(--board);padding:36px 20px 28px;text-align:center;border-bottom:1px solid #2a4a2c;}
+.subject-tag{display:inline-block;background:var(--dim);color:var(--B);font-size:.75rem;padding:3px 12px;border-radius:20px;margin-bottom:12px;border:1px solid var(--B);}
+.header h1{color:var(--Y);font-size:1.8rem;margin-bottom:8px;}
+.header p{color:var(--faint);font-size:.88rem;}
+.main{max-width:900px;margin:0 auto;padding:32px 16px;}
+.section-label{color:var(--faint);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;}
+.cockpit-card{background:var(--board);border-radius:14px;padding:22px;text-decoration:none;color:var(--chalk);border:2px solid transparent;transition:all .25s;display:flex;flex-direction:column;gap:8px;}
+.cockpit-card:hover{border-color:var(--G);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.card-tag{color:var(--faint);font-size:.72rem;margin-bottom:2px;}
+.card-title{color:var(--Y);font-size:1rem;font-weight:700;line-height:1.4;}
+.card-desc{color:var(--faint);font-size:.82rem;line-height:1.5;}
+.card-badge{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.badge{background:var(--dim);color:var(--B);font-size:.7rem;padding:2px 8px;border-radius:12px;border:1px solid #2a4a5a;}
+.card-footer{color:var(--G);font-size:.82rem;margin-top:auto;font-weight:700;}
+.footer{text-align:center;padding:30px 20px;color:var(--faint);font-size:.8rem;border-top:1px solid var(--board);margin-top:40px;}
+.footer a{color:var(--B);text-decoration:none;}
+</style>
+</head>
+<body>
+<div class="back-bar">
+  <a class="back-btn" href="https://truda0124.github.io/teaching-cockpits/" target="_blank">← 返回所有科目首頁</a>
+</div>
+<div class="header">
+  <div class="subject-tag">國中・理化科</div>
+  <h1>⚗️ 國中理化 教學駕駛艙</h1>
+  <p>整合 NotebookLM 簡報、影片、語音、形成性評量遊戲</p>
+</div>
+<div class="main">
+  <div class="section-label">所有單元</div>
+  <div class="grid">
+    <a class="cockpit-card" href="./CH3/index.html">
+      <span class="card-tag">八年級下學期・第3章</span>
+      <div class="card-title">酸、鹼、鹽</div>
+      <div class="card-desc">電解質與非電解質、離子解離、酸鹼性質、pH值、中和反應、酸雨危機</div>
+      <div class="card-badge">
+        <span class="badge">🖼 簡報13張</span>
+        <span class="badge">🎬 影片</span>
+        <span class="badge">🔊 語音</span>
+        <span class="badge">📊 圖表</span>
+        <span class="badge">🎮 6款遊戲</span>
+      </div>
+      <div class="card-footer">▶ 開啟教學駕駛艙</div>
+    </a>
+  </div>
+</div>
+<div class="footer">
+  <p>國中理化 教學駕駛艙・由 NotebookLM + Claude 自動生成</p>
+  <p style="margin-top:8px;"><a href="https://truda0124.github.io/teaching-cockpits/">← 返回所有科目首頁</a></p>
+</div>
+</body>
+</html>
