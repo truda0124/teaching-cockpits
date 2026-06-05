@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重點4：探究鐵生鏽的結論</title>
+<style>
+:root{--bg:#162b18;--board:#1d3a1f;--dim:#0e1e10;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;}
+h1{color:var(--Y);font-size:1.3rem;text-align:center;margin-bottom:6px;}
+.subtitle{color:var(--faint);font-size:.85rem;margin-bottom:20px;text-align:center;}
+.score-bar{display:flex;gap:16px;margin-bottom:18px;font-size:.9rem;}
+.score-bar span{color:var(--faint);}
+.score-bar b{color:var(--Y);}
+.progress{width:100%;max-width:560px;height:6px;background:var(--dim);border-radius:3px;margin-bottom:16px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--Y);border-radius:3px;transition:width .3s;}
+.card{background:var(--board);border-radius:14px;padding:24px;max-width:560px;width:100%;margin-bottom:16px;}
+.question{font-size:1.05rem;line-height:1.6;margin-bottom:18px;}
+/* 配對題 */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.col-label{color:var(--Y);font-size:.8rem;font-weight:700;margin-bottom:4px;}
+.item-btn{background:var(--dim);border:2px solid #2e4a30;color:var(--chalk);border-radius:8px;padding:10px 12px;font-size:.85rem;cursor:pointer;text-align:center;transition:all .2s;width:100%;}
+.item-btn.selected{border-color:var(--Y);color:var(--Y);background:#1a2e1a;}
+.item-btn.matched-ok{border-color:var(--G);background:#0d2e15;color:var(--G);cursor:default;}
+.item-btn.matched-ng{border-color:var(--R);background:#2e0d0d;color:var(--R);}
+.feedback{margin-top:14px;padding:12px;border-radius:8px;font-size:.9rem;line-height:1.5;display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:#0d2e15;border:1px solid var(--G);color:var(--G);}
+.feedback.ng{background:#2e0d0d;border:1px solid var(--R);color:var(--R);}
+.result{background:var(--board);border-radius:14px;padding:30px;text-align:center;max-width:560px;width:100%;display:none;}
+.result.show{display:block;}
+.result h2{color:var(--Y);font-size:1.4rem;margin-bottom:12px;}
+.result p{color:var(--faint);margin-bottom:20px;}
+.replay-btn{padding:12px 32px;background:var(--G);color:#0a1a0a;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;}
+.qr-area{margin-top:28px;text-align:center;}
+.qr-area p{color:var(--faint);font-size:.75rem;margin-top:6px;}
+.score-bar2{text-align:center;color:var(--faint);font-size:.85rem;margin-bottom:12px;}
+
+/* MCQ section */
+.options{display:flex;flex-direction:column;gap:10px;}
+.opt-btn{background:var(--dim);border:2px solid #2e4a30;color:var(--chalk);border-radius:8px;padding:12px 16px;font-size:.95rem;cursor:pointer;text-align:left;transition:all .2s;}
+.opt-btn:hover:not(:disabled){border-color:var(--Y);color:var(--Y);}
+.opt-btn.correct{border-color:var(--G);background:#0d2e15;color:var(--G);}
+.opt-btn.wrong{border-color:var(--R);background:#2e0d0d;color:var(--R);}
+.next-btn{margin-top:14px;padding:10px 28px;background:var(--Y);color:#1a1000;border:none;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer;display:none;}
+.next-btn.show{display:inline-block;}
+</style>
+</head>
+<body>
+<h1>🧪 重點4：探究鐵生鏽的結論</h1>
+<p class="subtitle">實驗結果告訴我們什麼？</p>
+<div class="score-bar"><span>得分：</span><b id="score">0</b><span> / </span><b id="total-q">0</b></div>
+<div class="progress"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+<div class="card" id="q-card">
+  <div class="question" id="q-text"></div>
+  <div class="options" id="opts"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="next-btn" onclick="nextQ()">下一題 →</button>
+</div>
+<div class="result" id="result">
+  <h2 id="result-title"></h2>
+  <p id="result-msg"></p>
+  <button class="replay-btn" onclick="startGame()">🔄 再玩一次</button>
+</div>
+<div class="qr-area">
+  <img id="qr-img" width="100" height="100" alt="QR Code">
+  <p>掃描開啟此遊戲</p>
+</div>
+<script>
+const QS=[
+  {q:"實驗組加了10滴水的鋼棉，和對照組未加水的鋼棉相比，哪組生鏽較明顯？",opts:["對照組（不加水）","實驗組（加水）","兩組一樣","兩組都沒生鏽"],ans:1,exp:"實驗組（加水）的鋼棉生鏽較明顯，出現褐色；對照組（不加水）沒有變化，因此水分會影響鐵生鏽。"},
+  {q:"比較空氣多寡的實驗中，接觸空氣較多的夾鏈袋鋼棉結果如何？",opts:["沒有生鏽","生鏽較不明顯","生鏽較明顯，呈現脆弱狀","顏色變白色"],ans:2,exp:"接觸空氣較多的鋼棉生鏽較明顯且呈現脆弱狀；空氣較少的生鏽現象不明顯。"},
+  {q:"浸泡過食醋的鋼棉，和浸泡自來水的鋼棉相比，哪組生鏽較明顯？",opts:["自來水組","食醋組","兩組一樣","兩組都完全沒生鏽"],ans:1,exp:"食醋是酸性水溶液，酸性環境加速生鏽，所以食醋組的生鏽情形比自來水組更明顯。"},
+  {q:"根據各組實驗，影響鐵製品生鏽的因素有哪些？",opts:["只有水分","只有空氣","水分、空氣和酸性水溶液等","只有溫度"],ans:2,exp:"實驗歸納：影響鐵製品生鏽的因素有水分、空氣和酸性水溶液等，接觸這些因素越多越容易生鏽。"},
+  {q:"以水分為操作變因時，除了鋼棉生鏽外，夾鏈袋還會出現什麼現象？",opts:["袋子脹大","袋子中出現黑褐色鏽水","袋子縮小","袋子顏色變黃"],ans:1,exp:"以水分為操作變因時，可以在夾鏈袋中看到黑褐色的鏽水，這是鐵鏽溶入水中的現象。"},
+  {q:"若實驗假設「水分會影響鐵製品生鏽」，且實驗結果是水分多的鋼棉生鏽明顯，則？",opts:["要重新提出假設","實驗假設成立","實驗設計有問題","對照組資料無效"],ans:1,exp:"當實驗結果和假設一致（水分多→生鏽明顯），就表示實驗假設成立。"}
+];
+let cur=0,score=0,answered=false,order=[];
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startGame(){cur=0;score=0;answered=false;order=shuffle([...Array(QS.length).keys()]);document.getElementById('result').classList.remove('show');document.getElementById('q-card').style.display='block';showQ();}
+function showQ(){
+  const d=QS[order[cur]];
+  document.getElementById('q-text').textContent=(cur+1)+'. '+d.q;
+  document.getElementById('total-q').textContent=QS.length;
+  document.getElementById('score').textContent=score;
+  document.getElementById('prog').style.width=(cur/QS.length*100)+'%';
+  const opts=document.getElementById('opts');opts.innerHTML='';
+  d.opts.forEach((o,i)=>{const b=document.createElement('button');b.className='opt-btn';b.textContent=o;b.onclick=()=>pick(i,d.ans,d.exp,d.opts);opts.appendChild(b);});
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('next-btn').className='next-btn';answered=false;
+}
+function pick(i,ans,exp,opts){
+  if(answered)return;answered=true;
+  const btns=document.querySelectorAll('.opt-btn');btns[ans].classList.add('correct');
+  const fb=document.getElementById('feedback');
+  if(i===ans){score++;fb.className='feedback ok show';fb.textContent='✅ 答對了！'+exp;}
+  else{btns[i].classList.add('wrong');fb.className='feedback ng show';fb.textContent='❌ 答錯了！正確答案是「'+opts[ans]+'」。'+exp;}
+  btns.forEach(b=>b.disabled=true);document.getElementById('next-btn').className='next-btn show';
+}
+function nextQ(){cur++;if(cur>=QS.length)showResult();else showQ();}
+function showResult(){
+  document.getElementById('q-card').style.display='none';
+  document.getElementById('result').classList.add('show');
+  const pct=Math.round(score/QS.length*100);
+  document.getElementById('result-title').textContent='得分：'+score+' / '+QS.length+' ('+pct+'%)';
+  document.getElementById('result-msg').textContent=pct>=80?'實驗結論全部掌握，厲害！':pct>=60?'不錯！水分、空氣、酸性都會加速生鏽！':'繼續加油！記住：水分多、空氣多、食醋→生鏽較明顯！';
+}
+startGame();
+document.getElementById('qr-img').src='https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(window.location.href);
+</script>
+</body>
+</html>
