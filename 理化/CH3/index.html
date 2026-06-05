@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第3章 酸、鹼、鹽 | 國中理化 教學駕駛艙</title>
+<style>
+:root{--bg:#0e1e10;--board:#1d3a1f;--dim:#162b18;--chalk:#f0ece2;--faint:#9aaa9c;--Y:#f5d050;--B:#5bb3e0;--G:#5dcc78;--R:#e05b5b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--chalk);font-family:'Noto Sans TC',sans-serif;min-height:100vh;}
+
+/* 返回列 */
+.back-bar{background:var(--dim);padding:10px 20px;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--faint);color:var(--faint);border-radius:6px;padding:6px 14px;font-size:.82rem;text-decoration:none;transition:all .2s;}
+.back-btn:hover{border-color:var(--Y);color:var(--Y);}
+
+/* 標頭 */
+.header{background:var(--board);padding:28px 20px 20px;text-align:center;border-bottom:1px solid #2a4a2c;}
+.subject-tag{display:inline-block;background:var(--dim);color:var(--B);font-size:.75rem;padding:3px 12px;border-radius:20px;margin-bottom:10px;border:1px solid var(--B);}
+.header h1{color:var(--Y);font-size:1.6rem;margin-bottom:6px;}
+.header p{color:var(--faint);font-size:.85rem;}
+
+/* 主體容器 */
+.main{max-width:860px;margin:0 auto;padding:24px 16px;}
+
+/* 區塊標題 */
+.section-title{color:var(--Y);font-size:1rem;font-weight:700;margin:28px 0 14px;display:flex;align-items:center;gap:8px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--board);}
+
+/* 簡報輪播 */
+.slide-wrap{background:#000;border-radius:12px;overflow:hidden;position:relative;}
+.slide-wrap img{width:100%;display:block;aspect-ratio:16/9;object-fit:contain;}
+.slide-nav{display:flex;align-items:center;justify-content:space-between;background:var(--dim);padding:10px 16px;}
+.nav-btn{background:none;border:1px solid var(--faint);color:var(--faint);border-radius:6px;padding:6px 16px;cursor:pointer;font-size:.9rem;transition:all .2s;}
+.nav-btn:hover{border-color:var(--Y);color:var(--Y);}
+.slide-counter{color:var(--chalk);font-size:.9rem;}
+.dots{display:flex;gap:5px;justify-content:center;padding:10px;flex-wrap:wrap;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--faint);cursor:pointer;transition:all .2s;}
+.dot.active{background:var(--Y);transform:scale(1.3);}
+
+/* 媒體卡 */
+.media-card{background:var(--board);border-radius:12px;overflow:hidden;margin-bottom:14px;}
+.media-card-body{padding:16px 20px;}
+.media-title{color:var(--Y);font-weight:700;margin-bottom:4px;}
+.media-sub{color:var(--faint);font-size:.8rem;margin-bottom:12px;}
+.media-player{width:100%;display:block;}
+video.media-player{max-height:460px;background:#000;}
+.open-btn{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:8px 18px;background:var(--B);color:#0a1a2a;border-radius:6px;text-decoration:none;font-size:.85rem;font-weight:700;}
+
+/* 資訊圖表 */
+.infographic-card{background:var(--board);border-radius:12px;overflow:hidden;}
+.infographic-link{display:block;cursor:zoom-in;position:relative;}
+.infographic-link img{width:100%;display:block;transition:opacity .2s;}
+.infographic-link:hover img{opacity:.9;}
+.infographic-link::after{content:'🔍 點擊放大';position:absolute;bottom:10px;right:12px;background:rgba(0,0,0,.6);color:var(--Y);font-size:.75rem;padding:4px 10px;border-radius:4px;}
+.infographic-footer{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.orig-link{color:var(--B);font-size:.8rem;text-decoration:none;}
+.orig-link:hover{text-decoration:underline;}
+
+/* Lightbox */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:95vw;max-height:95vh;object-fit:contain;border-radius:8px;}
+.lb-close{position:fixed;top:16px;right:20px;color:#fff;font-size:2rem;cursor:pointer;z-index:10000;}
+
+/* 遊戲卡片 */
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+.game-card{background:var(--board);border-radius:12px;padding:18px;text-decoration:none;color:var(--chalk);transition:all .2s;border:2px solid transparent;display:flex;flex-direction:column;gap:8px;}
+.game-card:hover{border-color:var(--G);transform:translateY(-2px);}
+.game-icon{font-size:1.8rem;}
+.game-name{color:var(--Y);font-weight:700;font-size:.95rem;}
+.game-type{color:var(--faint);font-size:.78rem;}
+.game-arrow{color:var(--G);font-size:.85rem;margin-top:auto;}
+
+/* QR Code 區 */
+.qr-grid{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;}
+.qr-item{background:var(--board);border-radius:10px;padding:14px;text-align:center;width:130px;}
+.qr-item img{border-radius:6px;background:#fff;padding:4px;}
+.qr-item p{color:var(--faint);font-size:.7rem;margin-top:8px;line-height:1.4;}
+
+/* Footer */
+.footer{text-align:center;padding:30px 20px;color:var(--faint);font-size:.8rem;border-top:1px solid var(--board);margin-top:40px;}
+.footer a{color:var(--B);text-decoration:none;}
+.footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<!-- 返回理化首頁 -->
+<div class="back-bar">
+  <a class="back-btn" href="https://truda0124.github.io/teaching-cockpits/理化/" target="_blank">← 返回理化教學駕駛艙首頁</a>
+</div>
+
+<!-- 標頭 -->
+<div class="header">
+  <div class="subject-tag">國中理化・八年級下學期</div>
+  <h1>第3章 酸、鹼、鹽</h1>
+  <p>電解質 · 酸鹼性質 · pH值 · 中和反應 · 酸雨</p>
+</div>
+
+<div class="main">
+
+  <!-- ① 簡報輪播 -->
+  <div class="section-title">🖼️ 簡報輪播</div>
+  <div class="slide-wrap">
+    <img id="slide-img" src="slides/slide_01.jpg" alt="投影片">
+  </div>
+  <div class="slide-nav">
+    <button class="nav-btn" onclick="goSlide(cur-1)">◀ 上一頁</button>
+    <span class="slide-counter" id="slide-counter">1 / 13</span>
+    <button class="nav-btn" onclick="goSlide(cur+1)">下一頁 ▶</button>
+  </div>
+  <div class="dots" id="dots"></div>
+
+  <!-- ② 教學影片 -->
+  <div class="section-title">🎬 教學影片</div>
+  <div class="media-card">
+    <div class="media-card-body">
+      <div class="media-title">第三章 酸鹼鹽：A++高分藍圖</div>
+      <div class="media-sub">若無法播放，請點下方按鈕在 NotebookLM 開啟</div>
+    </div>
+    <video class="media-player" controls preload="metadata"
+      src="https://lh3.googleusercontent.com/notebooklm/AKXwDQG2OpMGKefhN9A0LUy1l6ndrJv7jGzlqv7NPzWFZ3l4uEw2sD7VoqWfmC3OdZqAoiAHMq9xqm5Vv14dI98iTXo1j40DaA4EF8E7fziMoLcVlMpjnU5rkVDx60qhyyV4nX3PgTPHDbgcOb2egJNwlkRbwsV6VNs=m22-dv">
+      您的瀏覽器不支援影片播放。
+    </video>
+    <div class="media-card-body">
+      <a class="open-btn" href="https://notebooklm.google.com/notebook/7e575590-2833-453e-86fa-5600a666b6da/artifact/6fa28374-a0a9-4f8f-8b4c-a66404bb4389" target="_blank">🔗 在 NotebookLM 開啟影片</a>
+    </div>
+  </div>
+
+  <!-- ③ 複習語音 -->
+  <div class="section-title">🔊 複習語音</div>
+  <div class="media-card">
+    <div class="media-card-body">
+      <div class="media-title">酸鹼鹽與電解質底層邏輯</div>
+      <div class="media-sub">若無法播放，請點下方按鈕在 NotebookLM 開啟</div>
+      <audio class="media-player" controls preload="metadata"
+        src="https://lh3.googleusercontent.com/notebooklm/AKXwDQFHGmAxPZqLxCymI_OIUqVLxavwVfIQQjZVP6vIyJcd1fGlaOsGvCFiW9s9Bd5SJ6qq5scZ1U2U-cFw_FPry_0pHQEhHonf9fp7iV0_HRC7J3YMi2OI77TRPHoxe7iXmy5wDg_34Ez8tbW9PxZx164W16txjEE=m140-dv">
+      </audio>
+      <a class="open-btn" href="https://notebooklm.google.com/notebook/7e575590-2833-453e-86fa-5600a666b6da/artifact/8f6dd9c5-ea5a-4bbb-b98b-6436804314d2" target="_blank">🔗 在 NotebookLM 開啟語音</a>
+    </div>
+  </div>
+
+  <!-- ④ 資訊圖表 -->
+  <div class="section-title">📊 資訊圖表</div>
+  <div class="infographic-card">
+    <a class="infographic-link" onclick="openLightbox()" href="javascript:void(0)">
+      <img id="info-img" src="slides/infographic.jpg"
+        onerror="this.src='https://lh3.googleusercontent.com/notebooklm/AKXwDQGZ3WqpDgbz18dW9pfZc4l4QCaKKVvc4ffPtiUV027ytM-2Tl92PldtZkRg_Xli6pqF2iquHL4vWi0C55Acxx4ALxE6W3BD8JCxLDYeG8w-giDnbqNsqaJRAUXdT9eaD3A61YWozCaIhqto0aLrDnDKYxgnJxU=w2752-d-h1536-mp2'"
+        alt="酸鹼科學與酸雨危機 資訊圖表">
+    </a>
+    <div class="infographic-footer">
+      <span style="color:var(--faint);font-size:.8rem;">點擊圖片可放大檢視</span>
+      <a class="orig-link" href="https://lh3.googleusercontent.com/notebooklm/AKXwDQGZ3WqpDgbz18dW9pfZc4l4QCaKKVvc4ffPtiUV027ytM-2Tl92PldtZkRg_Xli6pqF2iquHL4vWi0C55Acxx4ALxE6W3BD8JCxLDYeG8w-giDnbqNsqaJRAUXdT9eaD3A61YWozCaIhqto0aLrDnDKYxgnJxU=w2752-d-h1536-mp2" target="_blank">🖼️ 查看原圖（高解析度）</a>
+    </div>
+  </div>
+
+  <!-- ⑤ 評量遊戲 -->
+  <div class="section-title">🎮 形成性評量遊戲</div>
+  <div class="games-grid">
+    <a class="game-card" href="game-01-electrolyte.html" target="_blank">
+      <div class="game-icon">⚡</div>
+      <div class="game-name">重點1：電解質與非電解質</div>
+      <div class="game-type">選擇題・6題</div>
+      <div class="game-arrow">▶ 開始作答</div>
+    </a>
+    <a class="game-card" href="game-02-ions.html" target="_blank">
+      <div class="game-icon">🔬</div>
+      <div class="game-name">重點2：解離與離子</div>
+      <div class="game-type">配對遊戲・5組</div>
+      <div class="game-arrow">▶ 開始作答</div>
+    </a>
+    <a class="game-card" href="game-03-acid-base.html" target="_blank">
+      <div class="game-icon">🧪</div>
+      <div class="game-name">重點3：酸與鹼的性質</div>
+      <div class="game-type">是非題・6題</div>
+      <div class="game-arrow">▶ 開始作答</div>
+    </a>
+    <a class="game-card" href="game-04-pH.html" target="_blank">
+      <div class="game-icon">📊</div>
+      <div class="game-name">重點4：pH值與酸鹼程度</div>
+      <div class="game-type">選擇題・6題</div>
+      <div class="game-arrow">▶ 開始作答</div>
+    </a>
+    <a class="game-card" href="game-05-neutralization.html" target="_blank">
+      <div class="game-icon">⚗️</div>
+      <div class="game-name">重點5：中和反應與鹽</div>
+      <div class="game-type">選擇題・6題</div>
+      <div class="game-arrow">▶ 開始作答</div>
+    </a>
+    <a class="game-card" href="game-06-acid-rain.html" target="_blank">
+      <div class="game-icon">🌧️</div>
+      <div class="game-name">重點6：酸雨的成因與危害</div>
+      <div class="game-type">混合題型・6題</div>
+      <div class="game-arrow">▶ 開始作答</div>
+    </a>
+  </div>
+
+  <!-- ⑥ QR Code -->
+  <div class="section-title">📱 QR Code 掃碼作答</div>
+  <div class="qr-grid" id="qr-row"></div>
+
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lb-close" onclick="closeLightbox()">✕</span>
+  <img id="lb-img" src="" alt="資訊圖表放大">
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>國中理化 第3章 酸、鹼、鹽 | 教學駕駛艙</p>
+  <p style="margin-top:8px;"><a href="https://truda0124.github.io/teaching-cockpits/理化/" target="_blank">← 返回理化教學駕駛艙首頁</a></p>
+</div>
+
+<script>
+// 簡報輪播
+const TOTAL = 13;
+let cur = 1;
+
+function goSlide(n) {
+  cur = Math.max(1, Math.min(TOTAL, n));
+  document.getElementById('slide-img').src = 'slides/slide_' + String(cur).padStart(2, '0') + '.jpg';
+  document.getElementById('slide-counter').textContent = cur + ' / ' + TOTAL;
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur - 1));
+}
+
+// 建立 dots
+const dotsEl = document.getElementById('dots');
+for (let i = 1; i <= TOTAL; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 1 ? ' active' : '');
+  d.onclick = () => goSlide(i);
+  dotsEl.appendChild(d);
+}
+
+// 鍵盤控制
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goSlide(cur + 1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goSlide(cur - 1);
+});
+
+// Lightbox
+function openLightbox() {
+  document.getElementById('lb-img').src = document.getElementById('info-img').src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+// QR Code 動態產生
+const games = [
+  {name: '重點1：電解質', file: 'game-01-electrolyte.html'},
+  {name: '重點2：解離與離子', file: 'game-02-ions.html'},
+  {name: '重點3：酸鹼性質', file: 'game-03-acid-base.html'},
+  {name: '重點4：pH值', file: 'game-04-pH.html'},
+  {name: '重點5：中和反應', file: 'game-05-neutralization.html'},
+  {name: '重點6：酸雨', file: 'game-06-acid-rain.html'},
+];
+const qrRow = document.getElementById('qr-row');
+const base = window.location.href.replace(/index\.html.*$/, '').replace(/\/$/, '') + '/';
+games.forEach(g => {
+  const url = base + g.file;
+  const div = document.createElement('div');
+  div.className = 'qr-item';
+  div.innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=' + encodeURIComponent(url) + '" width="100" height="100"><p>' + g.name + '</p>';
+  qrRow.appendChild(div);
+});
+</script>
+</body>
+</html>
