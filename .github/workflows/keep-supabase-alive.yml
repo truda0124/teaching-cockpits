@@ -1,0 +1,24 @@
+name: Keep Supabase Alive
+
+on:
+  schedule:
+    # 每 3 天執行一次（UTC 時間 02:00，台灣時間 10:00）
+    - cron: '0 2 */3 * *'
+  workflow_dispatch:  # 允許手動觸發
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase word_entries table
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            "https://ehczkmmgdogtnhhjunbr.supabase.co/rest/v1/word_entries?select=id&limit=1")
+          echo "Supabase response status: $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "Warning: unexpected status $STATUS"
+            exit 1
+          fi
+          echo "✅ Supabase is alive!"
