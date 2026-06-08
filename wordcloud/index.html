@@ -205,9 +205,9 @@
   // ── QR Code ──────────────────────────────────────────────
   const pageURL = window.location.href;
   QRCode.toCanvas(document.getElementById('qr-canvas'), pageURL, {
-    width: 120, margin: 1,
-    color: { dark: '#ffffff', light: '#00000000' }
-  });
+    width: 120, margin: 2,
+    color: { dark: '#1a1040', light: '#ffffff' }
+  }, function(err) { if (err) console.error('QR error:', err); });
   document.getElementById('qr-url').textContent = pageURL.replace('https://', '');
 
   // ── Canvas sizing ─────────────────────────────────────────
